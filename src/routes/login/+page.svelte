@@ -1,7 +1,4 @@
 <script lang="ts">
-  import type { PageData } from "../$types";
-
-  export let data: PageData;
 </script>
 
 <form class="form" method="POST">
@@ -14,7 +11,6 @@
     <input name="password" type="password">
   </label>
   <button>Log in</button>
-  <h1>{data.tastyCookie}</h1>
 </form>
 
 <style>

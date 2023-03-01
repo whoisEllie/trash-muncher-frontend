@@ -1,6 +1,6 @@
 import type { Actions } from './$types';
 
-export const actions = {
+export const actions: Actions = {
 	default: async (event) => {
 		let url = "http://127.0.0.1:8000/api/users/player-register/"
 		let data = {

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { PageData } from "../$types";
+  import { enhance } from "$app/forms";
+  import type { ActionData } from "./$types";
 
-  export let data: PageData;
+  export let form: ActionData;
 </script>
 
-<form class="form" method="POST">
-  <h1>{data.tastyCookie}</h1>
+<form class="form" method="POST" use:enhance>
   <label>
    	Username 
     <input name="username" type="text">
@@ -35,6 +35,11 @@
 		</select>
 	</label>
   <button>Register</button>
+  { #if form?.error }
+    <div class="notice-error">
+      {form.error}
+    </div>
+  {/if}
 </form>
 
 <style>
