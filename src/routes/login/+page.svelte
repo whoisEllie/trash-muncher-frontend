@@ -1,38 +1,29 @@
 <script lang="ts">
-	import { post, browserSet, browserGet} from '$lib/utils/requestUtils';
-	import { goto } from '$app/navigation';
-	import { variables } from '$lib/utils/constants';
-	import { onMount } from 'svelte';
+  import type { PageData } from "../$types";
 
-	import type { UserResponse } from '$lib/interfaces/user.interface';
-	import type { CustomError } from '$lib/interfaces/error.interface';
-	import { changeText } from '$lib/helpers/buttonText';
-  import {error} from '@sveltejs/kit';
+  export let data: PageData;
+</script>
 
-	let email = '',
-			password = '',
-			errors: Array<CustomError>;
+<form class="form" method="POST">
+  <label>
+    Email
+    <input name="email" type="email">
+  </label>
+  <label>
+    Password
+    <input name="password" type="password">
+  </label>
+  <button>Log in</button>
+  <h1>{data.tastyCookie}</h1>
+</form>
 
-	const handleLogin = async () => {
-		if (browserGet('refreshToken')) {
-			localStorage.removeItem('refreshToken');
-		}
-		const [jsonRes, err] = await post(fetch, `${variables.BASE_API_URI}/login/`, {
-			user: {
-				email: email,
-				password: password
-				}
-			});	
-			const response: UserResponse = jsonRes;
-
-			if (err.length > 0) {
-				errors = err;
-			} else if (response.user) {
-				if (response.user.tokens && response.user.tokens.refresh) {
-					browserSet('refreshToken', response.user.tokens.refresh);
-				}
-				await goto('/');
-			}
+<style>
+	
+	.form {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 
-</script>
+</style>
