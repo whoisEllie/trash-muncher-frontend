@@ -18,26 +18,30 @@ export const load = (async (event) => {
 		mode: "cors"
 		}
 
-		await event.fetch(url, packet).then((response) => response.json()).then((out) => {
-			console.log(out)
+		try {
+			await event.fetch(url, packet).then((response) => response.json()).then((out) => {
+				console.log(out)
 
-			if (out['detail'] === 'Authentication credentials were not provided.')
-			{
-				return;
-			}
-			if (out['code'] === "token_not_valid")
-			{
-				return;
-			}
-				
-			username = out['user']['username']
-			login_status = true;
-			console.log(username)
-		})
+				if (out['detail'] === 'Authentication credentials were not provided.')
+				{
+					return;
+				}
+				if (out['code'] === "token_not_valid")
+				{
+					return;
+				}
+					
+				username = out['user']['username']
+				login_status = true;
+				console.log(username)
+			})
 
-		return {
-			logged_in: login_status,
-			username: username 
-		};
-
+			return {
+				logged_in: login_status,
+				username: username 
+			};
+		} catch (error) {
+			
+		}
+		
 }) satisfies LayoutServerLoad;
