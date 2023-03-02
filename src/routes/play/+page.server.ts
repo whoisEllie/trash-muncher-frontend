@@ -1,4 +1,5 @@
-import type { LayoutServerLoad } from "./$types"
+import {redirect} from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types"
 
 export const load = (async (event) => {
 
@@ -19,20 +20,20 @@ export const load = (async (event) => {
 
 		try {
 			await event.fetch(url, packet).then((response) => response.json()).then((out) => {
-				console.log(out)
 
 				if (out['detail'] === 'Authentication credentials were not provided.')
 				{
+					throw redirect(302, '/login')
 					return;
 				}
 				if (out['code'] === "token_not_valid")
 				{
+					throw redirect(302, '/login')
 					return;
 				}
 					
 				username = out['user']['username']
 				login_status = true;
-				console.log(username)
 			})
 
 			return {
@@ -40,7 +41,7 @@ export const load = (async (event) => {
 				username: username 
 			};
 		} catch (error) {
-			
+			throw redirect(302, '/login')
 		}
 		
-}) satisfies LayoutServerLoad;
+}) satisfies PageServerLoad;

@@ -154,4 +154,34 @@
 		height: 40px;
 		cursor: pointer;
 	}
+
+	@media screen and (max-width: 600px) {
+		.title {
+			font-size: 4rem;
+		}	
+
+		.title-trash {
+			font-weight: bold;
+			transform: translate(-4.25rem, 1rem);
+		}
+
+		.title-munchers {
+			transform: translate(0.75rem, 0rem);
+		}
+	}
+
+	@media screen and (max-width: 350px) {
+		.title {
+			font-size: 3rem;
+		}	
+
+		.title-trash {
+			font-weight: bold;
+			transform: translate(-2.5rem, 1rem);
+		}
+
+		.title-munchers {
+			transform: translate(0rem, 0rem);
+		}
+	}
 </style>

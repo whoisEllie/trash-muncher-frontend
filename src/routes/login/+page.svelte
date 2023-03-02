@@ -99,7 +99,6 @@
 		background: transparent;
 		border: none;
 		outline: none;
-		padding: 0 35px 0 5px;
 		color: #000;
 		font-family: "Montserrat", sans-serif;
 		font-weight: 400;
@@ -111,6 +110,37 @@
 		width: 100%;
 		margin: 0px 55px;
 		cursor: pointer;
+	}
+
+	@media screen and (max-width: 600px) {
+		.title {
+			font-size: 4rem;
+		}	
+
+		.title-trash {
+			font-weight: bold;
+			transform: translate(-4.25rem, 1rem);
+		}
+
+		.title-munchers {
+			transform: translate(0.75rem, 0rem);
+		}
+	}
+
+	@media screen and (max-width: 350px) {
+		.title {
+			font-size: 3rem;
+		}	
+
+		.title-trash {
+			font-weight: bold;
+			transform: translate(-2.5rem, 1rem);
+		}
+
+		.title-munchers {
+			transform: translate(0rem, 0rem);
+		}
+
 	}
 
 </style>

@@ -9,9 +9,9 @@
 <div class="wrapper">
 	<div class="container">
  		<div class="images">
-   		<img src="green.png" class="green" />
-    	<img src="red.png" class="red" />
-    	<img src="pale.png" class="pale" />
+   		<img src="green.png" alt="A green blob in the top left corner of the screen" class="green" />
+    	<img src="red.png" alt="A red blob in the bottom left corner of the screen" class="red" />
+    	<img src="pale.png" alt="A pale brown blob in the bottom right corner of the screen" class="pale" />
   	</div>
 		<div class="header">
 			<a href="/" class="home">Home</a>
@@ -28,8 +28,8 @@
 			{/if}
 		</div>
 	</div>
-	<img src="left_plant.png" class="left_plant"/>
-  <img src="right_plant.png" class="right_plant"/>
+	<img src="left_plant.png" alt="An inked plant in the bottom left of the screen" class="left_plant"/>
+  <img src="right_plant.png" alt="An inked plant in the bottom right of the screen" class="right_plant"/>
 </div>
 
 <slot></slot>
@@ -122,7 +122,7 @@
 	a {
 		font-family: "Montserrat", sans-serif;
 		font-weight: 500;
-		font-size: 0.75rem;
+		font-size: 1rem;
 		text-decoration: none;
 		padding: 5px 15px;
 	}
@@ -161,6 +161,46 @@
 
 	.login:hover {
 		color: #977453;
+	}
+
+	@media screen and (max-width: 600px) {
+		.green {
+			width: 58%;
+		}
+
+		.red {
+			width: 30%;
+			height: 20%;
+		}
+
+		.pale {
+			width: 48%;
+			height: 27%;
+		}
+
+		.left_plant {
+			width: 0%;
+		}
+
+		.right_plant {
+			width: 0%;
+		}
+
+		a {
+			font-size: 0.75rem;
+		}
+	}
+
+	@media screen and (max-width:  300px) {
+		.container {
+			width: 100vw; /* this way, the margins are equal regardless of aspect ratio */
+			height: 100vh;		
+		}
+
+		a {
+			font-size: 0.65rem;
+		}
+
 	}
 
 </style>

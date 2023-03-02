@@ -8,7 +8,7 @@
 			<p class="title-munchers">MUNCHERS</p>
 		</div>
 		<p class="description">A location based "cookie-clicker" type game to promote sustainability at the University of Exeter</p>
-		<a class="start" href="/">Let's go!</a>
+		<a class="start" href="/play">Let's go!</a>
 	</div>
 </div>
 
@@ -60,7 +60,7 @@
 	.description {
 		text-align: center;
 		font-family: 'Chilanka', cursive;
-		font-size: max(1.5vw, 3vh);
+		font-size: 1rem;
 		letter-spacing: 0.2vw;
 	}
 		
@@ -80,12 +80,50 @@
 		max-width: 540px;
 		height: 70px;
 		margin: 25px auto;
+		text-decoration: none;
+		color: black;
 	}
 
 	.start:hover {
 		background-color: #DFC9B5;
 		border-radius: 25px;
 		transition: all 0.5s ease 0.0s;
+	}
+
+	@media screen and (max-width: 600px) {
+		.title {
+			font-size: 4rem;
+		}	
+
+		.title-trash {
+			font-weight: bold;
+			transform: translate(-4.25rem, 1rem);
+		}
+
+		.title-munchers {
+			transform: translate(0.75rem, 0rem);
+		}
+	}
+
+	@media screen and (max-width: 350px) {
+		.title {
+			font-size: 3rem;
+		}	
+
+		.title-trash {
+			font-weight: bold;
+			transform: translate(-2.5rem, 1rem);
+		}
+
+		.title-munchers {
+			transform: translate(0rem, 0rem);
+		}
+
+		.start {
+			font-size: 1rem;
+			min-width: 80px;
+			height: 60px;
+		}
 	}
 
 </style>
