@@ -5,7 +5,7 @@ export const load = (async (event) => {
 	let login_status: Boolean = false;
 	let username: String = ""
 
-	let url = "http://127.0.0.1:8000/api/users/me/"
+	let url = "http://38.242.137.81:8000/api/users/me/"
 	console.log(event.cookies.get('AccessToken'))
 
 	const packet: RequestInit = {

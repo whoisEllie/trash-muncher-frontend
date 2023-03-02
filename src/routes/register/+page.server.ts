@@ -6,7 +6,7 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 
-		let url = "http://127.0.0.1:8000/api/users/player-register/"
+		let url = "http://38.242.137.81:8000/api/users/player-register/"
 		let data = {
 			"user": {
 				"username": formData.get('username'),
