@@ -1,4 +1,5 @@
 import type { LayoutServerLoad } from "./$types"
+import type { Actions } from "@sveltejs/kit";
 
 export const load = (async (event) => {
 
@@ -20,6 +21,10 @@ export const load = (async (event) => {
 		await event.fetch(url, packet).then((response) => response.json()).then((out) => {
 			console.log(out)
 
+			if (out['detail'] === 'Authentication credentials were not provided.')
+			{
+				return;
+			}
 			if (out['code'] === "token_not_valid")
 			{
 				return;
