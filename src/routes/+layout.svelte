@@ -1,5 +1,7 @@
-<script>
+<script lang="ts">
+	import type { LayoutData } from "./$types";
 
+	export let data: LayoutData;
 </script>
 
 <!-- TODO: Implement hamburger menu for mobile layout -->
@@ -14,8 +16,16 @@
 		<div class="header">
 			<a href="/" class="home">Home</a>
 			<a href="/about" class="about">About</a>
-			<a href="/login" class="login">Login</a>
-			<a href="/register" class="register">Register</a>
+			{#if data.logged_in}
+				<a href="/logout" class="login">Logout</a>
+			{:else}
+				<a href="/login" class="login">Login</a>
+			{/if}
+			{#if data.logged_in}
+				<a href="/" class="login">{data.username}</a>
+			{:else}
+				<a href="/register" class="register">Register</a>
+			{/if}
 		</div>
 	</div>
 	<img src="left_plant.png" class="left_plant"/>

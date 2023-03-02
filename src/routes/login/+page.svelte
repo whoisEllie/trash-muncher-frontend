@@ -3,8 +3,8 @@
 
 <form class="form" method="POST">
   <label>
-    Email
-    <input name="email" type="email">
+    Username 
+    <input name="username" type="text">
   </label>
   <label>
     Password

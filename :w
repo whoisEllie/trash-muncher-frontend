@@ -1,35 +1,37 @@
 import type { Actions } from './$types';
-import { redirect } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	default: async ({request}) => {
 
 		const formData = await request.formData();
 
+
+		console.log(formData);
+
 		let url = "http://127.0.0.1:8000/api/users/player-register/"
 		let data = {
 			"user": {
-				"username": formData.get('username'),
-				"first_name": formData.get('fname'),
-				"last_name": formData.get('lname'),
-				"password": formData.get('password') 
+				"username": "ellie",
+				"first_name": "ellie",
+				"last_name": "kelemen",
+				"password": "pdC5s9QzGyKRVypYxvrvxnEUPu57WLFmgbH6SF5RXW244Sd6MgLCeZ6kBY7j5oTS"
 			},
 			"team": {
-				"name": formData.get('team')
+				"name": "Red"
 			}
 		};
 
-		const packet: RequestInit = {
+		const packet = {
 			headers: { "content-type" : "application/json; charset=UTF-8"},
 			body: JSON.stringify(data),
 			method: "POST",
 			mode: "cors"
 		};
 
-		await fetch (url, packet).then((response) => response.json()).then((out) => {
-			console.log(out);
-		
-			throw redirect(302, '/login');
-		});
+		fetch (url, packet).then((response) => handleReturn(response.json()));
 	}
+}
+
+async function handleReturn(data) {
+	console.log("Data return!");
 }

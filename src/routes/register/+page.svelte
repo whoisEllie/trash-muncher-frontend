@@ -12,11 +12,11 @@
   </label>
   <label>
    	First Name	
-    <input name="username" type="text">
+    <input name="fname" type="text">
   </label>
   <label>
    	Last Name	
-    <input name="username" type="text">
+    <input name="lname" type="text">
   </label>
   <label>
     Password
@@ -29,9 +29,9 @@
 	<label>
 		Choose a team!
 		<select name="team">
-			<option type="">Red</option>
-			<option type="">Blue</option>
-			<option type="">Green</option>
+			<option value="Red">Red</option>
+			<option value="Blue">Blue</option>
+			<option value="Green">Green</option>
 		</select>
 	</label>
   <button>Register</button>

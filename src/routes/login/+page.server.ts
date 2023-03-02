@@ -1,23 +1,18 @@
-import type { PageServerLoad, Actions } from './$types';
+import type { Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = (event) => {
-	const user = event.locals.user;
-
-	if (user) {
-		throw redirect(302, '/guarded');
-	}
-}
-
 export const actions: Actions = {
-	default: async (event) => {
+	default: async ({cookies, request}) => {
+
+		const formData = await request.formData();	
+
 		let url = "http://127.0.0.1:8000/api/users/login/"
 		let data = {
-			"username" : "ellie",
-			"password" : "pdC5s9QzGyKRVypYxvrvxnEUPu57WLFmgbH6SF5RXW244Sd6MgLCeZ6kBY7j5oTS"
+			"username" : formData.get('username'),
+			"password" : formData.get('password') 
 		}
 
-		const packet = {
+		const packet: RequestInit = {
 			headers: { "content-type" : "application/json; charset=UTF-8"},
 			body: JSON.stringify(data),
 			method: "POST",
@@ -25,10 +20,15 @@ export const actions: Actions = {
 		}
 
 
-		await event.fetch(url, packet).then((response) => response.json()).then((out) => {
+		await fetch(url, packet).then((response) => response.json()).then((out) => {
 			console.log(out);
 
-			event.cookies.set('AccessToken', `${out['access']}`, {
+			if (out['message'] === 'Invalid username or password!!') {
+				console.log("Invalid username and shit lol")
+				return;
+			}
+
+			cookies.set('AccessToken', `${out['access']}`, {
 			httpOnly: true,
 			path: '/',
 			secure: true,
@@ -36,13 +36,15 @@ export const actions: Actions = {
 			maxAge: 86400 /* 1 day */
 			})
 		
-			event.cookies.set('RefreshToken', `${out['refresh']}`, {
+			cookies.set('RefreshToken', `${out['refresh']}`, {
 			httpOnly: true,
 			path: '/',
 			secure: true,
 			sameSite: 'strict',
 			maxAge: 86400 /* 1 day */
 			})
-		})
+
+			throw redirect(302, '/');
+		})			
 	}
 }
