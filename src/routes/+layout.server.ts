@@ -37,7 +37,7 @@ export const load = (async (event) => {
 
 			return {
 				logged_in: login_status,
-				username: username 
+				username: username,
 			};
 		} catch (error) {
 			
