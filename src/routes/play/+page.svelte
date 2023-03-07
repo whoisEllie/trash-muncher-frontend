@@ -3,18 +3,18 @@
 	import { onMount } from 'svelte';
 
 	var errorMessage: string = "Awaiting map.";
+	let monsterurl = "http://38.242.137.81:8000/api/monsters/add-score/"
 
 	onMount(() => {
-		getPosition().then((position:Position) =>{
+		getPosition().then((position: Position) =>{
   			//document.getElementById("mapAwait").hidden = true;
   			createMap(position.coords.latitude,position.coords.longitude);
 		}).catch((err) => {
   			console.log(err);
-  			(document.getElementById("awaitText") as HTMLElement).textContent="Permission not granted. Pls grant <3"
+				errorMessage = "Location access blocked, please enable."
 		})
-		//navigator.geolocation.getCurrentPosition((pos) => {
-		//	createMap(pos.coords.latitude, pos.coords.longitude)	
-		//})
+
+		updateScore(0, [1, 1, 1]);
 	})
 
 	function getPosition(){
@@ -49,19 +49,42 @@
 			//do something :sparkle:
 		});
 	}
+
+	async function updateScore(id: number, scores: number[]) {
+		const data = {
+			"TM_ID": id,
+			"T1Score": scores[0],
+			"T2Score": scores[1],
+			"T3Score": scores[2]
+		};
+
+		const packet: RequestInit = {
+			headers: {"content-type": "application/json; charset=UTF-8"},
+			body: JSON.stringify(data),
+			method: "POST",
+			mode: "cors"
+		}
+
+		await fetch(monsterurl, packet).then((response) => response.json().then((out) => {
+			console.log(out);
+		}))
+	}
+
+	
 </script>
 
 
 <div class="map-modal">
-	<p id="status">Welcome!</p>
-	
 	<div class="below_map">
 	  <button class="mapButton" id="enterScore">Insert trash</button>
 	  <button  class="mapButton">Toggle Location</button>
 	  <button class="mapButton" >Change Zoom</button>
 		<!--onclick="toggleLocation()" onclick = "changeZoom()"-->
-	  
+		<form method="POST">
+			<button>POST!</button>
+		</form>
 	</div>
+
 	
 	<div id="mapAwait">
 	  <p id="awaitText">{errorMessage}</p>
@@ -147,6 +170,7 @@
 		float: left;
 		position: absolute;
 	}
+
 	.mapButton {
 		float: left;
 		padding: 12px;
@@ -154,8 +178,14 @@
 		font-size: 17px;
 		width: 33.33%; /* Four links of equal widths */
 		text-align: center;
-		
-		
+		height: 75px;
+		border: none;
+		cursor: pointer;
+		background-color: white;
+	}
+
+	.mapButton:hover {
+		background-color: #F0F0F0;
 	}
 
 	#errorText{

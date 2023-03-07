@@ -1,5 +1,6 @@
 import {redirect} from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types"
+import type { Actions } from './$types'
 
 export const load = (async (event) => {
 
@@ -45,3 +46,33 @@ export const load = (async (event) => {
 		}
 		
 }) satisfies PageServerLoad;
+
+export const actions: Actions = {
+	default: async ({cookies, request}) => {
+
+		// Returns data from the submitted form
+		const formData = await request.formData();
+
+		let url = "http://38.242.137.81:8000/api/monsters/add-score/"
+		const data = {
+			"TM_ID": 0,
+			"T1Score": 0,
+			"T2Score": 1,
+			"T3Score": 2
+		};
+
+		const packet: RequestInit = {
+			headers: {
+				"content-type": "application/json; charset=UTF-8",
+				"Authorization": `Bearer ${cookies.get('AccessToken')}`
+			},
+			body: JSON.stringify(data),
+			method: "POST",
+			mode: "cors"
+		}
+
+		await fetch(url, packet).then((response) => response.json()).then((out) => {
+			console.log(out);
+		})
+	}
+}
