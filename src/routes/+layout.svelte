@@ -9,9 +9,9 @@
 <div class="wrapper">
 	<div class="container">
  		<div class="images">
-   		<img src="green.png" alt="A green blob in the top left corner of the screen" class="green" />
-    	<img src="red.png" alt="A red blob in the bottom left corner of the screen" class="red" />
-    	<img src="pale.png" alt="A pale brown blob in the bottom right corner of the screen" class="pale" />
+			<img src="/images/green.png" alt="A green blob in the top left corner of the screen" class="green" />
+			<img src="/images/red.png" alt="A red blob in the bottom left corner of the screen" class="red" />
+			<img src="/images/pale.png" alt="A pale brown blob in the bottom right corner of the screen" class="pale" />
   	</div>
 		<div class="header">
 			<a href="/" class="home">Home</a>
@@ -28,8 +28,8 @@
 			{/if}
 		</div>
 	</div>
-	<img src="left_plant.png" alt="An inked plant in the bottom left of the screen" class="left_plant"/>
-  <img src="right_plant.png" alt="An inked plant in the bottom right of the screen" class="right_plant"/>
+	<img src="/images/left_plant.png" alt="An inked plant in the bottom left of the screen" class="left_plant"/>
+	<img src="/images/right_plant.png" alt="An inked plant in the bottom right of the screen" class="right_plant"/>
 </div>
 
 <slot></slot>
