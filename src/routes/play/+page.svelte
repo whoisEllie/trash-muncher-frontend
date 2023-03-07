@@ -1,9 +1,14 @@
 <script lang="ts">
 	import { Loader } from '@googlemaps/js-api-loader';
 	import { onMount } from 'svelte';
+	import {AmbientLight,DirectionalLight,Matrix4,PerspectiveCamera,Scene,WebGLRenderer,Vector3,} from 'three';
+	import * as THREE from "three";
+	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+	import {latLngToVector3Relative, latLngToVector3,ThreeJSOverlayView} from '@googlemaps/three';
 
 	var errorMessage: string = "Awaiting map.";
 	let monsterurl = "http://38.242.137.81:8000/api/monsters/add-score/"
+	var map: undefined;
 
 	onMount(() => {
 		getPosition().then((position: Position) =>{
@@ -14,7 +19,7 @@
 				errorMessage = "Location access blocked, please enable."
 		})
 
-		updateScore(0, [1, 1, 1]);
+		//updateScore(0, [1, 1, 1]);
 	})
 
 	function getPosition(){
@@ -43,7 +48,9 @@
 	await loader
 		.load()
 		.then((google) => {
-			new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
+			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
+			const webglOverlayView = new google.maps.WebGLOverlayView();
+			initWebglOverlayView(map,webglOverlayView);
 		})
 		.catch((e) => {
 			//do something :sparkle:
@@ -69,6 +76,100 @@
 			console.log(out);
 		}))
 	}
+
+	function initWebglOverlayView(map: undefined, webglOverlayView:undefined) {
+  		let scene:Scene, renderer:WebGLRenderer, camera:PerspectiveCamera, gltfLoader:GLTFLoader;
+		  scene = new Scene();
+    camera = new PerspectiveCamera();
+
+    const ambientLight = new AmbientLight(0xffffff, 0.75); // Soft white light.
+
+    scene.add(ambientLight);
+
+    const directionalLight = new DirectionalLight(0xffffff, 0.25);
+
+    directionalLight.position.set(0.5, -1, 0.5);
+    scene.add(directionalLight);
+    // Load the model.
+    gltfLoader = new GLTFLoader();
+    let i = 0;
+    //monsterArray.forEach(element => {
+		
+	let veccer = latLngToVector3Relative({lat:50.75646948193597,lng:-3.5397420013942633},{lat:0,lng:0});
+	console.log(veccer);
+	
+    gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+		gltf.scene.position.set(veccer.x,veccer.y,veccer.z);
+    	gltf.scene.scale.set(50, 50, 50);
+    	gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
+    	scene.add(gltf.scene);
+    })
+	let veccer2 = latLngToVector3Relative({lat:50.72747343933379,lng:-3.5207198022872284},{lat:0,lng:0});
+	gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+		gltf.scene.position.set(veccer2.x,veccer2.y,veccer2.z);
+    	gltf.scene.scale.set(50, 50, 50);
+    	gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
+    	scene.add(gltf.scene);
+    })
+	let veccer3 = latLngToVector3Relative({lat:50.73646948193597,lng:-3.5317420013942633},{lat:0,lng:0})
+	gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+		gltf.scene.position.set(veccer3.x,veccer3.y,veccer3.z);
+    	gltf.scene.scale.set(50, 50, 50);
+    	gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
+    	scene.add(gltf.scene);
+    })
+	new ThreeJSOverlayView({
+            //anchor, // can also anchor to different lat, lng, altitude
+            map,
+            scene,
+			THREE
+        });
+
+  	//webglOverlayView.onAdd = () => {
+    // Set up the scene.
+    
+
+    // loader.load(source, (gltf) => {
+    //   gltf.scene.scale.set(10, 10, 10);
+    //   gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
+    //   scene.add(gltf.scene);
+    // });
+    //};
+
+  //webglOverlayView.onContextRestored = ({ gl }) => {
+    // Create the js renderer, using the
+    // maps's WebGL rendering context.
+//     renderer = new WebGLRenderer({
+//       canvas: gl.canvas,
+//       context: gl,
+//       ...gl.getContextAttributes(),
+//     });
+//     renderer.autoClear = false;
+//     // Wait to move the camera until the 3D model loads.
+//     gltfLoader.manager.onLoad = () => {
+//       renderer.setAnimationLoop(() => {
+//         webglOverlayView.requestRedraw();
+//       })}
+//   };
+
+//   webglOverlayView.onDraw = ({ gl, transformer }) => {
+//     const latLngAltitudeLiteral = {
+//       lat: 50,
+//       lng: -3,
+//       altitude: 50,
+//     };
+//     // Update camera matrix to ensure the model is georeferenced correctly on the map.
+//     const matrix = transformer.fromLatLngAltitude(latLngAltitudeLiteral);
+
+//     camera.projectionMatrix = new Matrix4().fromArray(matrix);
+//     webglOverlayView.requestRedraw();
+//     renderer.render(scene, camera);
+//     // Sometimes it is necessary to reset the GL state.
+//     renderer.resetState();
+//   };
+
+//   webglOverlayView.setMap(map);
+}
 
 	
 </script>

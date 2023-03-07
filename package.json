@@ -20,6 +20,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@googlemaps/js-api-loader": "^1.15.1"
+		"@googlemaps/js-api-loader": "^1.15.1",
+		"@googlemaps/three": "^3.0.10",
+		"three": "^0.150.1"
 	}
 }
