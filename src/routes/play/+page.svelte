@@ -5,10 +5,23 @@
 	var errorMessage: string = "Awaiting map.";
 
 	onMount(() => {
-		navigator.geolocation.getCurrentPosition((pos) => {
-			createMap(pos.coords.latitude, pos.coords.longitude)	
+		getPosition().then((position:Position) =>{
+  			//document.getElementById("mapAwait").hidden = true;
+  			createMap(position.coords.latitude,position.coords.longitude);
+		}).catch((err) => {
+  			console.log(err);
+  			(document.getElementById("awaitText") as HTMLElement).textContent="Permission not granted. Pls grant <3"
 		})
+		//navigator.geolocation.getCurrentPosition((pos) => {
+		//	createMap(pos.coords.latitude, pos.coords.longitude)	
+		//})
 	})
+
+	function getPosition(){
+  		return new Promise((resolve,reject) => {
+    		navigator.geolocation.getCurrentPosition(resolve,reject,{maximumAge: 100,enableHighAccuracy:true})
+  		});
+	}
 
 	async function createMap(latitude: number, longitude: number) {
 		const loader = new Loader({
