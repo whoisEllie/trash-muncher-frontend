@@ -5,15 +5,22 @@
 		{id: '1', image: '/images/tempmap.png'}
 	]
 	
+	function loadImages() {
+		// do stuff here
+	}
+	
 	function removeButton(event) {
 		this.parentNode.remove()
 	}
 </script>
 
 <div class = "grid">
+	<div class = "refresh">
+		<button type="button" name="add" on:click={loadImages}>+</button>
+	</div>
 	{#each testImages as i}
 		<div class = "item">
-			<img src={i.image} style="height: 100%;">
+			<img src={i.image}>
 			<button type="button" class="remove" on:click={removeButton}>X</button>
 		</div>
 	{/each}
@@ -33,16 +40,14 @@
 	}
 	
 	.item{
-		max-height: 100%;
 		height: 50%;
-
 	}
 	
 	.item > img {
 		height: 100%; /* ensures image fits in grid */
 	}
 	
-	.add {
+	.refresh {
 		position: absolute;
 		top: 100%;
 		left: 100%;
