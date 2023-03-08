@@ -1,55 +1,23 @@
 <script lang="ts">
-	var count = 0
-	let item = [] // array of divs
-	let grid, remove, body
+
+	let testImages = [
+		{id: '0', image: '/images/the-blowup-t06aN6vewaQ-unsplash.jpg'},
+		{id: '1', image: '/images/tempmap.png'}
+	]
 	
-	function addDiv(event) {
-		count += 1
-		
-		var clone = item[0].cloneNode(true)
-		var removeButton = remove.cloneNode(true)
-		
-		clone.id = "item" + count
-		grid.appendChild(clone)
-				
-		var image = document.createElement("img")
-		image.style.height = "100%"
-		
-		// example of changing image source below
-		
-		/*if (count == 1) {
-			image.src = '/images/the-blowup-t06aN6vewaQ-unsplash.jpg'
-		}
-		
-		if (count == 2) {
-			image.src = '/images/tempmap.png'
-		}*/
-		
-		clone.appendChild(image)
-		
-		removeButton.style.visibility = "visible";
-		clone.appendChild(removeButton)
-		
-		removeButton.onclick = function() {
-			this.parentNode.remove()
-			count -= 1
-		}
-		
-		item[count] = clone // can now reference using item[count]
+	function removeButton(event) {
+		this.parentNode.remove()
 	}
 </script>
 
-<div class = "grid" bind:this={grid}>
-	<div class = "add">
-		<button type="button" name="add" on:click={addDiv}>+</button>
-	</div>
+<div class = "grid">
+	{#each testImages as i}
+		<div class = "item">
+			<img src={i.image} style="height: 100%;">
+			<button type="button" class="remove" on:click={removeButton}>X</button>
+		</div>
+	{/each}
 </div>
-
-<div class = "item" bind:this={item[count]}>
-	<!-- template div -->
-</div>
-
-<button type="button" class="remove" bind:this={remove} style="visibility: hidden;">X</button>
 
 <style>
 	.grid {
