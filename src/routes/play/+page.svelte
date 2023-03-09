@@ -31,7 +31,7 @@
   		const response = await fetch(url, { method: "get" });
 		console.log(response)
     	return await response.json();
-}
+	}
 
 	function getPosition(){
   		return new Promise((resolve,reject) => {
@@ -110,10 +110,10 @@
     	let i = 0;
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		const veccer = overlay.latLngAltToVector3({lat:50.75646948193597, lng:-3.5397420013942633});
-    	gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+    	gltfLoader.load("/models/sans.gltf", (gltf) => {
 			gltf.scene.position.set(veccer.x,veccer.y,1);
-    		gltf.scene.scale.set(50, 50, 50);
-			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
+    		gltf.scene.scale.set(80, 80, 80);
+			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
 			gltfs.push(gltf.scene);
 		})
@@ -121,7 +121,7 @@
 		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
 			gltf.scene.position.set(veccer2.x,veccer2.y,veccer2.z);
 			gltf.scene.scale.set(50, 50, 50);
-			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
+			gltf.scene.rotation.y = Math.PI; // Rotations are in radians.
 			gltfs.push(gltf.scene);
 			scene.add(gltf.scene);
 			
@@ -148,8 +148,10 @@
 			overlay.requestRedraw();
 			const intersections = overlay.raycast(vector);
 			console.log(intersections);
-			if(intersections.size>0){
+			if(intersections.length>0){
+				console.log("hi")
 			intersections.forEach(element => {
+				console.log("hi");
 				element.object.material.color.r=0.06;
 			});
 			}
@@ -160,7 +162,7 @@
 
 		const animate = () => {
 			gltfs.forEach(element => {
-				element.rotateZ(MathUtils.degToRad(0.2));
+				element.rotateY(MathUtils.degToRad(-1));
 			});
 			overlay.requestRedraw();
   			
