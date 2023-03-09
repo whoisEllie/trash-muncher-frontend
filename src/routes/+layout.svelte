@@ -195,6 +195,7 @@
 		.container {
 			width: 100vw; /* this way, the margins are equal regardless of aspect ratio */
 			height: 100vh;		
+			height: 100svh;
 		}
 
 		a {
