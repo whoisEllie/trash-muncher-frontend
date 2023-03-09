@@ -21,7 +21,7 @@ export const load = (async (event) => {
 
 		try {
 			await event.fetch(url, packet).then((response) => response.json()).then((out) => {
-
+			//await event.fetch(url, packet).then((response) => {console.log(response)}).then((out) => {
 				if (out['detail'] === 'Authentication credentials were not provided.')
 				{
 					throw redirect(302, '/login')
@@ -45,6 +45,7 @@ export const load = (async (event) => {
 			throw redirect(302, '/login')
 		}
 		
+		
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
@@ -53,26 +54,38 @@ export const actions: Actions = {
 		// Returns data from the submitted form
 		const formData = await request.formData();
 
-		let url = "http://38.242.137.81:8000/api/monsters/add-score/"
-		const data = {
-			"TM_ID": 0,
-			"T1Score": 0,
-			"T2Score": 1,
-			"T3Score": 2
-		};
+		// let url = "http://38.242.137.81:8000/api/monsters/add-score/"
+		// const data = {
+		// 	"TM_ID": 0,
+		// 	"T1Score": 0,
+		// 	"T2Score": 1,
+		// 	"T3Score": 2
+		// };
 
+		// const packet: RequestInit = {
+		// 	headers: {
+		// 		"content-type": "application/json; charset=UTF-8",
+		// 		"Authorization": `Bearer ${cookies.get('AccessToken')}`
+		// 	},
+		// 	body: JSON.stringify(data),
+		// 	method: "POST",
+		// 	mode: "cors"
+		// }
+
+		// await fetch(url, packet).then((response) => response.json()).then((out) => {
+		// 	console.log(out);
+		// })
+		let url = "http://38.242.137.81:8000/api/monsters/get-tms"
 		const packet: RequestInit = {
 			headers: {
-				"content-type": "application/json; charset=UTF-8",
+				//"content-type": "application/json; charset=UTF-8",
 				"Authorization": `Bearer ${cookies.get('AccessToken')}`
 			},
-			body: JSON.stringify(data),
-			method: "POST",
+			method: "GET",
 			mode: "cors"
 		}
-
 		await fetch(url, packet).then((response) => response.json()).then((out) => {
-			console.log(out);
+			console.log("out: ",out);
 		})
 	}
 }

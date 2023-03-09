@@ -21,9 +21,17 @@
   			console.log(err);
 				errorMessage = "Location access blocked, please enable."
 		})
-
+		getMonsters();
+		//setInterval(getMonsters,1000);
 		//updateScore(0, [1, 1, 1]);
 	})
+
+	async function getMonsters(){
+  		const url="http://38.242.137.81:8000/api/monsters/get-tms";
+  		const response = await fetch(url, { method: "get" });
+		console.log(response)
+    	return await response.json();
+}
 
 	function getPosition(){
   		return new Promise((resolve,reject) => {
@@ -140,9 +148,14 @@
 			overlay.requestRedraw();
 			const intersections = overlay.raycast(vector);
 			console.log(intersections);
+			if(intersections.size>0){
 			intersections.forEach(element => {
 				element.object.material.color.r=0.06;
 			});
+			}
+			else{
+				//do map things	
+			}
 		})
 
 		const animate = () => {
