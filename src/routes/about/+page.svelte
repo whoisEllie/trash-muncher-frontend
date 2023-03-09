@@ -40,23 +40,23 @@
 		align-items: center;
 	}
 
-  .split-grid {
+    .split-grid {
 		max-width: 1280px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
+	    display: grid;
+	    grid-template-columns: repeat(2, 1fr);
+    }
 
-  .about-card {
-    min-width: 300px;
+    .about-card {
+	    min-width: 300px;
 		max-width: 400px;
-    height: 100%;
-    border-radius: 15px;
-    background-color: #E0E0E0;
-    padding: 15px;
-    margin: 0rem 3rem;
-	  font-family: 'Chilanka', cursive;
-    box-shadow: 0px 0px 16px #00000044;
-  }
+	    height: 100%;
+	    border-radius: 15px;
+	    background-color: #E0E0E0;
+	    padding: 15px;
+	    margin: 0rem 3rem;
+	    font-family: 'Montseratt', sans-serif;
+	    box-shadow: 0px 0px 16px #00000044;
+	 }
 
 	.home_page {
 		display: flex;
