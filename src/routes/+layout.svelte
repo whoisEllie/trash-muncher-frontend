@@ -191,7 +191,7 @@
 		}
 	}
 
-	@media screen and (max-width:  300px) {
+	@media screen and (max-width:  450px) {
 		.container {
 			width: 100vw; /* this way, the margins are equal regardless of aspect ratio */
 			height: 100vh;		
