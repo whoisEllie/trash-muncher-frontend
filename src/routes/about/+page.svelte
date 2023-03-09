@@ -48,7 +48,7 @@
 
     .about-card {
 	    min-width: 300px;
-		max-width: 400px;
+			max-width: 400px;
 	    height: 100%;
 	    border-radius: 15px;
 	    background-color: #E0E0E0;
@@ -115,7 +115,7 @@
 		transition: all 0.5s ease 0.0s;
 	}
 
-	@media screen and (max-width: 900px) {
+	@media screen and (max-width: 950px) {
 
 		.about-wrapper {
 			margin-bottom: 5vh;
@@ -179,6 +179,11 @@
 			font-size: 1rem;
 			min-width: 80px;
 			height: 60px;
+		}
+
+		.about-card {
+			min-width: 100px;
+			max-width: 200px;
 		}
 	}
 
