@@ -21,7 +21,6 @@ export const actions: Actions = {
 
 
 		await fetch(url, packet).then((response) => response.json()).then((out) => {
-			console.log(out);
 
 			if (out['message'] === 'Invalid username or password!!') {
 				console.log("Invalid username and shit lol")

@@ -32,9 +32,9 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-    height: 80%;
-    display: flex;
-    flex-direction: column;
+    	height: 80%;
+	    display: flex;
+   		flex-direction: column;
 		justify-content: center;
 	}
 

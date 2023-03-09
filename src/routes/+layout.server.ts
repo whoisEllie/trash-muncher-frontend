@@ -6,7 +6,6 @@ export const load = (async (event) => {
 	let username: String = ""
 
 	let url = "http://38.242.137.81:8000/api/users/me/"
-	console.log(event.cookies.get('AccessToken'))
 
 	const packet: RequestInit = {
 		headers: {
@@ -32,7 +31,6 @@ export const load = (async (event) => {
 					
 				username = out['user']['username']
 				login_status = true;
-				console.log(username)
 			})
 
 			return {
@@ -40,7 +38,7 @@ export const load = (async (event) => {
 				username: username,
 			};
 		} catch (error) {
-			
+		
 		}
 		
 }) satisfies LayoutServerLoad;

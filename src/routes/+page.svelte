@@ -7,7 +7,7 @@
 			<p class="title-trash">TRASH</p>
 			<p class="title-munchers">MUNCHERS</p>
 		</div>
-		<p class="description">A location based "cookie-clicker" type game to promote sustainability at the University of Exeter</p>
+		<p class="description">A location based "cookie-clicker" type game to <br>promote sustainability at University of Exeter</p>
 		<a class="start" href="/play">Let's go!</a>
 	</div>
 </div>
