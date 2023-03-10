@@ -6,6 +6,7 @@
 	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 	import {latLngToVector3Relative, latLngToVector3} from '@googlemaps/three';
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
+    import { enhance } from '$app/forms';
 
 
 	var errorMessage: string = "Awaiting map.";
@@ -147,12 +148,12 @@
     		vector.y = 1 - 2 * (y / height);
 			overlay.requestRedraw();
 			const intersections = overlay.raycast(vector);
-			console.log(intersections);
+			console.log(intersections.length);
 			if(intersections.length>0){
 				console.log("hi")
-			intersections.forEach(element => {
-				console.log("hi");
-				element.object.material.color.r=0.06;
+				intersections.forEach(element => {
+					console.log("hi");
+					element.object.material.color.r=0.06;
 			});
 			}
 			else{
@@ -187,7 +188,7 @@
 	  <button  class="mapButton">Toggle Location</button>
 	  <button class="mapButton" >Change Zoom</button>
 		<!--onclick="toggleLocation()" onclick = "changeZoom()"-->
-		<form method="POST">
+		<form method="POST" use:enhance>
 			<button>POST!</button>
 		</form>
 	</div>

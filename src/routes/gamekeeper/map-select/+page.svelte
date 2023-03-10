@@ -6,9 +6,12 @@
 	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 	import {latLngToVector3Relative, latLngToVector3} from '@googlemaps/three';
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
+    import { enhance } from '$app/forms';
 
 
 	var errorMessage: string = "Awaiting map.";
+    let latForm: number;
+    let lngForm: number;
 	let monsterurl = "http://38.242.137.81:8000/api/monsters/add-score/"
 	var map: undefined;
 	var overlay;
@@ -138,7 +141,7 @@
 		
 		console.log(gltfs)
 		var raycaster=new Raycaster();
-		map.addListener('click', event => {
+		map.addListener('click', (event) => {
 			const {domEvent} = event;
     		const {left, top, width, height} = map.getDiv().getBoundingClientRect();
     		const x = domEvent.clientX - left;
@@ -148,12 +151,15 @@
 			overlay.requestRedraw();
 			const intersections = overlay.raycast(vector);
 			console.log(intersections);
-			if(intersections.size>0){
+			if(intersections.length>0){
 			intersections.forEach(element => {
+                console.log("hi")
 				element.object.material.color.r=0.06;
 			});
 			}
 			else{
+                latForm=event.latLng.lat();
+                lngForm=event.latLng.lng();
 				//do map things	
 			}
 		})
@@ -185,7 +191,9 @@
 	  <button  class="mapButton">Toggle Location</button>
 	  <button class="mapButton" >Change Zoom</button>
 		<!--onclick="toggleLocation()" onclick = "changeZoom()"-->
-		<form method="POST">
+		<form method="POST" use:enhance>
+            <input name="latitude" value={latForm}>
+            <input name="longitude" value={lngForm}>
 			<button>POST!</button>
 		</form>
 	</div>

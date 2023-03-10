@@ -48,6 +48,31 @@ export const load = (async (event) => {
 		
 }) satisfies PageServerLoad;
 
-export function test(){
-	cookies	
+export const actions: Actions = {
+	default: async ({cookies, request}) => {
+
+		// Returns data from the submitted form
+		const formData = await request.formData();
+
+		let url = "http://38.242.137.81:8000/api/monsters/add-tm"
+		const data = {
+			"Longitude":formData.get("longitude"),
+			"Latitude":formData.get("latitude")
+		};
+
+		const packet: RequestInit = {
+			headers: {
+				"content-type": "application/json; charset=UTF-8",
+				"Authorization": `Bearer ${cookies.get('AccessToken')}`
+			},
+			body: JSON.stringify(data),
+			method: "POST",
+			mode: "cors"
+		}
+
+		await fetch(url, packet).then((response) => {console.log(response)})
+		//.then((out) => {
+		//	console.log(out);
+		//})
+	}
 }
