@@ -47,3 +47,7 @@ export const load = (async (event) => {
 		
 		
 }) satisfies PageServerLoad;
+
+export function test(){
+	cookies	
+}

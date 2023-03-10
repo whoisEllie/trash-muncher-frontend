@@ -52,7 +52,7 @@
 			lng: longitude
 		},
 		tilt: 45,
-		zoom: 4,
+		zoom: 15,
 		mapId: '805b0b106a1a291d'
 	}
 
