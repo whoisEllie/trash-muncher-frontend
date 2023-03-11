@@ -6,31 +6,31 @@
 		alert("reloaded")
 	}
 
-	async function denyButton(event) {
-		let data = {
-			"id": Number(this.id)
-		}
+	// async function denyButton(event) {
+	// 	let data = {
+	// 		"id": Number(this.id)
+	// 	}
 
-		await fetch("http://38.242.137.81:8000/api/images/delete-image/", {
-			method: 'POST',
-			body: JSON.stringify(data),
-			mode: "cors",
-			headers: {"content-type": "application/json; charset=UTF-8"}
-		})
-		// .then((response) => response.json().then((out) => {
-		// 	console.log(out);
-		// }))
+	// 	await fetch("http://38.242.137.81:8000/api/images/delete-image/", {
+	// 		method: 'POST',
+	// 		body: JSON.stringify(data),
+	// 		mode: "cors",
+	// 		headers: {"content-type": "application/json; charset=UTF-8"}
+	// 	})
+	// 	// .then((response) => response.json().then((out) => {
+	// 	// 	console.log(out);
+	// 	// }))
 
-		alert(JSON.stringify(data))
+	// 	alert(JSON.stringify(data))
 
-		location.reload()
-		alert("reloaded")
-		// alert(JSON.stringify(data))
-	}
+	// 	location.reload()
+	// 	alert("reloaded")
+	// 	// alert(JSON.stringify(data))
+	// }
 	
-	function acceptButton(event) {
-		reloadImages(event)
-	}
+	// function acceptButton(event) {
+	// 	reloadImages(event)
+	// }
 	
 </script>
 
@@ -38,8 +38,18 @@
 	{#each data.images as i}
 		<div class = "item">
 			<img src={i.image}>
-			<button type="button" class="deny" id={i.id} on:click={denyButton}>X</button>
-			<button type="button" class="accept" id={i.id} on:click={acceptButton}>A</button>
+			<form method="POST" action="?/deny">
+				<input type="hidden" name="id" value={i.id}>
+				<input type="hidden" name="team" value={i.team}>
+				<input type="hidden" name="tm" value={i.monster}>
+
+				<button type="submit" class="deny" formaction="?/deny">X</button>
+			</form>
+
+			<form method="POST" action="?/accept">
+				<input type="hidden" name="id" value={i.id}>
+				<button type="submit" class="accept" formaction="?/accept">A</button>
+			</form>
 		</div>
 	{/each}
 	<div class = "refresh">
