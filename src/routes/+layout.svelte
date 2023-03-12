@@ -191,10 +191,11 @@
 		}
 	}
 
-	@media screen and (max-width:  300px) {
+	@media screen and (max-width:  450px) {
 		.container {
-			width: 100vw; /* this way, the margins are equal regardless of aspect ratio */
+			width: 100vw;
 			height: 100vh;		
+			height: 100svh; /* svh (small view height) helps to keep buttons visible below dynamic elements on mobile browsers. There's a regular vh above for compatibility */
 		}
 
 		a {
