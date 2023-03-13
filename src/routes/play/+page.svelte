@@ -9,11 +9,17 @@
     import { enhance } from '$app/forms';
 
 
+	/** @type {import('./$types').PageData} */
+	export let data;
+
 	var errorMessage: string = "Awaiting map.";
-	let monsterurl = "http://38.242.137.81:8000/api/monsters/add-score/"
 	var map: undefined;
 	var overlay;
 	var vector = new Vector2();
+	let monster={}
+	var gameData = [];
+	const gltfLoader = new GLTFLoader();
+	
 	onMount(() => {
 		getPosition().then((position: Position) =>{
   			//document.getElementById("mapAwait").hidden = true;
@@ -22,17 +28,7 @@
   			console.log(err);
 				errorMessage = "Location access blocked, please enable."
 		})
-		getMonsters();
-		//setInterval(getMonsters,1000);
-		//updateScore(0, [1, 1, 1]);
 	})
-
-	async function getMonsters(){
-  		const url="http://38.242.137.81:8000/api/monsters/get-tms";
-  		const response = await fetch(url, { method: "get" });
-		console.log(response)
-    	return await response.json();
-	}
 
 	function getPosition(){
   		return new Promise((resolve,reject) => {
@@ -61,36 +57,17 @@
 		.load()
 		.then((google) => {
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
-			initWebglOverlayView(map);
+			let scene = initWebglOverlayView(map);
+			scene = drawMonsters(scene);
 		})
 		.catch((e) => {
 			//do something :sparkle:
 		});
 	}
 
-	async function updateScore(id: number, scores: number[]) {
-		const data = {
-			"TM_ID": id,
-			"T1Score": scores[0],
-			"T2Score": scores[1],
-			"T3Score": scores[2]
-		};
-
-		const packet: RequestInit = {
-			headers: {"content-type": "application/json; charset=UTF-8"},
-			body: JSON.stringify(data),
-			method: "POST",
-			mode: "cors"
-		}
-
-		await fetch(monsterurl, packet).then((response) => response.json().then((out) => {
-			console.log(out);
-		}))
-	}
-
+	
 	function initWebglOverlayView(map: undefined) {
-		var gltfs = new Array();
-  		let renderer:WebGLRenderer, camera:PerspectiveCamera, gltfLoader:GLTFLoader;
+  		let camera:PerspectiveCamera;
 
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
 		overlay.setMap(map);
@@ -106,40 +83,11 @@
 		
     	directionalLight.position.set(0.5, -1, 0.5);
     	scene.add(directionalLight);
-    	// Load the model.
-    	gltfLoader = new GLTFLoader();
-    	let i = 0;
+    	// Sets a reference point for drawing onto the map (dont change its kinda important for setting relative points)
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
-		const veccer = overlay.latLngAltToVector3({lat:50.75646948193597, lng:-3.5397420013942633});
-    	gltfLoader.load("/models/sans.gltf", (gltf) => {
-			gltf.scene.position.set(veccer.x,veccer.y,1);
-    		gltf.scene.scale.set(80, 80, 80);
-			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
-			scene.add(gltf.scene);
-			gltfs.push(gltf.scene);
-		})
-		const veccer2 = overlay.latLngAltToVector3({lat:50.72747343933379,lng:-3.5207198022872284});
-		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
-			gltf.scene.position.set(veccer2.x,veccer2.y,veccer2.z);
-			gltf.scene.scale.set(50, 50, 50);
-			gltf.scene.rotation.y = Math.PI; // Rotations are in radians.
-			gltfs.push(gltf.scene);
-			scene.add(gltf.scene);
-			
-		})
-		const veccer3 = overlay.latLngAltToVector3({lat:50.73646948193597,lng:-3.5317420013942633});
-		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
-			gltf.scene.position.set(veccer3.x,veccer3.y,veccer3.z);
-			gltf.scene.scale.set(50, 50, 50);
-			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
-			scene.add(gltf.scene);
-			gltfs.push(gltf.scene);
-		})
-
 		
-		console.log(gltfs)
-		var raycaster=new Raycaster();
-		map.addListener('click', event => {
+		//creates a listener to detect mouse clicks onto the map. Raycasts for 3d objects, and shows coordinates when clicking everywhere else
+		map.addListener('click', (event) => {
 			const {domEvent} = event;
     		const {left, top, width, height} = map.getDiv().getBoundingClientRect();
     		const x = domEvent.clientX - left;
@@ -147,23 +95,25 @@
     		vector.x = 2 * (x / width) - 1;
     		vector.y = 1 - 2 * (y / height);
 			overlay.requestRedraw();
+			//detects if you click onto an object
 			const intersections = overlay.raycast(vector);
-			console.log(intersections.length);
+
 			if(intersections.length>0){
-				console.log("hi")
-				intersections.forEach(element => {
-					console.log("hi");
-					element.object.material.color.r=0.06;
+			intersections.forEach(element => {
+				gameData.forEach(m => {
+					//detects that the correct monster has been clicked, then sets it as the current monster
+					if (m.model==element.object.parent){
+						monster=m.monster;
+					}
+				});
+				element.object.material.color.r=0.06;
 			});
-			}
-			else{
-				//do map things	
 			}
 		})
 
-		const animate = () => {
-			gltfs.forEach(element => {
-				element.rotateY(MathUtils.degToRad(-1));
+		const animate = () => { //cool animations
+			gameData.forEach(element => {
+				element.model.rotateZ(MathUtils.degToRad(0.2));
 			});
 			overlay.requestRedraw();
   			
@@ -176,20 +126,36 @@
 
 		// start animation loop
 		requestAnimationFrame(animate);
+		return scene;
 }
 
+function drawMonsters(scene){
+	//loads the gltf models
+	data.monsters.forEach(element => {
+		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
+			gltf.scene.position.set(vector.x,vector.y,vector.z);
+    		gltf.scene.scale.set(50, 50, 50);
+			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
+			scene.add(gltf.scene);
+			gameData.push({"monster":element,"model":gltf.scene})
+		})
+		
+	});
+	return scene;
+}
 	
 </script>
 
 
 <div class="map-modal">
 	<div class="below_map">
-	  <button class="mapButton" id="enterScore">Insert trash</button>
 	  <button  class="mapButton">Toggle Location</button>
 	  <button class="mapButton" >Change Zoom</button>
 		<!--onclick="toggleLocation()" onclick = "changeZoom()"-->
-		<form method="POST" use:enhance>
-			<button>POST!</button>
+		<form method="POST" action="?/addScore" use:enhance>
+			<button>Eat TRASH</button>
+			<input value>
 		</form>
 	</div>
 
