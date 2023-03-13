@@ -20,6 +20,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@googlemaps/js-api-loader": "^1.15.1"
+		"@googlemaps/js-api-loader": "^1.15.1",
+		"@googlemaps/three": "^3.0.10",
+		"@ubilabs/threejs-overlay-view": "^0.7.1",
+		"three": "^0.150.1"
 	}
 }

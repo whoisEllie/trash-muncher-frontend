@@ -6,6 +6,7 @@ export const load = (async (event) => {
 
 	let login_status: Boolean = false;
 	let username: String = ""
+	let monsters= [];
 
 	let url = "http://38.242.137.81:8000/api/users/me/"
 	console.log(event.cookies.get('AccessToken'))
@@ -20,8 +21,8 @@ export const load = (async (event) => {
 		}
 
 		try {
-			await event.fetch(url, packet).then((response) => response.json()).then((out) => {
-
+			await event.fetch(url, packet).then((response) => response.json()).then(async (out) => {
+			//await event.fetch(url, packet).then((response) => {console.log(response)}).then((out) => {
 				if (out['detail'] === 'Authentication credentials were not provided.')
 				{
 					throw redirect(302, '/login')
@@ -35,31 +36,36 @@ export const load = (async (event) => {
 					
 				username = out['user']['username']
 				login_status = true;
+
+				url="http://38.242.137.81:8000/api/monsters/get-tms"
+				await event.fetch(url,packet).then((response) => response.json().then((out) => {
+					monsters=out;
+				}))
 			})
 
 			return {
 				logged_in: login_status,
-				username: username 
+				username: username,
+				monsters:monsters, 
 			};
 		} catch (error) {
 			throw redirect(302, '/login')
 		}
 		
+		
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	default: async ({cookies, request}) => {
-
-		// Returns data from the submitted form
+	addScore: async ({cookies, request}) => {
 		const formData = await request.formData();
-
-		let url = "http://38.242.137.81:8000/api/monsters/add-score/"
 		const data = {
-			"TM_ID": 0,
-			"T1Score": 0,
-			"T2Score": 1,
-			"T3Score": 2
+			"TM_ID":Number(formData.get("id")),
+			"T1Score":Number(formData.get("t1score")),
+			"T2Score":Number(formData.get("t2score")),
+			"T3Score":Number(formData.get("t3score"))
 		};
+		console.log(data);
+		let url = "http://38.242.137.81:8000/api/monsters/add-score"
 
 		const packet: RequestInit = {
 			headers: {
@@ -70,9 +76,6 @@ export const actions: Actions = {
 			method: "POST",
 			mode: "cors"
 		}
-
-		await fetch(url, packet).then((response) => response.json()).then((out) => {
-			console.log(out);
-		})
+		await fetch(url, packet).then((response) => {})
 	}
 }
