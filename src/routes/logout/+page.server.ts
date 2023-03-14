@@ -21,6 +21,4 @@ export const load = (async (event) => {
 	event.cookies.delete('AccessToken');	
 	event.cookies.delete('RefreshToken');
 
-	throw redirect(301, '/');
-
 }) satisfies PageServerLoad;
