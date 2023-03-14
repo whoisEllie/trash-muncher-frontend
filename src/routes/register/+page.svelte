@@ -31,15 +31,21 @@
 				<input name="confirm-password" type="password" required>
 				<label for="">Confirm Password</label>
 			</div>
-			<div class="team-select">
-				<label for="">Pick a team!</label>
-				<select name="team" required>
-					<option value="Red">Red</option>
-					<option value="Blue">Blue</option>
-					<option value="Green">Green</option>
-				</select>
+			<div class="inputbox">
+				<input name="email" type="email" required>
+				<label for="">Email</label>
 			</div>
-			<button>Register</button>
+			<div class="team-select">
+				<center><label for="">Pick a team!</label><br>
+				<select name="team" class="team" required>
+					<optgroup>
+						<option value="Red">Red</option>
+						<option value="Blue">Blue</option>
+						<option value="Green">Green</option>
+					</optgroup>
+				</select></center>
+			</div>
+			<center><button>Register</button></center>
 			{ #if form?.error }
 				<div class="notice-error">
 					{form.error}
@@ -61,9 +67,9 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-    height: 80%;
-    display: flex;
-    flex-direction: column;
+    	height: 80%;
+	    display: flex;
+	    flex-direction: column;
 		justify-content: center;
 	}
 	
@@ -74,15 +80,16 @@
 		box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.4);
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		grid-template-rows: repeat(3, 2fr), 1fr;
+		grid-template-rows: repeat(4, 2fr), 1fr;
 		gap: 1rem;
 		grid-template-areas: 
 		". ."
 		". ."
 		". ."
+		". ."
 		"button button";
 
-  }
+	  }
 
 	.title {
 		display: grid;
@@ -139,6 +146,12 @@
 		font-weight: 400;
 		font-size: 1.2em;
 	}
+	
+	.team {
+		width: 50%;
+		font-family: "Montserrat", sans-serif;
+		font-size: 0.7em;
+	}
 
 	.team-select {
 		font-family: "Montserrat", sans-serif;
@@ -146,13 +159,31 @@
 		font-size: 1.3em;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 	}
 
 	button {
-		grid-area: button;
-		height: 40px;
+		height: 50px;
 		cursor: pointer;
+		display: flex;
+		border: none;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		border-radius: 20px;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.2rem;
+		background-color: #B5D3D2;
+		transition: all 0.5s;
+		padding: 0 30px;
+		width: 180px;
+		text-decoration: none;
+		color: black;
+	}
+	
+	button:hover {
+		background-color: #DFC9B5;
+		border-radius: 25px;
+		transition: all 0.5s ease 0.0s;
 	}
 
 	@media screen and (max-width: 600px) {
@@ -182,6 +213,10 @@
 
 		.title-munchers {
 			transform: translate(0rem, 0rem);
+		}
+		button {
+			font-size: 1rem;
+			width: 100px;
 		}
 	}
 </style>

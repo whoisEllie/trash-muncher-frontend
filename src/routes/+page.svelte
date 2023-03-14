@@ -7,7 +7,7 @@
 			<p class="title-trash">TRASH</p>
 			<p class="title-munchers">MUNCHERS</p>
 		</div>
-		<p class="description">A location based "cookie-clicker" type game to <br>promote sustainability at University of Exeter</p>
+		<p class="description">A location-based game to promote <br>sustainability at the University of Exeter</p>
 		<a class="start" href="/play">Let's go!</a>
 	</div>
 </div>
@@ -69,7 +69,7 @@
 		justify-content: center;
 		align-items: center;
 		cursor: pointer;
-		border-radius: 15px;
+		border-radius: 20px;
 		font-family: 'Chilanka', cursive;
 		font-size: 1.5rem;
 		background-color: #B5D3D2;
