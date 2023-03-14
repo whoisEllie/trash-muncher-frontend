@@ -7,6 +7,7 @@
 		<p class="title-munchers">MUNCHERS</p>
 	</div>
   <form class="form" method="POST">
+  		<br>
 		<div class="inputbox">
 			<input name="username" type="text" required>
 			<label for="">Username</label>
@@ -70,7 +71,7 @@
 
 	.inputbox {
 		position: relative;
-		margin: 45px 0px;
+		margin: 35px 0px;
 		border-bottom: 2px solid #000;
 	}
 
@@ -106,10 +107,30 @@
 	}
 
 	button {
-		height: 40px;
-		width: 100%;
-		margin: 0px 55px;
+		height: 50px;
 		cursor: pointer;
+		display: flex;
+		border: none;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		border-radius: 20px;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.2rem;
+		background-color: #B5D3D2;
+		transition: all 0.5s;
+		padding: 0 30px;
+		width: 180px;
+		text-decoration: none;
+		color: black;
+		margin-top: 10px;
+		margin-bottom: 20px;
+	}
+	
+	button:hover {
+		background-color: #DFC9B5;
+		border-radius: 25px;
+		transition: all 0.5s ease 0.0s;
 	}
 
 	@media screen and (max-width: 600px) {

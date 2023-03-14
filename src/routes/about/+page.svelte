@@ -9,14 +9,16 @@
               <p class="title-trash">TRASH</p>
               <p class="title-munchers">MUNCHERS</p>
             </div>
-            <p class="description">A location based "cookie-clicker" type game to promote sustainability at the University of Exeter</p>
+            <p class="description">A location-based game to promote <br>sustainability at the University of Exeter</p>
             <a class="start" href="/play">Let's go!</a>
         </div>
         <div class="about-card">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat null
-            pariatur.<br><br>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br><br>This is some more dummy 
-            text, nothing to see here.
+        	Trash Munchers is a location-based game to promote sustainability at the University of Exeter. <br><br>Feed your monster, and accumulate points to propel your
+			team ahead of the rest! But be quick - the longer you go without feeding your monster, the more trash it eats, draining your points until you have none left!
+			<br><br>Sign up now, and make smarter environmental choices today!<br><br>
+			<div class="about-smaller">
+				<br>Developed by Ellie Kelemen, Scarlett Parker, William Liversidge, Owen Lee, Malik Besta and Vignesh Mohanarajan
+			</div>
         </div>
     </div>
 	</div>
@@ -49,13 +51,17 @@
     .about-card {
 	    min-width: 300px;
 		max-width: 400px;
-	    height: 100%;
+	    height: 90%;
 	    border-radius: 15px;
 	    background-color: #E0E0E0;
 	    padding: 15px;
 	    margin: 0rem 3rem;
-	    font-family: 'Montseratt', sans-serif;
+	    font-family: 'Montserrat', sans-serif;
 	    box-shadow: 0px 0px 16px #00000044;
+	 }
+	 
+	 .about-smaller {
+	 	font-size: 0.7rem;
 	 }
 
 	.home_page {
@@ -94,7 +100,7 @@
 		justify-content: center;
 		align-items: center;
 		cursor: pointer;
-		border-radius: 15px;
+		border-radius: 20px;
 		font-family: 'Chilanka', cursive;
 		font-size: 1.5rem;
 		background-color: #B5D3D2;

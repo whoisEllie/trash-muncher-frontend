@@ -12,7 +12,9 @@ export const actions: Actions = {
 				"username": formData.get('username'),
 				"first_name": formData.get('fname'),
 				"last_name": formData.get('lname'),
-				"password": formData.get('password') 
+				"email": formData.get('email'),
+				"password": formData.get('password'),
+				"is_gamekeeper": false
 			},
 			"team": {
 				"name": formData.get('team')
