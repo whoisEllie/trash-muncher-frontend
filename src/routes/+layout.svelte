@@ -2,10 +2,19 @@
 	import type { LayoutData } from "./$types";
 
 	export let data: LayoutData;
+	
+	let title;
+	if (data.logged_in) {
+		title = "Trash Munchers | " + data.username
+	} else {
+		title = "Trash Munchers"
+	}
 </script>
 
 <!-- TODO: Implement hamburger menu for mobile layout -->
-
+<svelte:head>
+	<title>{title}</title>
+</svelte:head>
 <div class="wrapper">
 	<div class="container">
  		<div class="images">
