@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { LayoutData } from "./$types";
 
+	// gets user data
 	export let data: LayoutData;
 	
 	let title;
 	if (data.logged_in) {
+		// displays username in title
 		title = "Trash Munchers | " + data.username
 	} else {
 		title = "Trash Munchers"
@@ -17,6 +19,7 @@
 </svelte:head>
 <div class="wrapper">
 	<div class="container">
+		<!-- load layout images -->
  		<div class="images">
 			<img src="/images/green.png" alt="A green blob in the top left corner of the screen" class="green" />
 			<img src="/images/red.png" alt="A red blob in the bottom left corner of the screen" class="red" />
@@ -31,6 +34,7 @@
 				<a href="/login" class="login">Login</a>
 			{/if}
 			{#if data.logged_in}
+				<!-- display username in navbar -->
 				<label class="username">{data.username}</label>
 			{:else}
 				<a href="/register" class="register">Register</a>
@@ -44,6 +48,7 @@
 <slot></slot>
 
 <style>
+	/* Importing non-native fonts */
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
 	@import url('https://fonts.googleapis.com/css2?family=Bubbler+One&display=swap');
@@ -57,6 +62,7 @@
 	
 	.wrapper {
 		position: absolute;
+		/* centers the main div */
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
@@ -77,7 +83,7 @@
 	}
 
 	.images { 
-		position: absolute;
+		position: absolute; /* allows images to load outside of main area */
 	}
 
 	.green {
@@ -131,6 +137,7 @@
 	a {
 		font-family: "Montserrat", sans-serif;
 		font-weight: 500;
+		/* relative to root font size */
 		font-size: 1rem;
 		text-decoration: none;
 		padding: 5px 15px;
@@ -147,7 +154,7 @@
 	
 	.home {
 		color: #FFFFFF;
-		float: left;
+		float: left; /* float determines position on nav bar */
 	}
 
 	.home:hover {
@@ -181,6 +188,7 @@
 		color: #977453;
 	}
 
+	/* max-width used to change display on different browsers */
 	@media screen and (max-width: 600px) {
 		.green {
 			width: 58%;

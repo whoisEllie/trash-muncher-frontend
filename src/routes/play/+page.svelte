@@ -146,11 +146,14 @@ function drawMonsters(scene){
 }
 
 let image, fileinput;
+// placeholder text before submitting image
 var name = "Select Image"
 	
 const onFileSelected =(e)=> {
 	let tempImage = e.target.files[0];
+	// get file name
 	name = e.target.files[0].name;
+	// ensure name isn't too long on display
 	if (name.length > 17) {
 		name = name.slice(0, 17) + "..."
 	}
@@ -158,6 +161,7 @@ const onFileSelected =(e)=> {
 	
 	reader.readAsDataURL(tempImage);
 	reader.onload = e => {
+		// display uploaded image
 		image = e.target.result
     };
 }

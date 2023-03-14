@@ -5,6 +5,7 @@ let authkey;
 
 export const load = (async (event) => {
 	let url = "http://38.242.137.81:8000/api/images/list-images/"
+	// get authkey to pass after load
 	authkey = `Bearer ${event.cookies.get('AccessToken')}`
 	
 	const packet: RequestInit = {
@@ -21,6 +22,7 @@ export const load = (async (event) => {
 	const imageData = await event.fetch(url, packet).then((response) => response.json());
 	
 	return {
+		// return images for client side
 		images: imageData,
 		auth: key
 	}
@@ -28,7 +30,7 @@ export const load = (async (event) => {
 
 export const actions : Actions = {
 	accept: async ({ request }) => {
-		console.log("accept")
+		// get form data to pass into API
 		const data = await request.formData();
 		let pack = {
 			"id": Number(data.get("id"))
@@ -44,7 +46,6 @@ export const actions : Actions = {
 		})
 	},
 	deny: async ({ request }) => {
-		console.log("deny")
 		const data = await request.formData();
 		let pack = {
 			"id": Number(data.get("id"))
@@ -59,7 +60,7 @@ export const actions : Actions = {
 			}
 		})
 
-		// Monkey fix
+		// updates team score based on given team
 		let team
 		if (Number(data.get("team")) == 1) {
 			team = "T1Score"
@@ -73,8 +74,8 @@ export const actions : Actions = {
 			"TM_ID": Number(data.get("tm")),
 			[team]: 1
 		}
-		console.log(JSON.stringify(pack2))
-
+		
+		// sends request
 		await fetch("http://38.242.137.81:8000/api/monsters/remove-score", {
 			method: 'POST',
 			body: JSON.stringify(pack2),

@@ -1,4 +1,5 @@
 <script lang="ts">
+	export let form
 </script>
 
 <div class="login-wrapper">
@@ -9,15 +10,22 @@
   <form class="form" method="POST">
   		<br>
 		<div class="inputbox">
-			<input name="username" type="text" required>
-			<label for="">Username</label>
+			<input name="email" type="text" required>
+			<label for="">Enter your email</label>
 		</div>
-		<div class="inputbox">
-			<input name="password" type="password" required>
-			<label for="">Password</label>
-		</div>
-		<a href="/forgot-password" class="forgot-password">Forgot password?</a><br>
-  <button>Log in</button>
+		{#if form?.success} 
+			<div class="success-wrapper">
+				<span class="success-text">{form.message}</span>
+			</div>
+			<br>
+		{/if}
+		{#if form?.success == false}
+			<div class="success-wrapper">
+				<span class="fail-text">Womp womp</span>
+			</div>
+			<br>
+		{/if}
+  <button type="submit">Reset Password</button>
   </form>
 </div>
 
@@ -79,7 +87,7 @@
 	.inputbox label {
 		position: absolute;
 		top: 50%;
-		left: 1.5%;
+		left: 11%;
 		transform: translateY(-50%);
 		color: #8C8C8C;
 		pointer-events: none;
@@ -121,31 +129,34 @@
 		background-color: #B5D3D2;
 		transition: all 0.5s;
 		padding: 0 30px;
-		width: 180px;
+		width: 250px;
 		text-decoration: none;
 		color: black;
 		margin-top: 10px;
 		margin-bottom: 20px;
 	}
 	
+	.success-wrapper {
+		text-align: center;
+		width: 70%;
+	}
+	
+	.success-text {
+		color: green;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.1rem;
+	}
+	
+	.fail-text {
+		color: red;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.1rem;
+	}
+	
 	button:hover {
 		background-color: #DFC9B5;
 		border-radius: 22px;
 		transition: all 0.5s ease 0.0s;
-	}
-	
-	a:link {
-		text-decoration: none;
-	}
-	
-	.forgot-password {
-		color: black;
-		font-size: 1.1rem;
-		font-family: "Montserrat", sans-serif;
-	}
-	
-	.forgot-password:hover {
-		color: #977453;
 	}
 
 	@media screen and (max-width: 600px) {
