@@ -16,12 +16,8 @@
 				<label for="">Username</label>
 			</div>
 			<div class="inputbox">
-				<input name="fname" type="text" required>
-				<label for="">First Name</label>
-			</div>
-			<div class="inputbox">
-				<input name="lname" type="text" required>
-				<label for="">Last Name</label>
+				<input name="email" type="email" required>
+				<label for="">Email</label>
 			</div>
 			<div class="inputbox">
 				<input name="password" type="password" required>
@@ -30,10 +26,6 @@
 			<div class="inputbox">
 				<input name="confirm-password" type="password" required>
 				<label for="">Confirm Password</label>
-			</div>
-			<div class="inputbox">
-				<input name="email" type="email" required>
-				<label for="">Email</label>
 			</div>
 			<div class="team-select">
 				<center><label for="">Pick a team!</label><br>
@@ -83,7 +75,6 @@
 		grid-template-rows: repeat(4, 2fr), 1fr;
 		gap: 1rem;
 		grid-template-areas: 
-		". ."
 		". ."
 		". ."
 		". ."

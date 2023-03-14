@@ -10,8 +10,6 @@ export const actions: Actions = {
 		let data = {
 			"user": {
 				"username": formData.get('username'),
-				"first_name": formData.get('fname'),
-				"last_name": formData.get('lname'),
 				"email": formData.get('email'),
 				"password": formData.get('password'),
 				"is_gamekeeper": false
