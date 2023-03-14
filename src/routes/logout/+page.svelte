@@ -1,4 +1,9 @@
 <script lang="ts">
 	import type { LayoutData } from "../$types";	
-	export let data: LayoutData;
+	import { onMount } from 'svelte';
+	export let form
+	
+	onMount(async () => {
+		window.location.replace('/')
+	});
 </script>

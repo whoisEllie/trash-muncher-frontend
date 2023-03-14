@@ -16,7 +16,8 @@
 			<input name="password" type="password" required>
 			<label for="">Password</label>
 		</div>
-    <button>Log in</button>
+		<a href="/forgot-password" class="forgot-password">Forgot password?</a><br>
+  <button>Log in</button>
   </form>
 </div>
 
@@ -72,7 +73,7 @@
 	.inputbox {
 		position: relative;
 		margin: 35px 0px;
-		border-bottom: 2px solid #000;
+		border-bottom: 2px solid #000; /* line under input box */
 	}
 
 	.inputbox label {
@@ -82,7 +83,7 @@
 		transform: translateY(-50%);
 		color: #8C8C8C;
 		pointer-events: none;
-		transition: .5s;
+		transition: .5s; /* animates form so text moves up */
 		font-family: "Montserrat", sans-serif;
 		font-weight: 400;
 		font-size: 1.3em;
@@ -90,8 +91,8 @@
 
 	input:focus ~label,
 	input:valid ~label {
-		top: -15%;
-		color: #000;
+		top: -15%; /* move text up */
+		color: #000; /* fades text in from placeholder style*/
 	}
 
 	.inputbox input {
@@ -129,8 +130,22 @@
 	
 	button:hover {
 		background-color: #DFC9B5;
-		border-radius: 25px;
+		border-radius: 22px;
 		transition: all 0.5s ease 0.0s;
+	}
+	
+	a:link {
+		text-decoration: none;
+	}
+	
+	.forgot-password {
+		color: black;
+		font-size: 1.1rem;
+		font-family: "Montserrat", sans-serif;
+	}
+	
+	.forgot-password:hover {
+		color: #977453;
 	}
 
 	@media screen and (max-width: 600px) {
