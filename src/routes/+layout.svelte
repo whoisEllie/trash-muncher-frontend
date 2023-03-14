@@ -22,7 +22,7 @@
 				<a href="/login" class="login">Login</a>
 			{/if}
 			{#if data.logged_in}
-				<a href="/" class="login">{data.username}</a>
+				<label class="username">{data.username}</label>
 			{:else}
 				<a href="/register" class="register">Register</a>
 			{/if}
@@ -125,6 +125,15 @@
 		font-size: 1rem;
 		text-decoration: none;
 		padding: 5px 15px;
+	}
+	
+	.username {
+		font-family: "Montserrat", sans-serif;
+		font-weight: 500;
+		font-size: 1rem;
+		text-decoration: none;
+		padding: 5px 15px;
+		float: right;
 	}
 	
 	.home {
