@@ -1,9 +1,6 @@
 <script lang="ts">
 	import type { LayoutData } from "./$types";
 
-	function reload() {
-		location.reload();
-	}
 	export let data: LayoutData;
 </script>
 
