@@ -144,30 +144,61 @@ function drawMonsters(scene){
 	});
 	return scene;
 }
+
+let image, fileinput;
+var name = "Select Image"
+	
+const onFileSelected =(e)=> {
+	let tempImage = e.target.files[0];
+	name = e.target.files[0].name;
+	if (name.length > 17) {
+		name = name.slice(0, 17) + "..."
+	}
+	let reader = new FileReader();
+	
+	reader.readAsDataURL(tempImage);
+	reader.onload = e => {
+		image = e.target.result
+    };
+}
+
 	
 </script>
 
 
-<div class="map-modal">
-	<div class="below_map">
-	  <button  class="mapButton">Toggle Location</button>
-	  <button class="mapButton" >Change Zoom</button>
-		<!--onclick="toggleLocation()" onclick = "changeZoom()"-->
-		<form method="POST" action="?/addScore" use:enhance>
-			<button>Eat TRASH</button>
-			<input value>
-		</form>
-	</div>
-
-	
+<div class="map-modal">	
 	<div id="mapAwait">
-	  <p id="awaitText">{errorMessage}</p>
+		<p id="awaitText">{errorMessage}</p>
 	</div>
 	<div id="mapContainer">
-	  <div id="map">
+		<div id="map">
+		</div>
+   		<div class="below_map">
+			<button class="mapButton">Toggle Location</button>
+			<button class="mapButton">Change Zoom</button>
+		</div>
 	</div>
+	<div class="submit-image">
+		<div class="image-display">
+	        {#if image}
+				<center><img class="image" src="{image}" alt="d" /></center>
+	        {:else}
+	        	<center><img class="no-image" src="/images/no_file.png" alt="" /></center>
+	        {/if}
+			<br>
+			<div class="upload-container">
+				<center><img class="upload" src="/images/upload.png" alt="" on:click={()=>{fileinput.click();}} /></center>
+		        <span class="upload-click" on:click={()=>{fileinput.click();}}>{name}</span>
+			</div>
+			<form method="POST" action="?/uploadImage">
+		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
+				name="file">
+				<br>
+				<center><button type="submit" class="button">Submit Image</button></center>
+			</form>
+		</div>
 	</div>
-  </div>
+</div>
 
 <style>
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
@@ -196,8 +227,8 @@ function drawMonsters(scene){
 	}
 
 	#map {
-		height: 60vh; /* The height is 400 pixels */
-		width: 50vw; /* The width is the width of the web page */
+		height: 60vh;
+		width: 50vw;
 		z-index: -1;
 		float: right;
 		position: absolute;
@@ -205,8 +236,8 @@ function drawMonsters(scene){
 	}
 
 	#mapAwait {
-		height: 60vh; /* The height is 400 pixels */
-		width: 50vw; /* The width is the width of the web page */
+		height: 60vh;
+		width: 50vw;
 		z-index: -1;
 		float: right;
 		position: absolute;
@@ -242,7 +273,8 @@ function drawMonsters(scene){
 		list-style-type: none;
 		text-align: center;
 		float: left;
-		position: absolute;
+		top: 86%;
+		position: relative;
 	}
 
 	.mapButton {
@@ -270,6 +302,88 @@ function drawMonsters(scene){
 		width: 50vw; /* The width is the width of the web page */
 		font-family: "Montserrat", sans-serif;
 
+	}
+	
+	.submit-image {
+		position: relative;
+		left: 20%;
+		top: 20%;
+	}
+	
+	.image-display {
+		text-align: center;
+	}
+	
+	.upload{
+		display:flex;
+		height:50px;
+		width:50px;
+		cursor:pointer;
+	}
+	
+	.upload:hover{
+		content: url("/images/upload_hover.png");
+	}
+	
+	.image{
+		display:flex;
+		height:250px;
+		width:200px;
+		object-fit: cover;
+	}
+	
+	.no-image{
+		display:flex;
+		height:250px;
+		width:250px;
+	}
+	
+	.upload-text {
+		font-family: "Montserrat", sans-serif;
+		color: white;
+	}
+	
+	.upload-click {
+		font-family: "Montserrat", sans-serif;
+		color: white;
+		cursor: pointer;
+		top: 50%;
+		transform: translateY(35%);
+		padding-left: 0.5rem;
+	}
+	
+	.upload-click:hover {
+		color: #FCDFC4;
+	}
+	
+	.upload-container {
+		justify-content: center;
+		margin: auto;
+		display: flex;
+	}
+	
+	button {
+		height: 50px;
+		cursor: pointer;
+		display: flex;
+		border: none;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		border-radius: 20px;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.0rem;
+		background-color: #B5D3D2;
+		transition: all 0.5s;
+		width: 155px;
+		text-decoration: none;
+		color: black;
+	}
+	
+	button:hover {
+		background-color: #DFC9B5;
+		border-radius: 22px;
+		transition: all 0.5s ease 0.0s;
 	}
 
 	#status{

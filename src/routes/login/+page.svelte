@@ -129,7 +129,7 @@
 	
 	button:hover {
 		background-color: #DFC9B5;
-		border-radius: 25px;
+		border-radius: 22px;
 		transition: all 0.5s ease 0.0s;
 	}
 
