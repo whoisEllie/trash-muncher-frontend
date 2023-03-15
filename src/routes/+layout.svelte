@@ -215,6 +215,10 @@
 		a {
 			font-size: 0.75rem;
 		}
+		
+		.username {
+			font-size: 0.75rem;
+		}
 	}
 
 	@media screen and (max-width:  450px) {
@@ -225,6 +229,10 @@
 		}
 
 		a {
+			font-size: 0.65rem;
+		}
+		
+		.username {
 			font-size: 0.65rem;
 		}
 
