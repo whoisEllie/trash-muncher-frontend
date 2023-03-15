@@ -52,7 +52,7 @@
 	async function createMap(latitude: number, longitude: number) {
 		//creates loader to get the map from the api
 		const loader = new Loader({
-		apiKey:  "",
+		apiKey:  "AIzaSyAjhTLsegGf1Zz7wgAU506zeXw2pHRUqe0",
 		version: "weekly",
 		libraries: ["places"],
 	});
@@ -65,7 +65,7 @@
 		tilt: 30,
 		zoom: 18,
 		//zoomControl: false,
-        gestureHandling: "none",
+        gestureHandling: "cooperative",
 		disableDefaultUI: true,
 		mapId: '805b0b106a1a291d'
 	}
