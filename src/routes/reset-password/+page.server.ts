@@ -19,7 +19,7 @@ export const actions: Actions = {
 			}
 		}		
 
-		let url = "http://38.242.137.81:8000/api/users/password-reset/"
+		let url = "http://38.242.137.81:8000/api/users/password-reset/confirm/"
 		let data = {
 			"password": formData.get('password'),
 			"token": token
@@ -33,25 +33,18 @@ export const actions: Actions = {
 		}
 
 		await fetch(url, packet).then((response) => response.json()).then((out) => {
-			if (out['message'] === 'Invalid token') {
-				success = true;
-				return {
-					success: false,
-					message: message
-				}
+			var checkMessage = out['detail']
+			if (typeof checkMessage !== 'undefined') {
+				message = "Token not found."
+				success = false;
 			} else {
 				message = "Success. You will be redirected to the login page shortly."
 				success = true;
-				return {
-					success: true,
-					message: message
-				}
 			}
 		})
 		
-		message = "Success. You will be redirected to the login page shortly."
 		return {
-			success: true,
+			success: success,
 			message: message
 		}
 	}

@@ -19,9 +19,9 @@
 			</div>
 			<br>
 		{/if}
-		{#if form?.success == false}
+		{#if form?.success === false}
 			<div class="success-wrapper">
-				<span class="fail-text">Womp womp</span>
+				<span class="fail-text">{form.message}</span>
 			</div>
 			<br>
 		{/if}
