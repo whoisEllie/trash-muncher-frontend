@@ -171,22 +171,25 @@ const onFileSelected =(e)=> {
 
 
 <!-- pre loads hover image -->
-<link rel="prefetch" as="image" href="/images/upload_hover.png">
+<link rel="preload" as="image" href="/images/upload_hover.png">
 
-<div class="map-modal">	
-	<div id="mapAwait">
-		<p id="awaitText">{errorMessage}</p>
-	</div>
-	<div id="mapContainer">
-		<div id="map">
+<div class="map-wrapper">
+	<div class="map-modal">	
+		<div id="mapAwait">
+			<p id="awaitText">{errorMessage}</p>
 		</div>
-   		<div class="below_map">
-			<button class="mapButton">Toggle Location</button>
-			<button class="mapButton">Change Zoom</button>
+		<div id="mapContainer">
+			<div id="map">
+			</div>
+			<div class="below_map">
+				<button class="mapButton">Toggle Location</button>
+				<button class="mapButton">Change Zoom</button>
+			</div>
 		</div>
 	</div>
 	<div class="submit-image">
 		<div class="image-display">
+			<!-- checks if anything has been uploaded, change output if so -->
 	        {#if image}
 				<center><img class="image" src="{image}" alt="d" /></center>
 	        {:else}
@@ -197,16 +200,17 @@ const onFileSelected =(e)=> {
 				<center><img class="upload" src="/images/upload.png" alt="" on:click={()=>{fileinput.click();}} /></center>
 		        <span class="upload-click" on:click={()=>{fileinput.click();}}>{name}</span>
 			</div>
+			<!-- api checks file formats but this works for modern browsers -->
 			<form method="POST" action="?/uploadImage">
-		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
+		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png, .tiff, .jfif, .bmp, .tif" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
 				name="file">
 				<br>
 				<center><button type="submit" class="button">Submit Image</button></center>
 			</form>
 		</div>
+		<br><br><br>
 	</div>
-</div>
-
+</div>	
 <style>
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
@@ -219,49 +223,42 @@ const onFileSelected =(e)=> {
 	}
 
 	.map-modal {
-		position: absolute;
+		position: absolute; /* stays in fixed position */
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -47%); /* centers the map */
 		width: 85vw;
-		height: 75vh;
+		height: 80vh;
 		display: grid;
 		grid-template-columns: 2fr 7fr;
+		grid-template-rows: auto;
 		border-radius: 25px;
-		overflow: hidden;
-		box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5);
+		box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
 		background-color: #61846F;
 	}
 
 	#map {
 		height: 60vh;
 		width: 50vw;
-		z-index: -1;
-		float: right;
-		position: absolute;
-
+		position: relative; /* relative to parent (allows for better scaling / scroll bar) */
 	}
 
 	#mapAwait {
 		height: 60vh;
 		width: 50vw;
-		z-index: -1;
-		float: right;
-		position: absolute;
+		position: relative;
 		top:50%;
 		left:65%;
 		transform: translate(-50%,-50%);
 	}
 
 	#mapContainer {
-		height: 60vh; /* The height is 400 pixels */
-		width: 50vw; /* The width is the width of the web page */
-		z-index: -1;
+		height: 60vh;
+		width: 50vw; /* The width is half the width of the web page */
 		box-shadow: 0px 4px 30px #272727;
-		float: right;
-		position: absolute;
+		position: relative;
 		top:50%;
-		left:65%;
+		left:10%;
 		transform: translate(-50%,-50%);
 	}
 
@@ -269,18 +266,16 @@ const onFileSelected =(e)=> {
 		text-align: center;
 		font-size: 32px;
 		font-family: "Montserrat", sans-serif;
-		position: absolute;
+		position: relative;
 		top:50%;
-		left:50%;
+		left:95%;
 		transform: translate(-50%,-50%);
 	}
 
-	.below_map {
-		width:30%;
+	.below_map { /* buttons that appear on top of the map */
 		list-style-type: none;
 		text-align: center;
 		float: left;
-		top: 86%;
 		position: relative;
 	}
 
@@ -289,9 +284,9 @@ const onFileSelected =(e)=> {
 		padding: 12px;
 		text-decoration: none;
 		font-size: 17px;
-		width: 33.33%; /* Four links of equal widths */
+		width: 140px;
 		text-align: center;
-		height: 75px;
+		height: 65px;
 		border: none;
 		cursor: pointer;
 		background-color: white;
@@ -306,15 +301,17 @@ const onFileSelected =(e)=> {
 		width: max-content;
 		background-color: red;
 		position: absolute;
-		width: 50vw; /* The width is the width of the web page */
+		width: 50vw;
 		font-family: "Montserrat", sans-serif;
 
 	}
 	
 	.submit-image {
+		display: block;
 		position: relative;
-		left: 20%;
-		top: 20%;
+		left: 21%;
+		height: 30vh;
+		transform: translate(-50%, 30vh);
 	}
 	
 	.image-display {
@@ -336,7 +333,7 @@ const onFileSelected =(e)=> {
 		display:flex;
 		height:250px;
 		width:200px;
-		object-fit: cover;
+		object-fit: cover; /* crop images to correct size */
 	}
 	
 	.no-image{
@@ -355,7 +352,7 @@ const onFileSelected =(e)=> {
 		color: white;
 		cursor: pointer;
 		top: 50%;
-		transform: translateY(35%);
+		transform: translateY(35%); /* moves button down */
 		padding-left: 0.5rem;
 	}
 	
@@ -398,5 +395,80 @@ const onFileSelected =(e)=> {
 		text-align: center;
 		font-size: larger;
 	}
+	
+	/* device sensitive */
+	@media screen and (max-width: 450px) {
+		.map-modal {
+			position: relative;
+			left: -66.5%;
+			margin-top: 30px;
+			transform: translateX(0%); /* resets transformation from previous css */
+			width: 100vw;
+			background-color: transparent;
+			box-shadow: none;
+		}
+		#map {
+			width: 100vw;
+		}
+		#mapAwait {
+			width: 100vw;
+		}
+		#mapContainer {
+			width: 100vw;
+		}
+		.below_map {
+			visibility: hidden;
+		}
+		.submit-image {
+			position: relative;
+			left: 0%;
+			transform: translateY(0%);
 
+		}
+		.map-wrapper {
+			transform: scale(1.05);
+			position: relative;
+			overflow-x: hidden;
+			/* allows for vertical scrolling */
+			overflow-y: auto;
+			max-height: 96.5vh;
+		}
+	}
+	
+	@media screen and (min-width: 451px) and (max-width: 1000px) {
+		.map-modal {
+			position: relative;
+			margin-top: 30px;
+			left: 50%;
+			transform: translateX(-55%);
+			width: fit-content;
+			background-color: transparent;
+			box-shadow: none;
+		}
+		#map {
+			width: 84vw;
+		}
+		#mapAwait {
+			width: 84vw;
+		}
+		#mapContainer {
+			width: 84vw;
+		}
+		.below_map {
+			visibility: hidden;
+		}
+		.submit-image {
+			position: relative;
+			left: 0%;
+			transform: translateY(0%);
+		}
+		.map-wrapper {
+			transform: scale(1.03);
+			position: relative;
+			overflow-x: hidden;
+			overflow-y: auto;
+			max-height: 97.5vh;
+		}
+	}
+	
 </style>

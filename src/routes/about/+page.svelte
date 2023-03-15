@@ -71,7 +71,7 @@
 
 	.title {
 		display: grid;
-		grid-template-rows: repeat(2, 1fr);
+		grid-template-rows: repeat(2, 1fr); /* splits title into two sections */
 		font-family: "Bubbler One", sans-serif;
 		font-size: 6rem;
 		letter-spacing: 7px;
@@ -121,6 +121,7 @@
 		transition: all 0.5s ease 0.0s;
 	}
 
+	/* displays differently on different devices */
 	@media screen and (max-width: 900px) {
 
 		.about-wrapper {

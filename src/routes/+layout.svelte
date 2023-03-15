@@ -58,6 +58,8 @@
 		box-sizing: border-box;
 		margin: 0;
 		padding: 0;
+		overflow-y: hidden;
+		max-height: 100vh;
 	}
 	
 	.wrapper {
@@ -215,6 +217,10 @@
 		a {
 			font-size: 0.75rem;
 		}
+				
+		.username {
+			visibility: hidden;
+		}
 	}
 
 	@media screen and (max-width:  450px) {
@@ -226,6 +232,10 @@
 
 		a {
 			font-size: 0.65rem;
+		}
+		
+		.username {
+			visibility: hidden;
 		}
 
 	}
