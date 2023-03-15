@@ -6,7 +6,6 @@
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
     import { enhance } from '$app/forms';
 
-
 	/** @type {import('./$types').PageData} */
 	export let data;
 
@@ -174,7 +173,8 @@ function showCampus(){
 	}
 }
 
-let image, fileinput;
+var image = null;
+let fileinput;
 // placeholder text before submitting image
 var name = "Select Image"
 	
@@ -216,8 +216,8 @@ const onFileSelected =(e)=> {
 		</div>
 	</div>
 	<div class="submit-image">
-		{#if monster.name}
-			<p>{monster.name}</p>
+		{#if monster.TM_ID}
+			<p>{monster.TM_ID}</p>
 		{/if}
 		<div class="image-display">
 	        {#if image}
@@ -233,6 +233,9 @@ const onFileSelected =(e)=> {
 			<form method="POST" action="?/uploadImage" use:enhance>
 		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
 				name="file">
+				<input type="hidden" name="image" value={image}>
+				<input type="hidden" name="tm" value={monster.TM_ID}>
+				<input type="hidden" name="team" value={data.team_id}>
 				<br>
 				<center><button type="submit" class="button">Submit Image</button></center>
 			</form>
