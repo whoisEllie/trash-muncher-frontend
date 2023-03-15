@@ -24,7 +24,6 @@ export const load = (async (event) => {
 
 		try {
 			await event.fetch(url, packet).then((response) => response.json()).then(async (out) => {
-			//await event.fetch(url, packet).then((response) => {console.log(response)}).then((out) => {
 				if (out['detail'] === 'Authentication credentials were not provided.')
 				{
 					throw redirect(302, '/login')
@@ -81,11 +80,9 @@ export const actions: Actions = {
 			mode: "cors"
 		}
 
-		await fetch(url, packet).then((response) => {console.log(response)})
-		//.then((out) => {
-		//	console.log(out);
-		//})
+		await fetch(url, packet).then((response) => response.json())
 	},
+
 	//changes the entire score for the monster
 	updateScore: async ({cookies, request}) => {
 		const formData = await request.formData();
@@ -106,7 +103,7 @@ export const actions: Actions = {
 			method: "POST",
 			mode: "cors"
 		}
-		await fetch(url, packet).then((response) => {console.log(response)})
+		await fetch(url, packet).then((response) => response.json())
 	},
 	//adds the score passed in to the monster
 	addScore: async ({cookies, request}) => {
@@ -117,7 +114,6 @@ export const actions: Actions = {
 			"T2Score":Number(formData.get("t2score")),
 			"T3Score":Number(formData.get("t3score"))
 		};
-		console.log(data);
 		let url = "http://38.242.137.81:8000/api/monsters/add-score"
 
 		const packet: RequestInit = {

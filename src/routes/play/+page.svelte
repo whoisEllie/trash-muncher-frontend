@@ -2,9 +2,7 @@
 	import { Loader } from '@googlemaps/js-api-loader';
 	import { onMount } from 'svelte';
 	import {AmbientLight,DirectionalLight,PerspectiveCamera,Scene,WebGLRenderer,Raycaster,Vector2,Matrix4,MathUtils} from 'three';
-	import * as THREE from "three";
 	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
-	import {latLngToVector3Relative, latLngToVector3} from '@googlemaps/three';
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
     import { enhance } from '$app/forms';
 
@@ -12,8 +10,9 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
+	var locationTracking=true;
 	var errorMessage: string = "Awaiting map.";
-	var map: undefined;
+	var map;
 	var overlay;
 	var vector = new Vector2();
 	let monster={}
@@ -22,40 +21,59 @@
 	
 	onMount(() => {
 		getPosition().then((position: Position) =>{
-  			//document.getElementById("mapAwait").hidden = true;
   			createMap(position.coords.latitude,position.coords.longitude);
-		}).catch((err) => {
-  			console.log(err);
+		}).then(()=>{
+			setInterval(()=>{
+				if(locationTracking){
+					navigator.geolocation.getCurrentPosition(success)}},3000);
+			setInterval(getMonsters,6000);
+		}).catch(() => {
 				errorMessage = "Location access blocked, please enable."
 		})
 	})
 
+	function success(position){
+		//updates the current player position
+		map.setCenter({lat:position.coords.latitude,lng:position.coords.longitude})
+	}
+
 	function getPosition(){
+		//tries to get permission for location access if needed, or initially loads a position to start with
+		//promise ensures no loading can take place until completed
   		return new Promise((resolve,reject) => {
     		navigator.geolocation.getCurrentPosition(resolve,reject,{maximumAge: 100,enableHighAccuracy:true})
   		});
 	}
 
+	function getMonsters(){
+
+	}
+
 	async function createMap(latitude: number, longitude: number) {
+		//creates loader to get the map from the api
 		const loader = new Loader({
 		apiKey:  "",
 		version: "weekly",
 		libraries: ["places"],
 	});
-
+	//sets settings for the player map. removes most control so they can't go exploring
 	const mapOptions = {
 		center: {
 			lat: latitude,
 			lng: longitude
 		},
-		tilt: 45,
-		zoom: 15,
+		tilt: 30,
+		zoom: 18,
+		zoomControl: false,
+        gestureHandling: "none",
+		disableDefaultUI: true,
 		mapId: '805b0b106a1a291d'
 	}
 
 	await loader
 		.load()
 		.then((google) => {
+			//only draws onto map when the map has loaded in the promise
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
 			let scene = initWebglOverlayView(map);
 			scene = drawMonsters(scene);
@@ -65,8 +83,8 @@
 		});
 	}
 
-	
-	function initWebglOverlayView(map: undefined) {
+	//WebGL initialisation. Loads all the models onto the map
+	function initWebglOverlayView(map) {
   		let camera:PerspectiveCamera;
 
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
@@ -75,14 +93,13 @@
 		const scene = overlay.getScene();
     	camera = new PerspectiveCamera();
 
+		//adds light to the models so they show colour
     	const ambientLight = new AmbientLight(0xffffff, 0.75); // Soft white light.
-
     	scene.add(ambientLight);
-
     	const directionalLight = new DirectionalLight(0xffffff, 0.25);
-		
     	directionalLight.position.set(0.5, -1, 0.5);
     	scene.add(directionalLight);
+		
     	// Sets a reference point for drawing onto the map (dont change its kinda important for setting relative points)
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		
@@ -145,6 +162,18 @@ function drawMonsters(scene){
 	return scene;
 }
 
+function showCampus(){
+	locationTracking=!locationTracking;
+	if(locationTracking==false){
+		map.setCenter({lat:50.736830961444106, lng:-3.532572733972099})
+		map.setZoom(15);
+	}
+	else{
+		navigator.getCurrentPosition
+		map.setZoom(18)
+	}
+}
+
 let image, fileinput;
 // placeholder text before submitting image
 var name = "Select Image"
@@ -178,11 +207,14 @@ const onFileSelected =(e)=> {
 		<div id="map">
 		</div>
    		<div class="below_map">
-			<button class="mapButton">Toggle Location</button>
+			<button class="mapButton" on:click="{showCampus}">View Campus</button>
 			<button class="mapButton">Change Zoom</button>
 		</div>
 	</div>
 	<div class="submit-image">
+		{#if monster.name}
+			<p>{monster.name}</p>
+		{/if}
 		<div class="image-display">
 	        {#if image}
 				<center><img class="image" src="{image}" alt="d" /></center>
@@ -194,7 +226,7 @@ const onFileSelected =(e)=> {
 				<center><img class="upload" src="/images/upload.png" alt="" on:click={()=>{fileinput.click();}} /></center>
 		        <span class="upload-click" on:click={()=>{fileinput.click();}}>{name}</span>
 			</div>
-			<form method="POST" action="?/uploadImage">
+			<form method="POST" action="?/uploadImage" use:enhance>
 		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
 				name="file">
 				<br>
