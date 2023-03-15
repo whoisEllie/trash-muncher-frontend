@@ -65,7 +65,8 @@
 	.form {
 		background: #ECECEC;
 		border-radius: 1.5rem;
-		padding: 20px 25px;
+		padding-top: 20px;
+		padding-bottom: 35px;
 		box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.4);
 		display: flex;
 		flex-direction: column;
