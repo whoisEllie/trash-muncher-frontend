@@ -454,6 +454,7 @@ const onFileSelected =(e)=> {
 			left: 0%;
 			width: 100vw;
 			transform: translateY(-10%);
+			padding-bottom: 250px;
 		}
 		.map-wrapper {
 			transform: scale(1.05);
@@ -492,6 +493,7 @@ const onFileSelected =(e)=> {
 			left: 0%;
 			transform: translateY(-10%);
 			width: 100vw;
+			padding-bottom: 250px;
 		}
 		.map-wrapper {
 			transform: scale(1.03);
