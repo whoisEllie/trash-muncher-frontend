@@ -64,7 +64,7 @@
 		},
 		tilt: 30,
 		zoom: 18,
-		zoomControl: false,
+		//zoomControl: false,
         gestureHandling: "none",
 		disableDefaultUI: true,
 		mapId: '805b0b106a1a291d'
@@ -99,7 +99,7 @@
     	const directionalLight = new DirectionalLight(0xffffff, 0.25);
     	directionalLight.position.set(0.5, -1, 0.5);
     	scene.add(directionalLight);
-		
+
     	// Sets a reference point for drawing onto the map (dont change its kinda important for setting relative points)
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		
