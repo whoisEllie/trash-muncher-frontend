@@ -5,7 +5,7 @@ export const actions: Actions = {
 	default: async ({request}) => {
 
 		const formData = await request.formData();	
-		var message;
+		var sendMessage, success;
 
 		let url = "http://38.242.137.81:8000/api/users/password-reset/"
 		let data = {
@@ -20,24 +20,21 @@ export const actions: Actions = {
 		}
 
 		await fetch(url, packet).then((response) => response.json()).then((out) => {
-			if (out['message'] === 'No user with that email') {
-				return {
-					success: true,
-					message: message
-				}
+			console.log(out)
+			var message = out['email']
+			
+			if (typeof message !== 'undefined') {
+				sendMessage = "Email does not match any user. Please try again."
+				success = false
 			} else {
-				message = "Success. Check your email and follow the link from there."
-				return {
-					success: true,
-					message: message
-				}
-			}
+				sendMessage = "Success. Check your email and follow the link from there."
+				success = true
+			}	
 		})
 		
-		message = "Success. Check your email and follow the link from there."
 		return {
-			success: true,
-			message: message
+			message: sendMessage,
+			success: success
 		}
 	}
 }

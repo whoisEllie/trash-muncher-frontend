@@ -170,6 +170,9 @@ const onFileSelected =(e)=> {
 </script>
 
 
+<!-- pre loads hover image -->
+<link rel="prefetch" as="image" href="/images/upload_hover.png">
+
 <div class="map-modal">	
 	<div id="mapAwait">
 		<p id="awaitText">{errorMessage}</p>
