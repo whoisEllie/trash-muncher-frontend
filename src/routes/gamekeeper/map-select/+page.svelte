@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { Loader } from '@googlemaps/js-api-loader';
 	import { onMount } from 'svelte';
-	import {AmbientLight,DirectionalLight,PerspectiveCamera,Scene,WebGLRenderer,Raycaster,Vector2,Matrix4,MathUtils} from 'three';
-	import * as THREE from "three";
+	import {AmbientLight,DirectionalLight,PerspectiveCamera,Scene,WebGLRenderer,Raycaster,Vector2,Matrix4,MathUtils,AnimationMixer} from 'three';
 	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
-	import {latLngToVector3Relative, latLngToVector3} from '@googlemaps/three';
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
     import { enhance } from '$app/forms';
 
@@ -16,12 +14,15 @@
 	var errorMessage: string = "Awaiting map.";
     let latForm: number;
     let lngForm: number;
-	var map: undefined;
+	var map;
+	let formChoice=0;
 	var gameData = [];
 	let monster = {}, t1score=0,t2score=0,t3score=0, forms;
-	var overlay;
+	var overlay: ThreejsOverlayView;
 	var vector = new Vector2();
+	var mixer: AnimationMixer;
 	const gltfLoader = new GLTFLoader();
+
 	onMount(() => {
 		createMap(50.72506135303006,-3.5306954520836453);
 		
@@ -29,11 +30,12 @@
 	async function createMap(latitude: number, longitude: number) {
 		//creates loader to get the map from the api
 		const loader = new Loader({
-		apiKey:  "",
+		apiKey:  "AIzaSyAjhTLsegGf1Zz7wgAU506zeXw2pHRUqe0",
 		version: "weekly",
 		libraries: ["places"],
 	});
 
+	//sets settings for the gamekeeper map page. Gives them full control over the map so they can place monsters anywhere
 	const mapOptions = {
 		center: {
 			lat: latitude,
@@ -41,6 +43,7 @@
 		},
 		tilt: 45,
 		zoom: 15,
+		disableDefaultUI: true,
 		mapId: '805b0b106a1a291d'
 	}
 
@@ -55,25 +58,10 @@
 		.catch((e) => {
 			//do something :sparkle:
 		});
-	
-	//sets the forms to submit scores
-	let formData = forms.childNodes[2];
-	console.log(formData.childNodes)
-	//This is for setting new scores
-	formData.childNodes[2].addEventListener("click", ()=>{
-		console.log(formData.childNodes[4])
-		formData.childNodes[8].hidden=false;
-		formData.childNodes[10].hidden=true;
-	})
-	//This is for adding scores
-	formData.childNodes[6].addEventListener("click", ()=>{
-		formData.childNodes[8].hidden=true;
-		formData.childNodes[10].hidden=false;
-	})
 	}
 
-	//initialises all the webgl needed for 3d modelling over the map
-	function initWebglOverlayView(map: undefined) {
+	//WebGL initialisation. Loads all the models onto the map
+	function initWebglOverlayView(map) {
   		let camera:PerspectiveCamera;
 
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
@@ -82,14 +70,13 @@
 		const scene = overlay.getScene();
     	camera = new PerspectiveCamera();
 
+		//adds light to the models so they show colour
     	const ambientLight = new AmbientLight(0xffffff, 0.75); // Soft white light.
-
     	scene.add(ambientLight);
-
     	const directionalLight = new DirectionalLight(0xffffff, 0.25);
-		
     	directionalLight.position.set(0.5, -1, 0.5);
     	scene.add(directionalLight);
+
     	// Sets a reference point for drawing onto the map (dont change its kinda important for setting relative points)
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		
@@ -116,9 +103,8 @@
 						t3score=monster.Team3_Score;
 					}
 				});
-
-                forms.childNodes[2].hidden=false;
-				forms.childNodes[0].hidden=true;
+				//sets form to choose whether to add or update the monster's score
+                formChoice=2;
 				element.object.material.color.r=0.06;
 			});
 			}
@@ -126,12 +112,11 @@
 				//clicked on map directly, sets up form for creating a new monster
                 latForm=event.latLng.lat();
                 lngForm=event.latLng.lng();
-				forms.childNodes[0].hidden = false;
-				forms.childNodes[2].hidden = true;
+				formChoice=1;
 			}
 		})
 
-		const animate = () => { //cool animations
+		const animate = () => { //cool animations :)
 			gameData.forEach(element => {
 				element.model.rotateZ(MathUtils.degToRad(0.2));
 			});
@@ -156,8 +141,13 @@ function drawMonsters(scene){
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 			gltf.scene.position.set(vector.x,vector.y,vector.z);
     		gltf.scene.scale.set(50, 50, 50);
+
+			//will initialise the animations for each monster here
+			mixer = new AnimationMixer(gltf.scene);
+
 			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
 			scene.add(gltf.scene);
+			//sets the monsters to an array to access later
 			gameData.push({"monster":element,"model":gltf.scene})
 		})
 		
@@ -171,22 +161,31 @@ function drawMonsters(scene){
 
 <div class="map-modal">
 	<div class="below_map">
-	  
-		<!--onclick="toggleLocation()" onclick = "changeZoom()"-->
-		<div bind:this={forms}>
-		<form method="POST" action="?/newMonster" use:enhance id="monsterForm" hidden>
-			<label for="latitude">Latitude: </label>
+		<!--Forms to add monsters, change score and add score
+		formChoice 1 - Adding a new monster to the map, with name, latitude and longitude
+		formChoice > 1 - Shows radio buttons to select which of the two score forms to use
+		formChoice 3 - Updating the monsters score. Has default values as the current scores
+		formChoice 4 - Adds score to the monster. Defaults to 0.
+		-->
+
+		{#if formChoice == 1}
+		<form method="POST" action="?/newMonster" use:enhance id="monsterForm">
+			<label for="mName">Monster Name:</label>
+			<input name="mName">
+			<label for="latitude">Latitude: </label><br>
             <input name="latitude" value={latForm}>
 			<label for="latitude">Longitude: </label>
             <input name="longitude" value={lngForm}>
 			<button>Submit new monster!</button>
 		</form>
-		<div id="scoreForm" hidden>
+		{:else if formChoice > 1}
 				<label for="scoreType"> Change Scores</label>
-				<input name="scoreType" type="radio">
+				<input name="scoreType" type="radio" on:click={() => {formChoice=3}}>
 				<label for="scoreType">Add Scores</label>
-				<input name="scoreType" type="radio">
-			<form method="POST" action="?/updateScore" use:enhance hidden>
+				<input name="scoreType" type="radio" on:click={() => {formChoice=4}}>
+		
+		{#if formChoice == 3}
+			<form method="POST" id="updateScore" action="?/updateScore" use:enhance>
 				<label for="t1score">Team 1</label>
 				<input type="number" name="t1score" value={t1score}><br>
 				<label for="t2score">Team 2</label>
@@ -196,7 +195,8 @@ function drawMonsters(scene){
 				<input type="hidden" name="id" value={monster.TM_ID}>
 				<button>Update Scores!</button>
 			</form>
-			<form method="POST" action="?/addScore" use:enhance hidden>
+		{:else if formChoice == 4}
+			<form method="POST" id="addScore" action="?/addScore" use:enhance>
 				<label for="t1score">Team 1</label>
 				<input type="number" name="t1score" value=0><br>
 				<label for="t2score">Team 2</label>
@@ -206,8 +206,8 @@ function drawMonsters(scene){
 				<input type="hidden" name="id" value={monster.TM_ID}>
 				<button>Add Scores!</button>
 			</form>
-		</div>
-		</div>
+		{/if}
+		{/if}
 	</div>
 
 	
