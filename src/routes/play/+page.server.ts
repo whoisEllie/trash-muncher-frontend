@@ -2,11 +2,13 @@ import {redirect} from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types"
 import type { Actions } from './$types'
 
+let authkey;
 export const load = (async (event) => {
 
 	let login_status: Boolean = false;
 	let username: String = ""
 	let monsters= [];
+	authkey = `Bearer ${event.cookies.get('AccessToken')}`
 
 	let url = "http://38.242.137.81:8000/api/users/me/"
 
@@ -81,6 +83,7 @@ export const actions: Actions = {
 		if (data.get('image') != "" && data.get("tm") != "undefined"){
 			let team
 			let team_id
+			console.log(data.get('image'))
 			if (data.get("team") == "Red") {
 				team = "T1Score"
 				team_id = 1
@@ -104,7 +107,7 @@ export const actions: Actions = {
 				"Authorization": authkey
 				}
 			})
-
+			
 			let pack2 = {
 				"image": data.get('image'),
 				"team": team_id,
@@ -118,7 +121,9 @@ export const actions: Actions = {
 					"content-type": "application/json; charset=UTF-8",
 					"Authorization": authkey
 					}
-				})
+			}).then((response) => {
+				console.log(response)
+			})
 		}else{
 			console.log("dne")
 		}

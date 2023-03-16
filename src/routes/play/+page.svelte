@@ -242,6 +242,9 @@ const onFileSelected =(e)=> {
 			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" use:enhance>
 		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
 				name="file">
+				<input type="hidden" name="image" value={image}>
+				<input type="hidden" name="tm" value={monster.TM_ID}>
+				<input type="hidden" name="team" value={data.team_id}>
 				<br>
 				<center><button type="submit" class="button">Submit Image</button></center>
 			</form>
