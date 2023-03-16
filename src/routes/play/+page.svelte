@@ -170,7 +170,8 @@ function drawMonsters(scene){
 			}
 		})
 		if(!monExists){
-		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+		//gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+			gltfLoader.load("models/poly.glb", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 			gltf.scene.position.set(vector.x,vector.y,40);
     		gltf.scene.scale.set(10, 10, 10);
