@@ -158,15 +158,27 @@
 function drawMonsters(scene){
 	//loads the gltf models
 	data.monsters.forEach(element => {
+		let monExists = false;
+		gameData.forEach(previousMonster =>{
+			if(previousMonster.monster.TM_ID==element.TM_ID){
+				console.log("just need to test if this runs once get monsters runs on intervals")
+				monExists=true;
+				previousMonster.monster.Team1Score = element.Team1Score;
+				previousMonster.monster.Team2Score = element.Team2Score;
+				previousMonster.monster.Team3Score = element.Team3Score;
+				return true;
+			}
+		})
+		if(!monExists){
 		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
-			gltf.scene.position.set(vector.x,vector.y,vector.z);
-    		gltf.scene.scale.set(50, 50, 50);
+			gltf.scene.position.set(vector.x,vector.y,40);
+    		gltf.scene.scale.set(10, 10, 10);
 			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
 			scene.add(gltf.scene);
 			gameData.push({"monster":element,"model":gltf.scene})
 		})
-		
+	}
 	});
 	return scene;
 }
