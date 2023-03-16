@@ -7,10 +7,11 @@ export const load = (async (event) => {
 
 	let login_status: Boolean = false;
 	let username: String = ""
+	let team;
 	let monsters= [];
 	authkey = `Bearer ${event.cookies.get('AccessToken')}`
 
-	let url = "http://38.242.137.81:8000/api/users/me/"
+	let url = "http://38.242.137.81:8000/api/users/me"
 
 	const packet: RequestInit = {
 		headers: {
@@ -35,6 +36,8 @@ export const load = (async (event) => {
 				}
 					
 				username = out['user']['username']
+				team = out['team']['name']
+				
 				login_status = true;
 
 				url="http://38.242.137.81:8000/api/monsters/get-tms"
@@ -46,7 +49,8 @@ export const load = (async (event) => {
 			return {
 				logged_in: login_status,
 				username: username,
-				monsters:monsters, 
+				monsters: monsters,
+				team_id: team
 			};
 		} catch (error) {
 			throw redirect(302, '/login')
@@ -82,23 +86,22 @@ export const actions: Actions = {
 		const data = await request.formData();
 		if (data.get('image') != "" && data.get("tm") != "undefined"){
 			let team
-			let team_id
-			console.log(data.get('image'))
+			let teamID
 			if (data.get("team") == "Red") {
 				team = "T1Score"
-				team_id = 1
+				teamID = 1
 			} else if (data.get("team") == "Green"){
 				team = "T2Score"
-				team_id = 2
+				teamID = 2
 			} else {
 				team = "T3Score"
-				team_id = 3
+				teamID = 3
 			}
 			let pack = {
 				"TM_ID": Number(data.get("tm")),
 				[team]: 1
 			}
-			await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+			await fetch("http://38.242.137.81:8000/api/monsters/add-score/", {
 			method: 'POST',
 			body: JSON.stringify(pack),
 			mode: "cors",
@@ -108,22 +111,35 @@ export const actions: Actions = {
 				}
 			})
 			
+			console.log(data.get("image"))
+			console.log(data.get("team"))
+			console.log(data.get('tm'))
+			
 			let pack2 = {
-				"image": data.get('image'),
-				"team": team_id,
-				"monster": data.get('tm')
+				"b64_img": data.get("image"),
+				"team": data.get("team"),
+				"monster": data.get("tm")
 			}
-			await fetch("http://38.242.137.81:8000/api/images/submit-image", {
-				method: 'POST',
-				body: JSON.stringify(pack2),
-				mode: "cors",
+			
+			const formData  = new FormData();
+			for (const name in pack2) {
+				formData.append(name, pack2[name]);
+			}
+			
+			let url = "http://38.242.137.81:8000/api/images/submit-image/"
+			const packet: RequestInit = {
 				headers: {
-					"content-type": "application/json; charset=UTF-8",
+					"Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
 					"Authorization": authkey
-					}
-			}).then((response) => {
+				},
+				body: formData,
+				method: "POST",
+				mode: "cors"
+			}
+			await fetch(url, packet).then((response) => {
 				console.log(response)
 			})
+			
 		}else{
 			console.log("dne")
 		}
