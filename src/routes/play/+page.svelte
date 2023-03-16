@@ -51,7 +51,7 @@
 	async function createMap(latitude: number, longitude: number) {
 		//creates loader to get the map from the api
 		const loader = new Loader({
-		apiKey:  "",
+		apiKey:  "AIzaSyAjhTLsegGf1Zz7wgAU506zeXw2pHRUqe0",
 		version: "weekly",
 		libraries: ["places"],
 	});
@@ -64,7 +64,7 @@
 		tilt: 30,
 		zoom: 18,
 		//zoomControl: false,
-        gestureHandling: "none",
+        gestureHandling: "cooperative",
 		disableDefaultUI: true,
 		mapId: '805b0b106a1a291d'
 	}
@@ -115,14 +115,23 @@
 			const intersections = overlay.raycast(vector);
 
 			if(intersections.length>0){
+			let clicked = false;
 			intersections.forEach(element => {
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
 					if (m.model==element.object.parent){
+						if(!clicked){
 						monster=m.monster;
+						element.object.material.color.r=0.06;
+						clicked=true;
+						}
+					}
+					else{
+						if(element.object.material.color.r==0.06){
+							m.model.children[2].material.color.r=0.8227857351303101;
+						}
 					}
 				});
-				element.object.material.color.r=0.06;
 			});
 			}
 		})
@@ -202,19 +211,6 @@ const onFileSelected =(e)=> {
 <!-- pre loads hover image -->
 <link rel="preload" as="image" href="/images/upload_hover.png">
 <div class="map-wrapper">
-	<div class="map-modal">	
-		<div id="mapAwait">
-			<p id="awaitText">{errorMessage}</p>
-		</div>
-		<div id="mapContainer">
-			<div id="map">
-			</div>
-			<div class="below_map">
-				<button class="mapButton" on:click="{showCampus}">View Campus</button>
-				<button class="mapButton">Change Zoom</button>
-			</div>
-		</div>
-	</div>
 	<div class="submit-image">
 		{#if monster.TM_ID}
 			<p>{monster.TM_ID}</p>
@@ -241,6 +237,19 @@ const onFileSelected =(e)=> {
 			</form>
 		</div>
 	</div>
+	<div class="map-modal">	
+		<div id="mapAwait">
+			<p id="awaitText">{errorMessage}</p>
+		</div>
+		<div id="mapContainer">
+			<div id="map">
+			</div>
+			<div class="below_map">
+				<button class="mapButton" on:click="{showCampus}">View Campus</button>
+				<button class="mapButton">Change Zoom</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <style>
@@ -257,7 +266,8 @@ const onFileSelected =(e)=> {
 	.map-modal {
 		position: absolute; /* stays in fixed position */
 		left: 50%;
-		transform: translate(-50%, 15%); /* centers the map */
+		top: 50%;
+		transform: translate(-50%, -50%); /* centers the map */
 		width: 85vw;
 		height: 80vh;
 		display: grid;
@@ -338,6 +348,7 @@ const onFileSelected =(e)=> {
 	}
 	
 	.submit-image {
+		z-index: 2;
 		display: block;
 		position: relative;
 		left: 21%;
@@ -435,7 +446,7 @@ const onFileSelected =(e)=> {
 			position: relative;
 			left: -66.5%;
 			margin-top: 30px;
-			transform: translateX(0%); /* resets transformation from previous css */
+			transform: translate(0%, -10%); /* resets transformation from previous css */
 			width: 100vw;
 			background-color: transparent;
 			box-shadow: none;
@@ -449,32 +460,28 @@ const onFileSelected =(e)=> {
 		#mapContainer {
 			width: 100vw;
 		}
-		.below_map {
-			visibility: hidden;
-		}
 		.submit-image {
 			position: relative;
 			left: 0%;
+			transform: translateY(25%);
 			width: 100vw;
-			transform: translateY(-10%);
 			margin-bottom: 250px;
 		}
 		.map-wrapper {
-			transform: scale(1.05);
+			margin-top: 17%;
+			transform: scale(1.03);
 			position: relative;
 			overflow-x: hidden;
-			/* allows for vertical scrolling */
 			overflow-y: auto;
-			max-height: 96.5vh;
+			max-height: 85.5vh;
 		}
 	}
 	
 	@media screen and (min-width: 451px) and (max-width: 1000px) {
 		.map-modal {
 			position: relative;
-			margin-top: 30px;
 			left: 50%;
-			transform: translateX(-55%);
+			transform: translate(-55%, -10%);
 			width: fit-content;
 			background-color: transparent;
 			box-shadow: none;
@@ -488,22 +495,20 @@ const onFileSelected =(e)=> {
 		#mapContainer {
 			width: 84vw;
 		}
-		.below_map {
-			visibility: hidden;
-		}
 		.submit-image {
 			position: relative;
 			left: 0%;
-			transform: translateY(-10%);
+			transform: translateY(25%);
 			width: 100vw;
 			margin-bottom: 250px;
 		}
 		.map-wrapper {
+			margin-top: 17%;
 			transform: scale(1.03);
 			position: relative;
 			overflow-x: hidden;
 			overflow-y: auto;
-			max-height: 97.5vh;
+			max-height: 85.5vh;
 		}
 	}
 
