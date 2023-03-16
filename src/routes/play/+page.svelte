@@ -183,7 +183,10 @@ function showCampus(){
 	}
 }
 
-let image, fileinput;
+
+var image = null;
+var error = false
+let fileinput, nameText
 // placeholder text before submitting image
 var name = "Select Image"
 	
@@ -196,20 +199,26 @@ const onFileSelected =(e)=> {
 		name = name.slice(0, 17) + "..."
 	}
 	let reader = new FileReader();
-	
-	reader.readAsDataURL(tempImage);
-	reader.onload = e => {
-		// display uploaded image
-		image = e.target.result
-    };
+	if (e.target.files[0].size > 4194304) {
+		error = true
+		image = null
+		name = "File size too big! Please submit a file below 4mb!"
+	} else {
+		error = false
+		reader.readAsDataURL(tempImage);
+		reader.onload = e => {
+			// display uploaded image
+			image = e.target.result
+	    };
+	}
 }
-
 	
 </script>
 
 
 <!-- pre loads hover image -->
 <link rel="preload" as="image" href="/images/upload_hover.png">
+<link rel="preload" as="image" href="/images/upload_hover_mobile.png">
 <div class="map-wrapper">
 	<div class="submit-image">
 		{#if monster.name}
@@ -224,11 +233,18 @@ const onFileSelected =(e)=> {
 			<br>
 			<div class="upload-container">
 				<center><img class="upload" src="/images/upload.png" alt="" on:click={()=>{fileinput.click();}} /></center>
-		        <span class="upload-click" on:click={()=>{fileinput.click();}}>{name}</span>
+				{#if error !== true}
+			        <span class="upload-click" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
+				{:else}
+					<span class="upload-click-error" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
+				{/if}
 			</div>
-			<form method="POST" action="?/uploadImage" use:enhance>
+			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" use:enhance>
 		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
 				name="file">
+				<input type="hidden" name="image" value={image}>
+				<input type="hidden" name="tm" value={monster.TM_ID}>
+				<input type="hidden" name="team" value={data.team_id}>
 				<br>
 				<center><button type="submit" class="button">Submit Image</button></center>
 			</form>
@@ -352,7 +368,8 @@ const onFileSelected =(e)=> {
 		top: 0%;
 		height: 30vh;
 		width: fit-content;
-		transform: translate(-50%, 30vh);
+		max-width: 260px;
+		transform: translate(-50%, 85%);
 	}
 	
 	.image-display {
@@ -364,10 +381,6 @@ const onFileSelected =(e)=> {
 		height:50px;
 		width:50px;
 		cursor:pointer;
-	}
-	
-	.upload:hover{
-		content: url("/images/upload_hover.png");
 	}
 	
 	.image{
@@ -393,18 +406,38 @@ const onFileSelected =(e)=> {
 		color: white;
 		cursor: pointer;
 		top: 50%;
-		transform: translateY(35%); /* moves button down */
-		padding-left: 0.5rem;
+		margin: auto;
+		padding-left: 5px;
+		width: fit-content;
 	}
 	
-	.upload-click:hover {
-		color: #FCDFC4;
+	.upload-click-error {
+		font-family: "Montserrat", sans-serif;
+		color: #FF8B8B;
+		cursor: pointer;
+		top: 50%;
+		margin: auto;
+		padding-left: 5px;
+		width: fit-content;
 	}
 	
 	.upload-container {
 		justify-content: center;
 		margin: auto;
+		width: fit-content;
 		display: flex;
+	}
+	
+	.upload-container:hover .upload-click {
+		color: #FCDFC4;
+	}
+	
+	.upload-container:hover .upload {
+		content: url("/images/upload_hover.png");
+	}
+	
+	.upload-container:hover .upload-click-error {
+		color: #FCDFC4;
 	}
 	
 	button {
@@ -457,20 +490,36 @@ const onFileSelected =(e)=> {
 		#mapContainer {
 			width: 100vw;
 		}
+		.below_map {
+			padding-left: 4%;
+		}
 		.submit-image {
 			position: relative;
 			left: 0%;
 			transform: translateY(25%);
 			width: 100vw;
 			margin-bottom: 250px;
+			max-width: 100vw;
 		}
 		.map-wrapper {
-			margin-top: 17%;
+			margin-top: 100px;
 			transform: scale(1.03);
 			position: relative;
 			overflow-x: hidden;
 			overflow-y: auto;
 			max-height: 85.5vh;
+		}
+		
+		.upload-container:hover .upload-click {
+			color: #977453;
+		}
+		
+		.upload-container:hover .upload {
+			content: url("/images/upload_hover_mobile.png");
+		}
+		
+		.image {
+			box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
 		}
 	}
 	
@@ -498,14 +547,27 @@ const onFileSelected =(e)=> {
 			transform: translateY(25%);
 			width: 100vw;
 			margin-bottom: 250px;
+			max-width: 100vw;
 		}
 		.map-wrapper {
-			margin-top: 17%;
+			margin-top: 100px;
 			transform: scale(1.03);
 			position: relative;
 			overflow-x: hidden;
 			overflow-y: auto;
 			max-height: 85.5vh;
+		}
+		
+		.upload-container:hover .upload-click {
+			color: #977453;
+		}
+		
+		.upload-container:hover .upload {
+			content: url("/images/upload_hover_mobile.png");
+		}
+		
+		.image {
+			box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
 		}
 	}
 
