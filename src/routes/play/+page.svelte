@@ -480,6 +480,7 @@ const onFileSelected =(e)=> {
 			width: 100vw;
 			background-color: transparent;
 			box-shadow: none;
+			margin-bottom: 200px;
 		}
 		#map {
 			width: 100vw;
@@ -491,7 +492,7 @@ const onFileSelected =(e)=> {
 			width: 100vw;
 		}
 		.below_map {
-			padding-left: 4%;
+			display: none;
 		}
 		.submit-image {
 			position: relative;
@@ -502,12 +503,12 @@ const onFileSelected =(e)=> {
 			max-width: 100vw;
 		}
 		.map-wrapper {
-			margin-top: 100px;
+			margin-top: 60px;
 			transform: scale(1.03);
 			position: relative;
 			overflow-x: hidden;
 			overflow-y: auto;
-			max-height: 85.5vh;
+			max-height: 91.5vh;
 		}
 		
 		.upload-container:hover .upload-click {
@@ -531,6 +532,7 @@ const onFileSelected =(e)=> {
 			width: fit-content;
 			background-color: transparent;
 			box-shadow: none;
+			margin-bottom: 200px;
 		}
 		#map {
 			width: 84vw;
@@ -550,14 +552,16 @@ const onFileSelected =(e)=> {
 			max-width: 100vw;
 		}
 		.map-wrapper {
-			margin-top: 100px;
+			margin-top: 80px;
 			transform: scale(1.03);
 			position: relative;
 			overflow-x: hidden;
 			overflow-y: auto;
-			max-height: 85.5vh;
+			max-height: 88.5vh;
 		}
-		
+		.below_map {
+			display: none;
+		}
 		.upload-container:hover .upload-click {
 			color: #977453;
 		}
