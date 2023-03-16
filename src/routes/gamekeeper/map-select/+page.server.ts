@@ -41,9 +41,6 @@ export const load = (async (event) => {
 				await event.fetch(url,packet).then((response) => response.json().then((out) => {
 					monsters=out;
 				}))
-
-				
-				
 			})
 
 			return {
