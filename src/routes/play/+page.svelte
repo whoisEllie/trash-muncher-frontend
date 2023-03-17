@@ -11,6 +11,7 @@
 	export let data;
 
 	var locationTracking=true;
+	var location = {"lat":null,"lng":null};
 	var errorMessage: string = "Awaiting map.";
 	var map;
 	var overlay;
@@ -34,7 +35,9 @@
 
 	function success(position){
 		//updates the current player position
-		map.setCenter({lat:position.coords.latitude,lng:position.coords.longitude})
+		location.lat=position.coords.latitude;
+		location.lng=position.coords.longitude;
+		map.setCenter({lat:position.coords.latitude,lng:position.coords.longitude});
 	}
 
 	function getPosition(){
@@ -170,8 +173,8 @@ function drawMonsters(scene){
 			}
 		})
 		if(!monExists){
-		//gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
-			gltfLoader.load("models/poly.glb", (gltf) => {
+		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+			//gltfLoader.load("models/poly.glb", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 			gltf.scene.position.set(vector.x,vector.y,40);
     		gltf.scene.scale.set(10, 10, 10);
@@ -258,7 +261,8 @@ const onFileSelected =(e)=> {
 				<input type="hidden" name="image" value={image}>
 				<input type="hidden" name="tm" value={monster.TM_ID}>
 				<input type="hidden" name="team" value={data.team_id}>
-				<br>
+				<input type="hidden" name="lat" value={location.lat}>
+				<input type="hidden" name="lng" value={location.lng}>
 				<center><button type="submit" class="button">Submit Image</button></center>
 			</form>
 		</div>
