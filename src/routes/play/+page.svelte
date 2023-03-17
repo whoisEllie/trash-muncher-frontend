@@ -5,6 +5,7 @@
 	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
     import { enhance } from '$app/forms';
+	import {TWEEN} from 'three/examples/jsm/libs/tween.module.min'
 
 
 	/** @type {import('./$types').PageData} */
@@ -14,6 +15,7 @@
 	var location = {"lat":null,"lng":null};
 	var errorMessage: string = "Awaiting map.";
 	var map;
+	var playerModel;
 	var overlay;
 	var vector = new Vector2();
 	let monster={}
@@ -22,6 +24,8 @@
 	
 	onMount(() => {
 		getPosition().then((position: Position) =>{
+			location.lat=position.coords.latitude;
+			location.lng=position.coords.longitude;
   			createMap(position.coords.latitude,position.coords.longitude);
 		}).then(()=>{
 			setInterval(()=>{
@@ -37,7 +41,11 @@
 		//updates the current player position
 		location.lat=position.coords.latitude;
 		location.lng=position.coords.longitude;
-		map.setCenter({lat:position.coords.latitude,lng:position.coords.longitude});
+		let vector = overlay.latLngAltToVector3({lat:location.lat,lng:location.lng})
+		//playerModel.position.set(vector.x,vector.y,0);
+		//console.log(playerModel.position)
+		new TWEEN.Tween(playerModel.position).to({x: vector.x,y:vector.y},1000).start()
+		//map.panTo({lat:position.coords.latitude,lng:position.coords.longitude});
 	}
 
 	function getPosition(){
@@ -67,8 +75,11 @@
 		},
 		tilt: 30,
 		zoom: 18,
+		maxZoom: 18,
+		minZoom:15,
+		panControl:false,
 		//zoomControl: false,
-        gestureHandling: "cooperative",
+        gestureHandling: "auto",
 		disableDefaultUI: true,
 		mapId: '805b0b106a1a291d'
 	}
@@ -80,6 +91,8 @@
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
 			let scene = initWebglOverlayView(map);
 			scene = drawMonsters(scene);
+			let button=document.getElementById("location");
+			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
 		})
 		.catch((e) => {
 			//do something :sparkle:
@@ -106,6 +119,18 @@
     	// Sets a reference point for drawing onto the map (dont change its kinda important for setting relative points)
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		
+		gltfLoader.load("models/sans.gltf", (gltf) => {
+			//gltfLoader.load("models/poly.glb", (gltf) => {
+			let vector = overlay.latLngAltToVector3({lat:location.lat,lng:location.lng})
+			playerModel = gltf.scene;
+			playerModel.position.set(vector.x,vector.y,0);
+			console.log("position:"+playerModel.position.x)
+    		playerModel.scale.set(10, 10, 10);
+			playerModel.rotation.x = Math.PI/2; // Rotations are in radians.
+			scene.add(playerModel);
+			
+		})
+
 		//creates a listener to detect mouse clicks onto the map. Raycasts for 3d objects, and shows coordinates when clicking everywhere else
 		map.addListener('click', (event) => {
 			const {domEvent} = event;
@@ -145,7 +170,7 @@
 				element.model.rotateZ(MathUtils.degToRad(0.2));
 			});
 			overlay.requestRedraw();
-  			
+			TWEEN.update()
 
   			requestAnimationFrame(animate);
 		};
@@ -198,6 +223,9 @@ function showCampus(){
 		map.setZoom(18)
 	}
 }
+function goToLocation(){
+	map.panTo({lat:location.lat,lng:location.lng});
+}
 
 
 var image = null;
@@ -235,6 +263,7 @@ const onFileSelected =(e)=> {
 <!-- pre loads hover image -->
 <link rel="preload" as="image" href="/images/upload_hover.png">
 <link rel="preload" as="image" href="/images/upload_hover_mobile.png">
+<button id="location" on:click={goToLocation}>location</button>
 <div class="map-wrapper">
 	<div class="submit-image">
 		{#if monster.name}
