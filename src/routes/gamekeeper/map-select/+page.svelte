@@ -101,11 +101,17 @@
 						t1score=monster.Team1_Score;
 						t2score=monster.Team2_Score;
 						t3score=monster.Team3_Score;
+						element.object.material.color.r=0.06;
+						
+					}
+					else{
+						if(element.object.material.color.r==0.06){
+							m.model.children[2].material.color.r=0.8227857351303101;
+						}
 					}
 				});
 				//sets form to choose whether to add or update the monster's score
                 formChoice=2;
-				element.object.material.color.r=0.06;
 			});
 			}
 			else{
@@ -140,7 +146,7 @@ function drawMonsters(scene){
 		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 			gltf.scene.position.set(vector.x,vector.y,vector.z);
-    		gltf.scene.scale.set(50, 50, 50);
+    		gltf.scene.scale.set(30, 30, 30);
 
 			//will initialise the animations for each monster here
 			mixer = new AnimationMixer(gltf.scene);

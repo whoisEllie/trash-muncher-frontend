@@ -16,7 +16,7 @@ export const load = (async (event) => {
 	const packet: RequestInit = {
 		headers: {
 			"content-type": "application/json; charset=UTF-8",
-			"Authorization": `Bearer ${event.cookies.get('AccessToken')}`
+			"Authorization": cookies
 		},
 		method: "GET",
 		mode: "cors"
@@ -57,7 +57,7 @@ export const load = (async (event) => {
 
 export const actions: Actions = {
 	//creates a new monster
-	newMonster: async ({cookies, request}) => {
+	newMonster: async ({request}) => {
 		// Returns data from the submitted form
 		const formData = await request.formData();
 
@@ -70,7 +70,7 @@ export const actions: Actions = {
 		const packet: RequestInit = {
 			headers: {
 				"content-type": "application/json; charset=UTF-8",
-				"Authorization": `Bearer ${cookies.get('AccessToken')}`
+				"Authorization": cookies
 			},
 			body: JSON.stringify(data),
 			method: "POST",
@@ -126,3 +126,4 @@ export const actions: Actions = {
 	}
 	
 }
+

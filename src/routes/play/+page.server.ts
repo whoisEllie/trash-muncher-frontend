@@ -101,6 +101,23 @@ export const actions: Actions = {
 				"TM_ID": Number(data.get("tm")),
 				[team]: 1
 			}
+			let location = {
+				"TM_ID": Number(data.get("tm")),
+				"o-lat": data.get("lat"),
+				"o-long": data.get("lng")
+			}
+
+			await fetch("http://38.242.137.81:8000/api/monsters/verify-distance", {
+			method: 'POST',
+			body: JSON.stringify(location),
+			mode: "cors",
+			headers: {
+				"content-type": "application/json; charset=UTF-8",
+				"Authorization": authkey
+				}
+			}).then((response) => response.json()).then(out => {console.log(out)})
+		
+			
 			await fetch("http://38.242.137.81:8000/api/monsters/add-score/", {
 			method: 'POST',
 			body: JSON.stringify(pack),
@@ -111,16 +128,20 @@ export const actions: Actions = {
 				}
 			})
 			
-			console.log(data.get("image"))
-			console.log(data.get("team"))
-			console.log(data.get('tm'))
+
+			
+			
+
+			//console.log(data.get("image"))
+			//console.log(data.get("team"))
+			//console.log(data.get('tm'))
 			
 			let pack2 = {
 				"b64_img": data.get("image"),
 				"team": data.get("team"),
 				"monster": data.get("tm")
 			}
-			
+			console.log(data.get("tm"))
 			const formData  = new FormData();
 			for (const name in pack2) {
 				formData.append(name, pack2[name]);
@@ -137,7 +158,7 @@ export const actions: Actions = {
 				mode: "cors"
 			}
 			await fetch(url, packet).then((response) => {
-				console.log(response)
+				//console.log(response)
 			})
 			
 		}else{
