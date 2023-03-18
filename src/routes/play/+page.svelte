@@ -80,7 +80,10 @@
 		panControl:false,
 		//zoomControl: false,
         gestureHandling: "auto",
-		disableDefaultUI: true,
+		//disableDefaultUI: true,
+		streetViewControl:false,
+		mapTypeControl:false,
+		fullscreenControl:false,
 		mapId: '805b0b106a1a291d'
 	}
 
@@ -153,6 +156,7 @@
 						monster=m.monster;
 						element.object.material.color.r=0.06;
 						clicked=true;
+						console.log(monster.TM_Name)
 						}
 					}
 					else{
@@ -263,11 +267,11 @@ const onFileSelected =(e)=> {
 <!-- pre loads hover image -->
 <link rel="preload" as="image" href="/images/upload_hover.png">
 <link rel="preload" as="image" href="/images/upload_hover_mobile.png">
-<button id="location" on:click={goToLocation}>location</button>
+<button id="location" on:click={goToLocation}><img src="images/location.png"></button>
 <div class="map-wrapper">
 	<div class="submit-image">
-		{#if monster.name}
-			<p>{monster.name}</p>
+		{#if monster.TM_Name !=undefined}
+			<p>{monster.TM_Name}</p>
 		{/if}
 		<div class="image-display">
 	        {#if image}
