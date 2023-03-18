@@ -5,6 +5,8 @@
 		location.reload()
 	}
 	
+	var submitted = false
+	
 </script>
 
 <div class = "grid">
@@ -17,11 +19,18 @@
 				<!-- hidden form to load data into server side API call -->
 				<input type="hidden" name="id" value={i.id}>
 				<input type="hidden" name="team" value={i.team}>
-				<input type="hidden" name="tm" value={i.monster}>
-
-				<button type="submit" class="deny" formaction="?/deny" style="border: 0; background: transparent; cursor: pointer;">
-					<img src="/images/deny.png" width="30" height="30" />
-				</button>
+				<input type="hidden" name="tm" value={i.monster_id}>
+				
+				{#if !submitted}
+					<button type="submit" class="deny" formaction="?/deny" style="border: 0; on:click={submitted = true}
+					background: transparent; cursor: pointer;">
+						<img src="/images/deny.png" width="30" height="30" />
+					</button>
+				{:else}
+					<button type="submit" class="deny" style="border: 0; background: transparent; cursor: pointer;">
+						<img src="/images/deny.png" width="30" height="30" />
+					</button>
+				{/if}
 			</form>
 
 			<form method="POST" action="?/accept">
@@ -78,6 +87,8 @@
 		position: absolute;
 		top: 93%;
 		right: -3%;
+		background-color: transparent;
+		outline: none;
 	}
 	
 	.accept {

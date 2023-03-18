@@ -123,7 +123,7 @@ export const actions: Actions = {
 			})
 		
 			if (inRange) {
-				await fetch("http://38.242.137.81:8000/api/monsters/add-score/", {
+				await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
 				method: 'POST',
 				body: JSON.stringify(pack),
 				mode: "cors",

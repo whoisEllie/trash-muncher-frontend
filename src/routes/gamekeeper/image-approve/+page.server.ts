@@ -75,7 +75,7 @@ export const actions : Actions = {
 		} else {
 			team = "T3Score"
 		}
-
+		
 		let pack2 = {
 			"TM_ID": Number(data.get("tm")),
 			[team]: 1
