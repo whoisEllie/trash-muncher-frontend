@@ -151,18 +151,13 @@
 			intersections.forEach(element => {
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
+					m.model.children[0].material.color.r=0.8227857351303101;
 					if (m.model==element.object.parent){
-						if(!clicked){
+						//if(!clicked){
 						monster=m.monster;
 						element.object.material.color.r=0.06;
 						clicked=true;
-						console.log(monster.TM_Name)
-						}
-					}
-					else{
-						if(element.object.material.color.r==0.06){
-							m.model.children[2].material.color.r=0.8227857351303101;
-						}
+						//}
 					}
 				});
 			});
