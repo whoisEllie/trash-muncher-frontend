@@ -21,6 +21,7 @@
 	var vector = new Vector2();
 	let monster={}
 	var gameData = [];
+	
 	const gltfLoader = new GLTFLoader();
 	
 	onMount(() => {
@@ -158,12 +159,16 @@
 						monster=m.monster;
 						element.object.material.color.r=0.06;
 						clicked=true;
+						addHTML()
 						//}
 					}
+
 				});
 			});
 			}
 		})
+		
+
 
 		const animate = () => { //cool animations
 			gameData.forEach(element => {
@@ -181,6 +186,48 @@
 		// start animation loop
 		requestAnimationFrame(animate);
 		return scene;
+}
+
+let spans = []
+function addHTML() {
+	spans = []
+	let scores = []
+	let sortedScores = []
+	scores.push("" + monster.Team1_Score + 1)
+	scores.push("" + monster.Team2_Score + 2)
+	scores.push("" + monster.Team3_Score + 3)
+	scores.sort((a,b)=>b-a)
+	var order = []
+	for (var i = 0; i < scores.length; i++) {
+		if (scores[i] % 10 == 1) {
+			sortedScores.push("Red Score: " + Math.floor(scores[i]/10))
+			order[i] = "red"
+		}
+		if (scores[i] % 10 == 2) {
+			sortedScores.push("Green Score: " + Math.floor(scores[i]/10))
+			order[i] = "green"
+		}
+		if (scores[i] % 10 == 3) {
+			sortedScores.push("Blue Score: " + Math.floor(scores[i]/10))
+			order[i] = "blue"
+		}
+	}
+	
+	for (var i = 0; i < sortedScores.length; i++) {
+		var team = order[i]
+		var span = document.createElement('span')
+		if (order[i] == "red") {
+			span.style.color = "#EA6E6E"
+		}
+		if (order[i] == "blue") {
+			span.style.color = "#6285DC"
+		}
+		if (order[i] == "green") {
+			span.style.color = "#6DC462"
+		}
+		span.innerHTML = sortedScores[i]
+		spans.push(span.outerHTML)
+	}
 }
 
 function drawMonsters(scene){
@@ -263,12 +310,9 @@ const onFileSelected =(e)=> {
 <!-- pre loads hover image -->
 <link rel="preload" as="image" href="/images/upload_hover.png">
 <link rel="preload" as="image" href="/images/upload_hover_mobile.png">
-<button id="location" on:click={goToLocation}><img src="images/location.png"></button>
+<button id="location" on:click={goToLocation}><img class="location" src="images/location.png"></button>
 <div class="map-wrapper">
 	<div class="submit-image">
-		{#if monster.TM_Name !=undefined}
-			<p>{monster.TM_Name}</p>
-		{/if}
 		<div class="image-display">
 	        {#if image}
 				<center><img class="image" src="{image}" alt="d" /></center>
@@ -308,6 +352,14 @@ const onFileSelected =(e)=> {
 		</div>
 		<div id="mapContainer">
 			<div id="map">
+				{#if Object.keys(monster).length > 0}
+				<div class="monsterScore">
+					Name: {monster.TM_Name}<br>
+					{#each spans as item}
+						{@html item}<br>
+					{/each}
+				</div>
+				{/if}
 			</div>
 			<div class="below_map">
 				<button class="mapButton" on:click="{showCampus}">View Campus</button>
@@ -401,6 +453,17 @@ const onFileSelected =(e)=> {
 	.mapButton:hover {
 		background-color: #F0F0F0;
 	}
+	
+	.monsterScore {
+		background-color: #E0E0E0;
+		position: relative;
+		width: fit-content;
+		padding: 10px 20px 10px 10px;
+		font-size: 1.1em;
+		box-shadow: 0px 0px 16px #00000044;
+		border-radius: 15px;
+		font-family: "Montserrat", sans-serif;
+	}
 
 	#errorText{
 		font-size: 1.2em;
@@ -410,6 +473,18 @@ const onFileSelected =(e)=> {
 		width: 50vw;
 		font-family: "Montserrat", sans-serif;
 
+	}
+	
+	.location {
+		width: 25px;
+		height: 25px;
+	}
+	
+	#location {
+		top: 1%;
+		margin-right: 1%;
+		width: 50px;
+		height: 50px;
 	}
 	
 	.submit-image {
