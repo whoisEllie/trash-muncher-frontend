@@ -1,4 +1,5 @@
 <script lang="ts">
+	export let data;
 </script>
 
 <div class="home-wrapper">
@@ -8,7 +9,14 @@
 			<p class="title-munchers">MUNCHERS</p>
 		</div>
 		<p class="description">A location-based game to promote <br>sustainability at the University of Exeter</p>
-		<a class="start" href="/play">Let's go!</a>
+		{#if data?.gamekeeper === true}
+			<div class="button-wrapper">
+				<a class="buttons" href="/gamekeeper/map-select">Add monsters</a>
+				<a class="buttons" href="/gamekeeper/image-approve">Approve images</a>
+			</div>
+		{:else}
+			<a class="start" href="/play">Let's go!</a>
+		{/if}
 	</div>
 </div>
 
@@ -63,6 +71,12 @@
 		font-size: 1rem;
 		letter-spacing: 0.2vw;
 	}
+	
+	.button-wrapper {
+		display: grid;
+		grid-template-areas:
+		". .";
+	}
 		
 	.start {
 		display: flex;
@@ -76,8 +90,7 @@
 		box-shadow: 0px 0px 16px #00000044;
 		transition: all 0.5s; /* allows button colour fade/shape change to be animated */
 		padding: 0 50px;
-		min-width: 140px;
-		max-width: 540px;
+		width: fit-content;
 		height: 70px;
 		margin: 25px auto;
 		text-decoration: none;
@@ -85,6 +98,33 @@
 	}
 
 	.start:hover {
+		background-color: #DFC9B5;
+		border-radius: 25px;
+		transition: all 0.5s ease 0.0s;
+	}
+
+
+	.buttons {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		border-radius: 20px;
+		font-family: 'Chilanka', cursive;
+		font-size: 1.5rem;
+		background-color: #B5D3D2;
+		box-shadow: 0px 0px 16px #00000044;
+		transition: all 0.5s; /* allows button colour fade/shape change to be animated */
+		padding: 0 25px;
+		width: fit-content;
+		height: 70px;
+		margin: 25px auto;
+		text-decoration: none;
+		color: black;
+	}
+
+	.buttons:hover {
 		background-color: #DFC9B5;
 		border-radius: 25px;
 		transition: all 0.5s ease 0.0s;
@@ -102,6 +142,11 @@
 
 		.title-munchers {
 			transform: translate(0.75rem, 0rem);
+		}
+		
+		.buttons {
+			margin: 10px;
+			font-size: 1.3rem;
 		}
 	}
 
@@ -123,6 +168,21 @@
 			font-size: 1rem;
 			min-width: 80px;
 			height: 60px;
+		}
+		
+		.buttons {
+			font-size: 1rem;
+			min-width: 80px;
+			height: 60px;
+		}
+		
+		.button-wrapper {
+			margin: auto;
+			margin-top: 20px;
+			justify-items: center;
+			grid-template-areas:
+			"."
+			".";
 		}
 	}
 
