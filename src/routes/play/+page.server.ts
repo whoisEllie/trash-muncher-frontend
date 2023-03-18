@@ -161,6 +161,12 @@ export const actions: Actions = {
 						message: "Image successfully uploaded!"
 					}
 				} catch(error) {
+					if (error["status"] == 429) {
+						return {
+							success: false,
+							message: "Please wait 24 hours between image submissions."
+						}
+					}
 					return {
 						success: false,
 						message: "Unexpected error."
