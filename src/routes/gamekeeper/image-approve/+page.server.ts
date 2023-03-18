@@ -18,7 +18,6 @@ export const load = (async (event) => {
 	}
 
 	const key = event.cookies.get('AccessToken')
-
 	const imageData = await event.fetch(url, packet).then((response) => response.json());
 	
 	return {
@@ -46,6 +45,7 @@ export const actions : Actions = {
 		})
 	},
 	deny: async ({ request }) => {
+		let success;
 		const data = await request.formData();
 		let pack = {
 			"id": Number(data.get("id"))
@@ -58,7 +58,13 @@ export const actions : Actions = {
 				"content-type": "application/json; charset=UTF-8",
 				"Authorization": authkey
 			}
-		})
+		}).then((response) => response.json()).then(out => {
+			if (out["message"] == "Image with specified ID does not exist") {
+				success = false;
+			} else {
+				success = true;
+			}
+		});
 
 		// updates team score based on given team
 		let team
@@ -69,21 +75,23 @@ export const actions : Actions = {
 		} else {
 			team = "T3Score"
 		}
-
+		
 		let pack2 = {
 			"TM_ID": Number(data.get("tm")),
 			[team]: 1
 		}
 		
-		// sends request
-		await fetch("http://38.242.137.81:8000/api/monsters/remove-score", {
-			method: 'POST',
-			body: JSON.stringify(pack2),
-			mode: "cors",
-			headers: {
-				"content-type": "application/json; charset=UTF-8",
-				"Authorization": authkey
-			}
-		})
+		if(success) {
+			// sends request
+			await fetch("http://38.242.137.81:8000/api/monsters/remove-score", {
+				method: 'POST',
+				body: JSON.stringify(pack2),
+				mode: "cors",
+				headers: {
+					"content-type": "application/json; charset=UTF-8",
+					"Authorization": authkey
+				}
+			})
+		}
 	}
 }

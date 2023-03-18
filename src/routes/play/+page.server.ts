@@ -83,10 +83,11 @@ export const actions: Actions = {
 	},
 	
 	uploadImage: async ({cookies, request}) => {
+		
 		const data = await request.formData();
+		let inRange = false
 		if (data.get('image') != "" && data.get("tm") != "undefined"){
-			let team
-			let teamID
+			let team, teamID
 			if (data.get("team") == "Red") {
 				team = "T1Score"
 				teamID = 1
@@ -115,52 +116,51 @@ export const actions: Actions = {
 				"content-type": "application/json; charset=UTF-8",
 				"Authorization": authkey
 				}
-			}).then((response) => response.json()).then(out => {console.log(out)})
-		
-			
-			await fetch("http://38.242.137.81:8000/api/monsters/add-score/", {
-			method: 'POST',
-			body: JSON.stringify(pack),
-			mode: "cors",
-			headers: {
-				"content-type": "application/json; charset=UTF-8",
-				"Authorization": authkey
+			}).then((response) => response.json()).then(out => {
+				if (out == true) {
+					inRange = true
 				}
 			})
-			
-
-			
-			
-
-			//console.log(data.get("image"))
-			//console.log(data.get("team"))
-			//console.log(data.get('tm'))
-			
-			let pack2 = {
-				"b64_img": data.get("image"),
-				"team": data.get("team"),
-				"monster": data.get("tm")
-			}
-			console.log(data.get("tm"))
-			const formData  = new FormData();
-			for (const name in pack2) {
-				formData.append(name, pack2[name]);
-			}
-			
-			let url = "http://38.242.137.81:8000/api/images/submit-image/"
-			const packet: RequestInit = {
+		
+			if (inRange) {
+				await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+				method: 'POST',
+				body: JSON.stringify(pack),
+				mode: "cors",
 				headers: {
-					"Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+					"content-type": "application/json; charset=UTF-8",
 					"Authorization": authkey
-				},
-				body: formData,
-				method: "POST",
-				mode: "cors"
+					}
+				})
+				
+				let pack2 = {
+					"b64_img": data.get("image"),
+					"monster_id": data.get("tm"),
+					"team": teamID
+				}
+				
+				const formData  = new FormData();
+				for (const name in pack2) {
+					formData.append(name, pack2[name]);
+				}
+				
+				let url = "http://38.242.137.81:8000/api/images/submit-image/"
+				const packet: RequestInit = {
+					headers: {
+						"Authorization": authkey
+					},
+					body: formData,
+					method: "POST",
+					mode: "cors"
+				}
+	
+	
+				await fetch(url, packet).then((response) => response.json().then((out) => {
+					console.log("success!")
+				}))
+			} else {
+				console.log("not in distance")
 			}
-			await fetch(url, packet).then((response) => {
-				//console.log(response)
-			})
-			
 		}else{
 			console.log("dne")
 		}
