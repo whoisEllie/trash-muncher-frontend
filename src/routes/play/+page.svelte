@@ -10,6 +10,7 @@
 
 	/** @type {import('./$types').PageData} */
 	export let data;
+	export let form;
 
 	var locationTracking=true;
 	var location = {"lat":null,"lng":null};
@@ -275,10 +276,16 @@ const onFileSelected =(e)=> {
 			<br>
 			<div class="upload-container">
 				<center><img class="upload" src="/images/upload.png" alt="" on:click={()=>{fileinput.click();}} /></center>
-				{#if error !== true}
-			        <span class="upload-click" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
+				{#if form?.success === false}
+					<span class="upload-click-error" on:click={()=>{fileinput.click();}} bind:this={nameText}>{form.message}</span>
+				{:else if form?.success === true}
+					<span class="upload-click-success" on:click={()=>{fileinput.click();}} bind:this={nameText}>{form.message}</span>
 				{:else}
-					<span class="upload-click-error" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
+					{#if error !== true}
+				        <span class="upload-click" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
+					{:else}
+						<span class="upload-click-error" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
+					{/if}
 				{/if}
 			</div>
 			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" use:enhance>
@@ -420,9 +427,9 @@ const onFileSelected =(e)=> {
 	}
 	
 	.upload{
-		display:flex;
 		height:50px;
 		width:50px;
+		padding-bottom: 10px;
 		cursor:pointer;
 	}
 	
@@ -461,7 +468,17 @@ const onFileSelected =(e)=> {
 		top: 50%;
 		margin: auto;
 		padding-left: 5px;
-		width: fit-content;
+		width: 180px;
+	}
+	
+	.upload-click-success {
+		font-family: "Montserrat", sans-serif;
+		color: #A2FF8B;
+		cursor: pointer;
+		top: 50%;
+		margin: auto;
+		padding-left: 5px;
+		width: 160px;
 	}
 	
 	.upload-container {
@@ -480,6 +497,10 @@ const onFileSelected =(e)=> {
 	}
 	
 	.upload-container:hover .upload-click-error {
+		color: #FCDFC4;
+	}
+	
+	.upload-container:hover .upload-click-success {
 		color: #FCDFC4;
 	}
 	

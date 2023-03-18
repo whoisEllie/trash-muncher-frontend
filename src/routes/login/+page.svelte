@@ -1,4 +1,5 @@
 <script lang="ts">
+	export let form
 </script>
 
 <div class="login-wrapper">
@@ -6,8 +7,14 @@
 		<p class="title-trash">TRASH</p>
 		<p class="title-munchers">MUNCHERS</p>
 	</div>
+  <div class="form-wrapper">
+	{#if form?.success === false}
+	<br>
+	<div class="success-wrapper">
+		<span class="fail-text">{form.message}</span>
+	</div>
+	{/if}
   <form class="form" method="POST">
-  		<br>
 		<div class="inputbox">
 			<input name="username" type="text" required>
 			<label for="">Username</label>
@@ -19,6 +26,7 @@
 		<a href="/forgot-password" class="forgot-password">Forgot password?</a><br>
   <button>Log in</button>
   </form>
+  </div>
 </div>
 
 <style>
@@ -39,12 +47,28 @@
    		flex-direction: column;
 		justify-content: center;
 	}
+	
+	.success-wrapper {
+		margin: auto;
+		text-align: center;
+		width: 70%;
+		padding-bottom: 10px;
+	}
+	
+	.fail-text {
+		color: red;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.1rem;
+	}
 
-	.form {
+	.form-wrapper {
 		background: #ECECEC;
 		border-radius: 1.5rem;
-		padding: 20px 25px;
-		box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.4);
+		padding-top: 35px;
+		box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.4);	
+	}
+	
+	.form {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -72,7 +96,7 @@
 
 	.inputbox {
 		position: relative;
-		margin: 35px 0px;
+		margin: 25px 0px;
 		border-bottom: 2px solid #000; /* line under input box */
 	}
 
