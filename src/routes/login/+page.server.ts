@@ -53,11 +53,15 @@ export const actions: Actions = {
 					success: success,
 					message: message
 				}
-			}		
+			}
 		} catch(error) {
-			return {
-				success: false,
-				message: "Unexpected error!"
+			if (error["status"] == 302) {
+				throw redirect(302, '/')
+			} else {
+				return {
+					success: false,
+					message: "Unexpected error!"
+				}
 			}
 		}
 	}
