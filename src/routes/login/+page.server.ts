@@ -19,31 +19,46 @@ export const actions: Actions = {
 			mode: "cors"
 		}
 
+		let success, message
 
-		await fetch(url, packet).then((response) => response.json()).then((out) => {
-
-			if (out['message'] === 'Invalid username or password!!') {
-				console.log("Invalid username and shit lol")
-				return;
-			}
-
-			cookies.set('AccessToken', `${out['access']}`, {
-			httpOnly: true,
-			path: '/',
-			secure: true,
-			sameSite: 'strict',
-			maxAge: 86400 /* 1 day */
-			})
+		try {
+			await fetch(url, packet).then((response) => response.json()).then((out) => {
+	
+				if (out['message'] === 'Invalid username or password!!') {
+					success = false;
+					message = "Invalid username or password!"
+				} else {
 		
-			cookies.set('RefreshToken', `${out['refresh']}`, {
-			httpOnly: true,
-			path: '/',
-			secure: true,
-			sameSite: 'strict',
-			maxAge: 86400 /* 1 day */
-			})
-
-			throw redirect(302, '/');
-		})			
+					cookies.set('AccessToken', `${out['access']}`, {
+					httpOnly: true,
+					path: '/',
+					secure: true,
+					sameSite: 'strict',
+					maxAge: 86400 /* 1 day */
+					})
+				
+					cookies.set('RefreshToken', `${out['refresh']}`, {
+					httpOnly: true,
+					path: '/',
+					secure: true,
+					sameSite: 'strict',
+					maxAge: 86400 /* 1 day */
+					})
+		
+					throw redirect(302, '/');
+				}
+			})	
+			if (success == false) {
+				return {
+					success: success,
+					message: message
+				}
+			}		
+		} catch(error) {
+			return {
+				success: false,
+				message: "Unexpected error!"
+			}
+		}
 	}
 }
