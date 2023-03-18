@@ -81,7 +81,10 @@
 		panControl:false,
 		//zoomControl: false,
         gestureHandling: "auto",
-		disableDefaultUI: true,
+		//disableDefaultUI: true,
+		streetViewControl:false,
+		mapTypeControl:false,
+		fullscreenControl:false,
 		mapId: '805b0b106a1a291d'
 	}
 
@@ -149,17 +152,13 @@
 			intersections.forEach(element => {
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
+					m.model.children[0].material.color.r=0.8227857351303101;
 					if (m.model==element.object.parent){
-						if(!clicked){
+						//if(!clicked){
 						monster=m.monster;
 						element.object.material.color.r=0.06;
 						clicked=true;
-						}
-					}
-					else{
-						if(element.object.material.color.r==0.06){
-							m.model.children[2].material.color.r=0.8227857351303101;
-						}
+						//}
 					}
 				});
 			});
@@ -264,9 +263,12 @@ const onFileSelected =(e)=> {
 <!-- pre loads hover image -->
 <link rel="preload" as="image" href="/images/upload_hover.png">
 <link rel="preload" as="image" href="/images/upload_hover_mobile.png">
-<button id="location" on:click={goToLocation}>location</button>
+<button id="location" on:click={goToLocation}><img src="images/location.png"></button>
 <div class="map-wrapper">
 	<div class="submit-image">
+		{#if monster.TM_Name !=undefined}
+			<p>{monster.TM_Name}</p>
+		{/if}
 		<div class="image-display">
 	        {#if image}
 				<center><img class="image" src="{image}" alt="d" /></center>

@@ -177,7 +177,7 @@ function drawMonsters(scene){
 		{#if formChoice == 1}
 		<form method="POST" action="?/newMonster" use:enhance id="monsterForm">
 			<label for="mName">Monster Name:</label>
-			<input name="mName">
+			<input name="TM_Name">
 			<label for="latitude">Latitude: </label><br>
             <input name="latitude" value={latForm}>
 			<label for="latitude">Longitude: </label>

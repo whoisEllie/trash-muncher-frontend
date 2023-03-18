@@ -63,6 +63,7 @@ export const actions: Actions = {
 
 		let url = "http://38.242.137.81:8000/api/monsters/add-tm"
 		const data = {
+			"TM_Name":formData.get("TM_Name"),
 			"Longitude":formData.get("longitude"),
 			"Latitude":formData.get("latitude")
 		};
@@ -77,7 +78,7 @@ export const actions: Actions = {
 			mode: "cors"
 		}
 
-		await fetch(url, packet).then((response) => response.json())
+		await fetch(url, packet).then((response) => response.json()).then((out)=>{console.log(out)})
 	},
 
 	//changes the entire score for the monster
