@@ -154,15 +154,29 @@ export const actions: Actions = {
 					mode: "cors"
 				}
 	
-	
-				await fetch(url, packet).then((response) => response.json().then((out) => {
-					console.log("success!")
-				}))
+				try {
+					await fetch(url, packet)
+					return {
+						success: true,
+						message: "Image successfully uploaded!"
+					}
+				} catch(error) {
+					return {
+						success: false,
+						message: "Unexpected error."
+					}
+				}
 			} else {
-				console.log("not in distance")
+				return {
+					success: false,
+					message: "Too far away from selected monster!"
+				}
 			}
 		}else{
-			console.log("dne")
+			return {
+				success: false,
+				message: "Please select both an image and monster!"
+			}
 		}
 	}
 }
