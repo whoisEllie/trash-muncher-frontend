@@ -167,7 +167,7 @@
 
 		const animate = () => { //cool animations
 			gameData.forEach(element => {
-				element.model.rotateZ(MathUtils.degToRad(0.2));
+				element.model.rotateY(MathUtils.degToRad(0.2));
 			});
 			overlay.requestRedraw();
 			TWEEN.update()
@@ -198,12 +198,12 @@ function drawMonsters(scene){
 			}
 		})
 		if(!monExists){
-		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
+		gltfLoader.load("models/poly.glb", (gltf) => {
 			//gltfLoader.load("models/poly.glb", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 			gltf.scene.position.set(vector.x,vector.y,40);
-    		gltf.scene.scale.set(10, 10, 10);
-			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
+    		gltf.scene.scale.set(50, 50, 50);
+			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
 			gameData.push({"monster":element,"model":gltf.scene})
 		})
@@ -266,9 +266,6 @@ const onFileSelected =(e)=> {
 <button id="location" on:click={goToLocation}>location</button>
 <div class="map-wrapper">
 	<div class="submit-image">
-		{#if monster.name}
-			<p>{monster.name}</p>
-		{/if}
 		<div class="image-display">
 	        {#if image}
 				<center><img class="image" src="{image}" alt="d" /></center>
