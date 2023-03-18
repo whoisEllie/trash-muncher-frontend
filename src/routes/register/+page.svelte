@@ -1,8 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import type { ActionData } from "./$types";
 
-  export let form: ActionData;
+  export let form
 </script>
 
 <div class="login-wrapper">
@@ -10,40 +9,43 @@
 		<p class="title-trash">TRASH</p>
 		<p class="title-munchers">MUNCHERS</p>
 	</div>
-		<form class="form" method="POST" use:enhance>
-			<div class="inputbox">
-				<input name="username" type="text" required>
-				<label for="">Username</label>
-			</div>
-			<div class="inputbox">
-				<input name="email" type="email" required>
-				<label for="">Email</label>
-			</div>
-			<div class="inputbox">
-				<input name="password" type="password" required>
-				<label for="">Password</label>
-			</div>
-			<div class="inputbox">
-				<input name="confirm-password" type="password" required>
-				<label for="">Confirm Password</label>
-			</div>
-			<div class="team-select">
-				<center><label for="">Pick a team!</label><br>
-				<select name="team" class="team" required>
-					<optgroup>
-						<option value="Red">Red</option>
-						<option value="Blue">Blue</option>
-						<option value="Green">Green</option>
-					</optgroup>
-				</select></center>
-			</div>
-			<center><button>Register</button></center>
-			{ #if form?.error }
-				<div class="notice-error">
-					{form.error}
-				</div>
-			{/if}
+	<div class="form-wrapper">
+	{#if form?.success === false}
+		<br>
+		<div class="success-wrapper">
+			<span class="fail-text">{form.message}</span>
+		</div>
+	{/if}
+	<form class="form" method="POST" use:enhance>
+		<div class="inputbox">
+			<input name="username" type="text" required>
+			<label for="">Username</label>
+		</div>
+		<div class="inputbox">
+			<input name="email" type="email" required>
+			<label for="">Email</label>
+		</div>
+		<div class="inputbox">
+			<input name="password" type="password" required>
+			<label for="">Password</label>
+		</div>
+		<div class="inputbox">
+			<input name="confirm-password" type="password" required>
+			<label for="">Confirm Password</label>
+		</div>
+		<div class="team-select">
+			<center><label for="">Pick a team!</label><br>
+			<select name="team" class="team" required>
+				<optgroup>
+					<option value="Red">Red</option>
+					<option value="Blue">Blue</option>
+					<option value="Green">Green</option>
+				</optgroup>
+			</select></center>
+		</div>
+		<center><button>Register</button></center>
 	</form>
+	</div>
 </div>
 
 <style>	
@@ -65,11 +67,26 @@
 		justify-content: center;
 	}
 	
-	.form {
+	.success-wrapper {
+		margin: auto;
+		text-align: center;
+		width: 70%;
+	}
+	
+	.fail-text {
+		color: red;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.1rem;
+	}
+	
+	.form-wrapper {
 		background: #ECECEC;
 		border-radius: 1.5rem;
 		padding: 20px 25px;
 		box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.4);
+	}
+	
+	.form {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		grid-template-rows: repeat(4, 2fr), 1fr;
@@ -189,6 +206,11 @@
 
 		.title-munchers {
 			transform: translate(0.75rem, 0rem);
+		}
+		
+		button {
+			font-size: 1rem;
+			width: 100px;
 		}
 	}
 
