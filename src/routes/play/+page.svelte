@@ -266,9 +266,6 @@ const onFileSelected =(e)=> {
 <button id="location" on:click={goToLocation}>location</button>
 <div class="map-wrapper">
 	<div class="submit-image">
-		{#if monster.name}
-			<p>{monster.name}</p>
-		{/if}
 		<div class="image-display">
 	        {#if image}
 				<center><img class="image" src="{image}" alt="d" /></center>
