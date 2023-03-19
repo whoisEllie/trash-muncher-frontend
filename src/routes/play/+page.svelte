@@ -24,7 +24,10 @@
 	
 	const gltfLoader = new GLTFLoader();
 	
-	onMount(() => {
+	onMount(async () => {
+		if (form?.image) {
+			image = form.image
+		}
 		getPosition().then((position: Position) =>{
 			location.lat=position.coords.latitude;
 			location.lng=position.coords.longitude;
@@ -155,16 +158,19 @@
 					//detects that the correct monster has been clicked, then sets it as the current monster
 					m.model.children[0].material.color.r=0.8227857351303101;
 					if (m.model==element.object.parent){
-						//if(!clicked){
 						monster=m.monster;
 						element.object.material.color.r=0.06;
 						clicked=true;
 						addHTML()
-						//}
 					}
-
 				});
 			});
+			} else {
+				gameData.forEach(m => {
+					//detects that the correct monster has been clicked, then sets it as the current monster
+					m.model.children[0].material.color.r=0.8227857351303101;
+				})
+				monster = {}
 			}
 		})
 		
@@ -303,6 +309,18 @@ const onFileSelected =(e)=> {
 	    };
 	}
 }
+
+let submitButton, submitForm
+function freezeForm(e) {
+	if (submitForm.classList.contains('is-submitting')) {
+		e.preventDefault();
+	}
+	submitForm.classList.add('is-submitting');
+}
+
+function unfreezeForm(e) {
+	submitForm.classList.remove('is-submitting')
+}
 	
 </script>
 
@@ -317,7 +335,11 @@ const onFileSelected =(e)=> {
 	        {#if image}
 				<center><img class="image" src="{image}" alt="d" /></center>
 	        {:else}
-	        	<center><img class="no-image" src="/images/no_file.png" alt="" /></center>
+				{#if form?.image}
+					<center><img class="image" src="{form.image}" alt="" /></center>
+				{:else}
+		        	<center><img class="no-image" src="/images/no_file.png" alt="" /></center>
+				{/if}
 	        {/if}
 			<br>
 			<div class="upload-container">
@@ -334,7 +356,7 @@ const onFileSelected =(e)=> {
 					{/if}
 				{/if}
 			</div>
-			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" use:enhance>
+			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm}>
 		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
 				name="file">
 				<input type="hidden" name="image" value={image}>
@@ -342,7 +364,7 @@ const onFileSelected =(e)=> {
 				<input type="hidden" name="team" value={data.team_id}>
 				<input type="hidden" name="lat" value={location.lat}>
 				<input type="hidden" name="lng" value={location.lng}>
-				<center><button type="submit" class="button">Submit Image</button></center>
+				<center><button type="submit" class="button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button></center>
 			</form>
 		</div>
 	</div>
