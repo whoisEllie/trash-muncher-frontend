@@ -5,32 +5,31 @@
 		location.reload()
 	}
 	
-	var submitted = false
-	
+	let removeButton, form
+	function freezeForm(e) {
+		if (form.classList.contains('is-submitting')) {
+			e.preventDefault();
+		}
+		
+		form.classList.add('is-submitting');
+	}
 </script>
 
 <div class = "grid">
 	<!-- svelte for loop -->
-	<!-- TODO: CSS for buttons so they look nicer -->
 	{#each data.images as i}
 		<div class = "item">
 			<img src={i.image}>
-			<form method="POST" action="?/deny">
+			<form method="POST" action="?/deny" bind:this={form}>
 				<!-- hidden form to load data into server side API call -->
 				<input type="hidden" name="id" value={i.id}>
 				<input type="hidden" name="team" value={i.team}>
 				<input type="hidden" name="tm" value={i.monster_id}>
 				
-				{#if !submitted}
-					<button type="submit" class="deny" formaction="?/deny" style="border: 0; on:click={submitted = true}
-					background: transparent; cursor: pointer;">
+				<button type="submit" class="deny" formaction="?/deny" style="border: 0;
+				background: transparent; cursor: pointer;" bind:this="{removeButton}" on:click={freezeForm}>
 						<img src="/images/deny.png" width="30" height="30" />
-					</button>
-				{:else}
-					<button type="submit" class="deny" style="border: 0; background: transparent; cursor: pointer;">
-						<img src="/images/deny.png" width="30" height="30" />
-					</button>
-				{/if}
+				</button>
 			</form>
 
 			<form method="POST" action="?/accept">

@@ -157,29 +157,34 @@ export const actions: Actions = {
 				try {
 					await fetch(url, packet)
 					return {
+						image: data.get("image"),
 						success: true,
 						message: "Image successfully uploaded!"
 					}
 				} catch(error) {
 					if (error["status"] == 429) {
 						return {
+							image: data.get("image"),
 							success: false,
 							message: "Please wait 24 hours between image submissions."
 						}
 					}
 					return {
+						image: data.get("image"),
 						success: false,
 						message: "Unexpected error."
 					}
 				}
 			} else {
 				return {
+					image: data.get("image"),
 					success: false,
 					message: "Too far away from selected monster!"
 				}
 			}
 		}else{
 			return {
+				image: data.get("image"),
 				success: false,
 				message: "Please select both an image and monster!"
 			}
