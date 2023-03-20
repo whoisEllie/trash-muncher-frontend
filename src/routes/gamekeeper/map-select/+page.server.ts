@@ -11,7 +11,6 @@ export const load = (async (event) => {
 	let monsters= [];
 
 	let url = "http://38.242.137.81:8000/api/users/me/"
-	console.log(event.cookies.get('AccessToken'))
 
 	const packet: RequestInit = {
 		headers: {
@@ -78,7 +77,7 @@ export const actions: Actions = {
 			mode: "cors"
 		}
 
-		await fetch(url, packet).then((response) => response.json()).then((out)=>{console.log(out)})
+		await fetch(url, packet).then((response) => response.json())
 	},
 
 	//changes the entire score for the monster

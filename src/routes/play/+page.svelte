@@ -11,7 +11,6 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 	export let form;
-	export let _test;
 
 	var locationTracking=true;
 	var location = {"lat":null,"lng":null};
@@ -49,10 +48,7 @@
 		location.lat=position.coords.latitude;
 		location.lng=position.coords.longitude;
 		let vector = overlay.latLngAltToVector3({lat:location.lat,lng:location.lng})
-		//playerModel.position.set(vector.x,vector.y,0);
-		//console.log(playerModel.position)
 		new TWEEN.Tween(playerModel.position).to({x: vector.x,y:vector.y},1000).start()
-		//map.panTo({lat:position.coords.latitude,lng:position.coords.longitude});
 	}
 
 	function getPosition(){
@@ -75,7 +71,6 @@
 		let url="http://38.242.137.81:8000/api/monsters/get-tms"
 		await fetch(url,packet).then((response) => response.json().then((out) => {
 			let monsters=out;
-			console.log(monsters);
 			drawMonsters(scene,monsters)
 			addHTML()
 		}))
@@ -146,7 +141,6 @@
 			let vector = overlay.latLngAltToVector3({lat:location.lat,lng:location.lng})
 			playerModel = gltf.scene;
 			playerModel.position.set(vector.x,vector.y,0);
-			console.log("position:"+playerModel.position.x)
     		playerModel.scale.set(10, 10, 10);
 			playerModel.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(playerModel);
@@ -258,13 +252,11 @@ function drawMonsters(scene, monsters){
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
 				
-				console.log("just need to test if this runs once get monsters runs on intervals")
 				monExists=true;
 				previousMonster.monster.Team1Score = element.Team1Score;
 				previousMonster.monster.Team2Score = element.Team2Score;
 				previousMonster.monster.Team3Score = element.Team3Score;
 				if(monster.TM_ID==element.TM_ID){
-					console.log("updating selected mon")
 					monster=element;
 				}
 				return true;
@@ -337,7 +329,7 @@ function freezeForm(e) {
 	}
 	if(!submitForm.classList.contains('is-submitting')){
 	submitForm.classList.add('is-submitting');
-	setTimeout(()=> {console.log("hi");submitForm.classList.remove('is-submitting')},1000)
+	setTimeout(()=> {submitForm.classList.remove('is-submitting')},1000)
 	}
 }
 
