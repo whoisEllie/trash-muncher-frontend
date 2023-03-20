@@ -1,6 +1,7 @@
-import {redirect} from "@sveltejs/kit";
+import {redirect, type RequestHandler} from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types"
 import type { Actions } from './$types'
+//import { json } from '@sveltejs/kit'
 
 let authkey;
 export const load = (async (event) => {
@@ -45,12 +46,12 @@ export const load = (async (event) => {
 					monsters=out;
 				}))
 			})
-
 			return {
 				logged_in: login_status,
 				username: username,
 				monsters: monsters,
-				team_id: team
+				team_id: team,
+				cookie: authkey
 			};
 		} catch (error) {
 			throw redirect(302, '/login')
@@ -58,6 +59,9 @@ export const load = (async (event) => {
 		
 		
 }) satisfies PageServerLoad;
+
+
+	
 
 export const actions: Actions = {
 	addScore: async ({cookies, request}) => {
