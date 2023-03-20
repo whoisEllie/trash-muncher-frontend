@@ -21,6 +21,7 @@
 	var vector = new Vector2();
 	let monster={}
 	var gameData = [];
+	var scene;
 	
 	const gltfLoader = new GLTFLoader();
 	
@@ -36,7 +37,7 @@
 			setInterval(()=>{
 				if(locationTracking){
 					navigator.geolocation.getCurrentPosition(success)}},3000);
-			setInterval(getMonsters,6000);
+			setInterval(getMonsters,8000);
 		}).catch(() => {
 				errorMessage = "Location access blocked, please enable."
 		})
@@ -47,10 +48,7 @@
 		location.lat=position.coords.latitude;
 		location.lng=position.coords.longitude;
 		let vector = overlay.latLngAltToVector3({lat:location.lat,lng:location.lng})
-		//playerModel.position.set(vector.x,vector.y,0);
-		//console.log(playerModel.position)
 		new TWEEN.Tween(playerModel.position).to({x: vector.x,y:vector.y},1000).start()
-		//map.panTo({lat:position.coords.latitude,lng:position.coords.longitude});
 	}
 
 	function getPosition(){
@@ -61,8 +59,21 @@
   		});
 	}
 
-	function getMonsters(){
-
+	async function getMonsters(){
+		const packet: RequestInit = {
+		headers: {
+			"content-type": "application/json; charset=UTF-8",
+			"Authorization": data.cookie
+		},
+		method: "GET",
+		mode: "cors"
+		}
+		let url="http://38.242.137.81:8000/api/monsters/get-tms"
+		await fetch(url,packet).then((response) => response.json().then((out) => {
+			let monsters=out;
+			drawMonsters(scene,monsters)
+			addHTML()
+		}))
 	}
 
 	async function createMap(latitude: number, longitude: number) {
@@ -83,9 +94,7 @@
 		maxZoom: 18,
 		minZoom:15,
 		panControl:false,
-		//zoomControl: false,
         gestureHandling: "auto",
-		//disableDefaultUI: true,
 		streetViewControl:false,
 		mapTypeControl:false,
 		fullscreenControl:false,
@@ -98,7 +107,7 @@
 			//only draws onto map when the map has loaded in the promise
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
 			let scene = initWebglOverlayView(map);
-			scene = drawMonsters(scene);
+			scene = drawMonsters(scene,data.monsters);
 			let button=document.getElementById("location");
 			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
 		})
@@ -114,7 +123,7 @@
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
 		overlay.setMap(map);
 
-		const scene = overlay.getScene();
+		scene = overlay.getScene();
     	camera = new PerspectiveCamera();
 
 		//adds light to the models so they show colour
@@ -132,7 +141,6 @@
 			let vector = overlay.latLngAltToVector3({lat:location.lat,lng:location.lng})
 			playerModel = gltf.scene;
 			playerModel.position.set(vector.x,vector.y,0);
-			console.log("position:"+playerModel.position.x)
     		playerModel.scale.set(10, 10, 10);
 			playerModel.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(playerModel);
@@ -236,17 +244,21 @@ function addHTML() {
 	}
 }
 
-function drawMonsters(scene){
+
+function drawMonsters(scene, monsters){
 	//loads the gltf models
-	data.monsters.forEach(element => {
+	monsters.forEach(element => {
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
-				console.log("just need to test if this runs once get monsters runs on intervals")
+				
 				monExists=true;
 				previousMonster.monster.Team1Score = element.Team1Score;
 				previousMonster.monster.Team2Score = element.Team2Score;
 				previousMonster.monster.Team3Score = element.Team3Score;
+				if(monster.TM_ID==element.TM_ID){
+					monster=element;
+				}
 				return true;
 			}
 		})
@@ -315,7 +327,10 @@ function freezeForm(e) {
 	if (submitForm.classList.contains('is-submitting')) {
 		e.preventDefault();
 	}
+	if(!submitForm.classList.contains('is-submitting')){
 	submitForm.classList.add('is-submitting');
+	setTimeout(()=> {submitForm.classList.remove('is-submitting')},1000)
+	}
 }
 
 function unfreezeForm(e) {
@@ -356,7 +371,7 @@ function unfreezeForm(e) {
 					{/if}
 				{/if}
 			</div>
-			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm}>
+			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
 		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
 				name="file">
 				<input type="hidden" name="image" value={image}>
@@ -364,7 +379,7 @@ function unfreezeForm(e) {
 				<input type="hidden" name="team" value={data.team_id}>
 				<input type="hidden" name="lat" value={location.lat}>
 				<input type="hidden" name="lng" value={location.lng}>
-				<center><button type="submit" class="button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button></center>
+				<center><button type="submit" class="button" bind:this="{submitButton}" on:click={freezeForm} >Submit Image</button></center>
 			</form>
 		</div>
 	</div>
