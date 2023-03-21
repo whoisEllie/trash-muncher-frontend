@@ -112,7 +112,7 @@
 		.then((google) => {
 			//only draws onto map when the map has loaded in the promise
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
-			let scene = initWebglOverlayView(map);
+			scene = initWebglOverlayView(map);
 			scene = drawMonsters(scene,data.monsters);
 			let button=document.getElementById("location");
 			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
