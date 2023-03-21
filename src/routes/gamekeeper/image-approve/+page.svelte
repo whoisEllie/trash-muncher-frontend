@@ -24,6 +24,10 @@
 	function removeDiv(e) {
 		popup = false
 	}
+	
+	function getRandomInt(max) {
+		return Math.floor(Math.random() * max);
+	}
 </script>
 
 <div class = "grid">
@@ -36,7 +40,7 @@
 						<input type="hidden" name="id" value={i.id}>
 						<input type="hidden" name="team" value={i.team}>
 						<input type="hidden" name="score" value=0>
-						<input type="hidden" name="carbon" value=80>
+						<input type="hidden" name="carbon" value={70 + getRandomInt(10)}>
 						<input type="hidden" name="tm" value={i.monster_id}>
 						<button type="submit" class="trash">Small trash</button>
 					</form>
@@ -44,7 +48,7 @@
 						<input type="hidden" name="id" value={i.id}>
 						<input type="hidden" name="team" value={i.team}>
 						<input type="hidden" name="score" value=1>
-						<input type="hidden" name="carbon" value=250>
+						<input type="hidden" name="carbon" value={240 + getRandomInt(10)}>
 						<input type="hidden" name="tm" value={i.monster_id}>
 						<button type="submit" class="trash">Medium trash</button>
 					</form>
@@ -52,7 +56,7 @@
 						<input type="hidden" name="id" value={i.id}>
 						<input type="hidden" name="team" value={i.team}>
 						<input type="hidden" name="score" value=2>
-						<input type="hidden" name="carbon" value=500>
+						<input type="hidden" name="carbon" value={490 + getRandomInt(10)}>
 						<input type="hidden" name="tm" value={i.monster_id}>
 						<button type="submit" class="trash">Large trash</button>
 					</form>
