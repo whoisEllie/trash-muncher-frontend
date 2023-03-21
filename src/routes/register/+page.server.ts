@@ -6,7 +6,7 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 					
-		let message, success
+		let message, success, status
 		let password = formData.get("confirm-password")
 		
 		if (password != formData.get('password')) {
@@ -56,7 +56,7 @@ export const actions: Actions = {
 					}
 				});
 			} catch (error) {
-				message = "Unexpected error!"
+				message = "An error has occurred."
 				return {
 					message: message,
 					success: false

@@ -90,6 +90,7 @@ export const actions: Actions = {
 		
 		const data = await request.formData();
 		let inRange = false
+		let success, message
 		if (data.get('image') != "" && data.get("tm") != "undefined"){
 			let team, teamID
 			if (data.get("team") == "Red") {
@@ -127,16 +128,7 @@ export const actions: Actions = {
 			})
 		
 			if (inRange) {
-				await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
-				method: 'POST',
-				body: JSON.stringify(pack),
-				mode: "cors",
-				headers: {
-					"content-type": "application/json; charset=UTF-8",
-					"Authorization": authkey
-					}
-				})
-				
+							
 				let pack2 = {
 					"b64_img": data.get("image"),
 					"monster_id": data.get("tm"),
@@ -157,27 +149,44 @@ export const actions: Actions = {
 					method: "POST",
 					mode: "cors"
 				}
-	
+				
 				try {
-					await fetch(url, packet)
+					await fetch(url, packet).then((response) => {
+						console.log(response)
+						if (response["status"] == 429) {
+							success = false
+							message = "Please wait at least 8 hours between image submissions!"
+						} else if (response["status"] == 201) {
+							success = true
+							message = "Image successfully uploaded!"
+						} else {
+							success = false
+							message = "An error has occurred. Please try again"
+						}
+					})
 					return {
 						image: data.get("image"),
-						success: true,
-						message: "Image successfully uploaded!"
+						success: success,
+						message: message
 					}
 				} catch(error) {
-					if (error["status"] == 429) {
-						return {
-							image: data.get("image"),
-							success: false,
-							message: "Please wait 24 hours between image submissions."
-						}
-					}
+					success = false
 					return {
 						image: data.get("image"),
 						success: false,
-						message: "Unexpected error."
+						message: "An error has occurred. Please try again"
 					}
+				}
+				if (success == true) {
+					await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+					method: 'POST',
+					body: JSON.stringify(pack),
+					mode: "cors",
+					headers: {
+						"content-type": "application/json; charset=UTF-8",
+						"Authorization": authkey
+						}
+					})
 				}
 			} else {
 				return {

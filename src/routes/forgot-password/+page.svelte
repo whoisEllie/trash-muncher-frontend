@@ -1,5 +1,17 @@
 <script lang="ts">
 	export let form
+	let wait, submitForm
+	let submit
+	
+	function freezeForm(e) {
+		submit = true
+		if (submitForm.classList.contains('is-submitting')) {
+			e.preventDefault();
+		}
+		
+		submitForm.classList.add('is-submitting');
+		wait.style.opacity = "1"
+	}
 </script>
 
 <div class="login-wrapper">
@@ -7,8 +19,9 @@
 		<p class="title-trash">TRASH</p>
 		<p class="title-munchers">MUNCHERS</p>
 	</div>
-  <form class="form" method="POST">
+  <form id="form" method="POST" bind:this={submitForm}>
   		<br>
+		
 		<div class="inputbox">
 			<input name="email" type="text" required>
 			<label for="">Enter your email</label>
@@ -25,7 +38,13 @@
 			</div>
 			<br>
 		{/if}
-  <button type="submit">Reset Password</button>
+		{#if submit == true}
+			<div class="wait-wrapper" bind:this={wait}>
+				<span class="wait-text">Please wait while we process your request...</span>
+			</div>
+			<br>
+		{/if}
+  <button type="submit" on:click={freezeForm}>Reset Password</button>
   </form>
 </div>
 
@@ -49,7 +68,7 @@
 		justify-content: center;
 	}
 
-	.form {
+	#form {
 		background: #ECECEC;
 		border-radius: 1.5rem;
 		padding-top: 20px;
@@ -143,6 +162,11 @@
 		width: 70%;
 	}
 	
+	.wait-wrapper {
+		text-align: center;
+		width: 70%;
+	}
+	
 	.success-text {
 		color: green;
 		font-family: 'Montserrat', sans-serif;
@@ -151,6 +175,12 @@
 	
 	.fail-text {
 		color: red;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.1rem;
+	}
+	
+	.wait-text {
+		color: black;
 		font-family: 'Montserrat', sans-serif;
 		font-size: 1.1rem;
 	}
