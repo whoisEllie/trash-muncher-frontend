@@ -29,6 +29,7 @@ export const load = (async (event) => {
 
 export const actions : Actions = {
 	accept: async ({ request }) => {
+		let team, carbon
 		// get form data to pass into API
 		const data = await request.formData();
 		let pack = {
@@ -43,6 +44,54 @@ export const actions : Actions = {
 				"Authorization": authkey
 			}
 		})
+		
+		if (Number(data.get("team")) == 1) {
+			team = "T1Score"
+			carbon = "T1Carbon"
+		} else if (Number(data.get("team")) == 2){
+			team = "T2Score"
+			carbon = "T2Carbon"
+		} else {
+			team = "T3Score"
+			carbon = "T3Carbon"
+		}
+		
+		console.log(Number(data.get("carbon")))
+		let pack2 = {
+			"TM_ID": Number(data.get("tm")),
+			[team]: Number(data.get("score"))
+		}
+		
+		let pack3 = {
+			"TM_ID": Number(data.get("tm")),
+			[carbon]: Number(data.get("carbon"))
+		}
+		
+		await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+			method: 'POST',
+			body: JSON.stringify(pack2),
+			mode: "cors",
+			headers: {
+				"content-type": "application/json; charset=UTF-8",
+				"Authorization": authkey
+			}
+		}).then((response) => response.json()).then(out => {
+			console.log(out)
+		})
+		
+		await fetch("http://38.242.137.81:8000/api/monsters/add-carbon", {
+			method: 'POST',
+			body: JSON.stringify(pack3),
+			mode: "cors",
+			headers: {
+				"content-type": "application/json; charset=UTF-8",
+				"Authorization": authkey
+			}
+		}).then((response) => response.json()).then(out => {
+			console.log(out)
+		})
+		
+		
 	},
 	deny: async ({ request }) => {
 		let success;
