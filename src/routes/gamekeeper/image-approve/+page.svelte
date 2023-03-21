@@ -5,7 +5,9 @@
 		location.reload()
 	}
 	
-	let removeButton, form
+	let removeButton, form, popup = false, currentItem
+	let item = []
+	
 	function freezeForm(e) {
 		if (form.classList.contains('is-submitting')) {
 			e.preventDefault();
@@ -13,13 +15,54 @@
 		
 		form.classList.add('is-submitting');
 	}
+	
+	function addDiv(citem) {
+		currentItem = citem
+		popup = true
+	}
+	
+	function removeDiv(e) {
+		popup = false
+	}
+	
+	function getRandomInt(max) {
+		return Math.floor(Math.random() * max);
+	}
 </script>
 
 <div class = "grid">
 	<!-- svelte for loop -->
-	{#each data.images as i}
-		<div class = "item">
-			<img src={i.image}>
+	{#each data.images as i, index}
+		<div class = "item" bind:this="{item[index]}">
+			{#if popup == true && currentItem == item[index]}
+				<div class="trash-size" on:mouseleave="{removeDiv}">
+					<form method="POST" action="?/accept" bind:this={form}>
+						<input type="hidden" name="id" value={i.id}>
+						<input type="hidden" name="team" value={i.team}>
+						<input type="hidden" name="score" value=0>
+						<input type="hidden" name="carbon" value={70 + getRandomInt(10)}>
+						<input type="hidden" name="tm" value={i.monster_id}>
+						<button type="submit" class="trash" on:click={freezeForm}>Small trash</button>
+					</form>
+					<form method="POST" action="?/accept" bind:this={form}>
+						<input type="hidden" name="id" value={i.id}>
+						<input type="hidden" name="team" value={i.team}>
+						<input type="hidden" name="score" value=1>
+						<input type="hidden" name="carbon" value={240 + getRandomInt(10)}>
+						<input type="hidden" name="tm" value={i.monster_id}>
+						<button type="submit" class="trash" on:click={freezeForm}>Medium trash</button>
+					</form>
+					<form method="POST" action="?/accept" bind:this={form}>
+						<input type="hidden" name="id" value={i.id}>
+						<input type="hidden" name="team" value={i.team}>
+						<input type="hidden" name="score" value=2>
+						<input type="hidden" name="carbon" value={490 + getRandomInt(10)}>
+						<input type="hidden" name="tm" value={i.monster_id}>
+						<button type="submit" class="trash" on:click={freezeForm}>Large trash</button>
+					</form>
+				</div>
+			{/if}
+			<img src={i.image} on:mouseover="{removeDiv}">
 			<form method="POST" action="?/deny" bind:this={form}>
 				<!-- hidden form to load data into server side API call -->
 				<input type="hidden" name="id" value={i.id}>
@@ -27,16 +70,13 @@
 				<input type="hidden" name="tm" value={i.monster_id}>
 				
 				<button type="submit" class="deny" formaction="?/deny" style="border: 0;
-				background: transparent; cursor: pointer;" bind:this="{removeButton}" on:click={freezeForm}>
+				background: transparent; cursor: pointer;" bind:this="{removeButton}" on:click={freezeForm} on:mouseover="{removeDiv}">
 						<img src="/images/deny.png" width="30" height="30" />
 				</button>
 			</form>
-
 			<form method="POST" action="?/accept">
 				<input type="hidden" name="id" value={i.id}>
-				<button type="submit" class="accept" formaction="?/accept" style="border: 0; background: transparent; cursor: pointer;">
-					<img src="/images/accept.png" width="30" height="30" />
-				</button>
+				<div class="accept" on:mouseover="{addDiv(item[index])}"><img src="/images/accept.png" width="30" height="30" /></div>
 			</form>
 		</div>
 	{/each}
@@ -69,9 +109,11 @@
 	}
 	
 	.item > img {
-		z-index: 1;
+		top: 0%;
+		z-index: 0;
 		height: 100%; /* ensures image fits in grid */
 		width: 100%;
+		position: absolute;
 		object-fit: cover;
 	}
 	
@@ -91,14 +133,47 @@
 	}
 	
 	.accept {
+		width: 30px;
+		height: 30px;
 		z-index: 2;
 		position: absolute;
-		top: 93%;
+		top: 93.5%;
 		right: 30px;
 	}
 	
-	button {
+	.trash-size {
+		position: relative;
+		left: 37%;
+		top: 43%;
+		z-index: 1;
+		height: 200px;
+		width: 170px;
+		background-color: #e0e0e0;
+		border-radius: 15px;
 	}
+	
+	.trash {
+		margin-left: 10px;
+		margin-top: 17.5px;
+		padding: 10px 10px 10px 10px;
+		font-family: "Montserrat", sans-serif;
+		font-size: 1.2rem;
+		border: none;
+		border-radius: 10px;
+		background-color: #B5D3D2;
+		transition: all 0.5s ease 0.0s;
+		cursor: pointer;
+	}
+	
+	.trash:hover {
+		background-color: #DFC9B5;
+		transition: all 0.5s ease 0.0s;
+	}
+	
+	.accept:hover .trash-size{
+		opacity: 1;
+	}
+	
 	button span {
 		display: none;
 	}
