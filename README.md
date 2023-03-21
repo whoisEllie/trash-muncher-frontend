@@ -82,6 +82,3 @@ You can preview the production build with `npm run preview`.
       </tr>
   </tbody>
 </table>
-      
-
----
