@@ -34,9 +34,7 @@
 
 			<form method="POST" action="?/accept">
 				<input type="hidden" name="id" value={i.id}>
-				<button type="submit" class="accept" formaction="?/accept" style="border: 0; background: transparent; cursor: pointer;">
-					<img src="/images/accept.png" width="30" height="30" />
-				</button>
+				<img class="accept" src="/images/accept.png" width="30" height="30" />
 			</form>
 		</div>
 	{/each}
