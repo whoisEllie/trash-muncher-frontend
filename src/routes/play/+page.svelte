@@ -395,6 +395,12 @@ function unfreezeForm(e) {
 					{#each spans as item}
 						{@html item}<br>
 					{/each}
+					<br>
+					Carbon consumed
+					<br>
+					<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
+					<br><span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
+					<br><span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
 				</div>
 				{/if}
 			</div>
