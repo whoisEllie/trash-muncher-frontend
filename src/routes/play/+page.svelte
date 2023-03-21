@@ -191,21 +191,21 @@
 		
 
 
-		const animate = () => { //cool animations
-			gameData.forEach(element => {
-				element.model.rotateY(MathUtils.degToRad(0.2));
-			});
-			overlay.requestRedraw();
-			TWEEN.update()
+// 		const animate = () => { //cool animations
+// 			gameData.forEach(element => {
+// 				element.model.rotateY(MathUtils.degToRad(0.2));
+// 			});
+// 			overlay.requestRedraw();
+// 			TWEEN.update()
 
-  			requestAnimationFrame(animate);
-		};
+//   			requestAnimationFrame(animate);
+// 		};
 
-		overlay.update = () => {
-};
+// 		overlay.update = () => {
+// };
 
-		// start animation loop
-		requestAnimationFrame(animate);
+// 		// start animation loop
+// 		requestAnimationFrame(animate);
 		return scene;
 }
 
