@@ -8,8 +8,6 @@
 
 - [Deployment](https://github.com/whoisEllie/trash-muncher-frontend#deployement)
 
-- [Contributors](https://github.com/whoisEllie/trash-muncher-frontend/tree/malik-readme#contributors-computer)
-
 
 Hi! Welcome to the frontend for Trash Munchers, an interactive game about saving the planet by feeding trash-munching monsters.
 
