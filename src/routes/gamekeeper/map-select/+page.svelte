@@ -145,8 +145,9 @@ function drawMonsters(scene){
 	data.monsters.forEach(element => {
 		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
+			vector.z += 50;
 			gltf.scene.position.set(vector.x,vector.y,vector.z);
-    		gltf.scene.scale.set(30, 30, 30);
+    		gltf.scene.scale.set(15, 15, 15);
 
 			//will initialise the animations for each monster here
 			mixer = new AnimationMixer(gltf.scene);
@@ -161,70 +162,81 @@ function drawMonsters(scene){
 	return scene;
 }
 
+	function setOverwrite() {
+		formChoice = 3;
+	}
+
+	function setAddTo() {
+		formChoice = 4;
+	}
+
 	
 </script>
 
 
 <div class="map-modal">
-	<div class="below_map">
+
+	<div class="map-form">
 		<!--Forms to add monsters, change score and add score
 		formChoice 1 - Adding a new monster to the map, with name, latitude and longitude
 		formChoice > 1 - Shows radio buttons to select which of the two score forms to use
 		formChoice 3 - Updating the monsters score. Has default values as the current scores
 		formChoice 4 - Adds score to the monster. Defaults to 0.
 		-->
+			{#if formChoice == 0}
+				<div class="no-selection">
+					Click anywhere on the map to add a new monster. Click on an existing monster to adjust It's scores.
+				</div>
+			{/if}
+			{#if formChoice == 1}
+				<form method="POST" action="?/newMonster" use:enhance id="monsterForm">
+					<label for="latitude">Location:</label>
+					<input name="latitude" id="latitude" value={latForm + "\"N"} style="border-radius: 10px 10px 0px 0px;">
+						<input name="longitude" id="longitude" value={lngForm + "\"W"} style="border-radius: 0px 0px 10px 10px;">
+					<label for="TM_Name">Pick a name for this location:</label>
+						<input name="TM_Name" id="TM_Name" required>
+					<button>Add a new monster!</button>
+				</form>
+			{:else if formChoice > 1}
+				<div class="change-add-scores">
+					<button on:click={setOverwrite} style="border-radius: 10px 0px 0px 10px;">Overwrite</button>
+					<button on:click={setAddTo} style="border-radius: 0px 10px 10px 0px;">Add to</button>
+				</div>
+			
+			{#if formChoice == 3}
+				<form method="POST" id="updateScore" action="?/updateScore" use:enhance>
+					<label for="t1score">Team 1</label>
+						<input type="number" name="t1score" value={t1score}>
+					<label for="t2score">Team 2</label>
+						<input type="number" name="t2score" value={t2score}>
+					<label for="t3score">Team 3</label>
+						<input type="number" name="t3score" value={t3score}>
+						<input type="hidden" name="id" value={monster.TM_ID}>
+					<button>Overwrite Scores!</button>
+				</form>
+			{:else if formChoice == 4}
+				<form method="POST" id="addScore" action="?/addScore" use:enhance>
+					<label for="t1score">Team 1</label>
+					<input type="number" name="t1score" value=0>
+					<label for="t2score">Team 2</label>
+					<input type="number" name="t2score" value=0>
+					<label for="t3score">Team 3</label>
+					<input type="number" name="t3score" value=0>
+					<input type="hidden" name="id" value={monster.TM_ID}>
+					<button>Add to Scores!</button>
+				</form>
+			{/if}
+			{/if}
+		</div>
 
-		{#if formChoice == 1}
-		<form method="POST" action="?/newMonster" use:enhance id="monsterForm">
-			<label for="mName">Monster Name:</label>
-			<input name="TM_Name">
-			<label for="latitude">Latitude: </label><br>
-            <input name="latitude" value={latForm}>
-			<label for="latitude">Longitude: </label>
-            <input name="longitude" value={lngForm}>
-			<button>Submit new monster!</button>
-		</form>
-		{:else if formChoice > 1}
-				<label for="scoreType"> Change Scores</label>
-				<input name="scoreType" type="radio" on:click={() => {formChoice=3}}>
-				<label for="scoreType">Add Scores</label>
-				<input name="scoreType" type="radio" on:click={() => {formChoice=4}}>
-		
-		{#if formChoice == 3}
-			<form method="POST" id="updateScore" action="?/updateScore" use:enhance>
-				<label for="t1score">Team 1</label>
-				<input type="number" name="t1score" value={t1score}><br>
-				<label for="t2score">Team 2</label>
-				<input type="number" name="t2score" value={t2score}><br>
-				<label for="t3score">Team 3</label>
-				<input type="number" name="t3score" value={t3score}>
-				<input type="hidden" name="id" value={monster.TM_ID}>
-				<button>Update Scores!</button>
-			</form>
-		{:else if formChoice == 4}
-			<form method="POST" id="addScore" action="?/addScore" use:enhance>
-				<label for="t1score">Team 1</label>
-				<input type="number" name="t1score" value=0><br>
-				<label for="t2score">Team 2</label>
-				<input type="number" name="t2score" value=0><br>
-				<label for="t3score">Team 3</label>
-				<input type="number" name="t3score" value=0>
-				<input type="hidden" name="id" value={monster.TM_ID}>
-				<button>Add Scores!</button>
-			</form>
-		{/if}
-		{/if}
-	</div>
-
-	
-	<div id="mapAwait">
+	<!--	
+	<div id="mapAwait">278740cca7ef
 	  <p id="awaitText">{errorMessage}</p>
 	</div>
-	<div id="mapContainer">
-	  <div id="map">
+	-->
+	<div id="map" class="map">
 	</div>
-	</div>
-  </div>
+</div>
 
 <style>
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
@@ -235,6 +247,7 @@ function drawMonsters(scene){
 	* {
 		margin: 0;
 		padding: 0;
+		font-family: Montserrat;
 	}
 
 	.map-modal {
@@ -249,90 +262,82 @@ function drawMonsters(scene){
 		border-radius: 25px;
 		overflow: hidden;
 		box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5);
-		background-color: #61846F;
+		background-color: #E1E1E1;
 	}
 
-	#map {
-		height: 60vh; /* The height is 400 pixels */
-		width: 50vw; /* The width is the width of the web page */
-		z-index: -1;
-		float: right;
-		position: absolute;
-
+	.map {
+		height: 100%; 
+		width: 100%;
 	}
 
-	#mapAwait {
-		height: 60vh; /* The height is 400 pixels */
-		width: 50vw; /* The width is the width of the web page */
-		z-index: -1;
-		float: right;
-		position: absolute;
-		top:50%;
-		left:65%;
-		transform: translate(-50%,-50%);
+	.no-selection {
+		margin: 25px;
+		font-weight: 500;
 	}
 
-	#mapContainer {
-		height: 60vh; /* The height is 400 pixels */
-		width: 50vw; /* The width is the width of the web page */
-		z-index: -1;
-		box-shadow: 0px 4px 30px #272727;
-		float: right;
-		position: absolute;
-		top:50%;
-		left:65%;
-		transform: translate(-50%,-50%);
+	.map-form form {
+		display: grid;
+		margin: 25px 0px;
 	}
 
-	#awaitText{
-		text-align: center;
-		font-size: 32px;
-		font-family: "Montserrat", sans-serif;
-		position: absolute;
-		top:50%;
-		left:50%;
-		transform: translate(-50%,-50%);
-	}
-
-	.below_map {
-		width:30%;
-		list-style-type: none;
-		text-align: center;
-		float: left;
-		position: absolute;
-	}
-
-	.mapButton {
-		float: left;
-		padding: 12px;
-		text-decoration: none;
-		font-size: 17px;
-		width: 33.33%; /* Four links of equal widths */
-		text-align: center;
-		height: 75px;
+	.map-form form input {
+		margin: 2px 25px;
 		border: none;
+		padding: 10px 5px;
+		border-radius: 10px;
+		background-color: #ECECEC;
+	}
+
+	.map-form form input:focus {
+		display: flex;
+		justify-content: center;
+		align-items: bottom;
+		background-color: #FCFCFC;
+		max-height: 1rem;
+	}
+
+	.map-form form label {
+		margin: 15px 25px 0px 25px;
+		height: 25px;
+		vertical-align: bottom;
+		font-size: 14px;
+		font-weight: 450;
+	}
+
+	.map-form form button {
+		height: 50px;
+		margin: 15px 25px;
+		border-radius: 10px;
+		border: none;
+		background-color: #F2DBC6;
 		cursor: pointer;
-		background-color: white;
+		transition: all 0.5s ease 0.0s;
+		font-weight: 500;
 	}
 
-	.mapButton:hover {
-		background-color: #F0F0F0;
+	.change-add-scores {
+		margin: 25px 25px -25px 25px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		height: 50px;
 	}
 
-	#errorText{
-		font-size: 1.2em;
-		width: max-content;
-		background-color: red;
-		position: absolute;
-		width: 50vw; /* The width is the width of the web page */
-		font-family: "Montserrat", sans-serif;
-
+	.change-add-scores button {
+		border: none;
+		margin: 1px;
+		cursor: pointer;
+		transition: all 0.2s; /* allows button colour fade/shape change to be animated */
 	}
 
-	#status{
-		font-family: "Montserrat", sans-serif;
-		text-align: center;
-		font-size: larger;
+	.change-add-scores button:hover {
+		background-color: #B5D3D2;
+		transition: all 0.2s; /* allows button colour fade/shape change to be animated */
+	}
+
+	.map-form form button:hover {
+		border-radius: 15px;
+		background-color: #B5D3D2;
+		transition: all 0.5s ease 0.0s;
 	}
 
 </style>
