@@ -62,7 +62,7 @@
 					</form>
 				</div>
 			{/if}
-			<img src={i.image}>
+			<img src={i.image} on:mouseover="{removeDiv}">
 			<form method="POST" action="?/deny" bind:this={form}>
 				<!-- hidden form to load data into server side API call -->
 				<input type="hidden" name="id" value={i.id}>

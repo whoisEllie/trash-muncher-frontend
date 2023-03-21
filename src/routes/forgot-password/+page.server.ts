@@ -19,22 +19,35 @@ export const actions: Actions = {
 			mode: "cors"
 		}
 
-		await fetch(url, packet).then((response) => response.json()).then((out) => {
-			console.log(out)
-			var message = out['email']
+		try {
+			await fetch(url, packet).then((response) => response.json()).then((out) => {
+				console.log(out)
+				var message = out['email']
 			
-			if (typeof message !== 'undefined') {
-				sendMessage = "Email does not match any user. Please try again."
-				success = false
-			} else {
-				sendMessage = "Success. Check your email and follow the link from there."
-				success = true
-			}	
-		})
-		
-		return {
-			message: sendMessage,
-			success: success
+				if (typeof message !== 'undefined') {
+					sendMessage = "Email does not match any user. Please try again."
+					success = false
+				} else if (out["status"] == "OK"){
+					sendMessage = "Success. Check your email and follow the link from there."
+					success = true
+				} else {
+					sendMessage = "An error has occurred."
+					success = false
+				}
+			})
+			
+			return {
+				message: sendMessage,
+				success: success
+			}
+		} catch(error) {
+			sendMessage = "An error has occurred."
+			success = false
+			
+			return {
+				message: sendMessage,
+				success: success
+			}
 		}
 	}
 }

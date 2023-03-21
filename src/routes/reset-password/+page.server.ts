@@ -6,6 +6,7 @@ export const actions: Actions = {
 	default: async ({request, query}) => {
 		const formData = await request.formData();
 		let path = formData.get('path')
+		let responseFull
 		var message;
 		
 		const params = new URLSearchParams(path.substring(path.indexOf("?")))
@@ -31,15 +32,24 @@ export const actions: Actions = {
 			method: "POST",
 			mode: "cors"
 		}
-
+		
 		await fetch(url, packet).then((response) => response.json()).then((out) => {
 			var checkMessage = out['detail']
+			var checkPassword = out['password']
+			console.log(out)
+
 			if (typeof checkMessage !== 'undefined') {
 				message = "Token not found."
 				success = false;
-			} else {
+			} else if(out["status"] == "OK"){
 				message = "Success. You will be redirected to the login page shortly."
 				success = true;
+			} else {
+				message = "An error has occurred. Please try again."
+				if (typeof checkPassword !== 'undefined') {
+					message = checkPassword
+				}
+				success = false
 			}
 		})
 		
