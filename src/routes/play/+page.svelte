@@ -274,11 +274,11 @@ function drawMonsters(scene, monsters){
 		if(!monExists){
 			//checks if the file currently exists
 			var fileString = "models/"+element.TM_Name+'.gltf';
-			fetch(fileString,{method:"HEAD"}).catch(()=>{fileString="models/poly.glb"}).then((response)=>{
-			if(response.status!=200){
+			//fetch(fileString,{method:"HEAD"}).catch(()=>{fileString="models/poly.glb"}).then((response)=>{
+			//if(response.status!=200){
 				//default model
-				fileString="models/poly.glb"
-			}
+			//	fileString="models/poly.glb"
+			//}
 			//change to fileString if animations are included
 			gltfLoader.load("models/poly.glb", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
@@ -287,7 +287,8 @@ function drawMonsters(scene, monsters){
 			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
 			gameData.push({"monster":element,"model":gltf.scene})
-			})})
+			})
+		//})
 		
 	}
 	});

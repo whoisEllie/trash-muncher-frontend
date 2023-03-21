@@ -23,10 +23,12 @@ export const load = (async (event) => {
 		mode: "cors"
 		}
 
-		try {
+	
 			await event.fetch(url, packet).then((response) => response.json()).then(async (out) => {
+				
 				if (out['detail'] === 'Authentication credentials were not provided.')
 				{
+					
 					throw redirect(302, '/login')
 					return;
 				}
@@ -35,7 +37,13 @@ export const load = (async (event) => {
 					throw redirect(302, '/login')
 					return;
 				}
-					
+				if (out['user'].is_gamekeeper == true)
+				{
+					throw redirect(302, '/')
+					return;
+				}	
+				
+
 				username = out['user']['username']
 				team = out['team']['name']
 				
@@ -53,17 +61,12 @@ export const load = (async (event) => {
 				team_id: team,
 				cookie: authkey
 			};
-		} catch (error) {
-			throw redirect(302, '/login')
-		}
+		
 		
 		
 }) satisfies PageServerLoad;
 
-function _hi(){
-	console.log("hi");
-}
-	
+
 
 export const actions: Actions = {
 	addScore: async ({cookies, request}) => {
