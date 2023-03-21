@@ -65,6 +65,7 @@
 
 	//fetches current monster db, then updates the monsters
 	async function getMonsters(){
+		console.log(gameData)
 		const packet: RequestInit = {
 		headers: {
 			"content-type": "application/json; charset=UTF-8",
@@ -336,7 +337,7 @@ function freezeForm(e) {
 	}
 	if(!submitForm.classList.contains('is-submitting')){
 	submitForm.classList.add('is-submitting');
-	setTimeout(()=> {submitForm.classList.remove('is-submitting')},1000)
+	setTimeout(()=> {submitForm.classList.remove('is-submitting')},3000)
 	}
 }
 

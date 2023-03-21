@@ -37,6 +37,11 @@ export const load = (async (event) => {
 					throw redirect(302, '/login')
 					return;
 				}
+				if (out['code'] === "user_not_found")
+				{
+					throw redirect(302, '/login')
+					return;
+				}
 				if (out['user'].is_gamekeeper == true)
 				{
 					throw redirect(302, '/')
