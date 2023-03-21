@@ -259,6 +259,7 @@ function drawMonsters(scene){
 		height: 75vh;
 		display: grid;
 		grid-template-columns: 2fr 7fr;
+		grid-template-areas: "Form Map";
 		border-radius: 25px;
 		overflow: hidden;
 		box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5);
@@ -268,6 +269,7 @@ function drawMonsters(scene){
 	.map {
 		height: 100%; 
 		width: 100%;
+		grid-area: Map;
 	}
 
 	.no-selection {
@@ -278,6 +280,7 @@ function drawMonsters(scene){
 	.map-form form {
 		display: grid;
 		margin: 25px 0px;
+		grid-area: Form;
 	}
 
 	.map-form form input {
@@ -293,7 +296,6 @@ function drawMonsters(scene){
 		justify-content: center;
 		align-items: bottom;
 		background-color: #FCFCFC;
-		max-height: 1rem;
 	}
 
 	.map-form form label {
@@ -338,6 +340,29 @@ function drawMonsters(scene){
 		border-radius: 15px;
 		background-color: #B5D3D2;
 		transition: all 0.5s ease 0.0s;
+	}
+
+	@media screen and (max-width: 750px) {
+		.map-modal {
+			grid-template-columns: auto;
+			grid-template-rows: 7fr 2fr;
+			grid-template-areas: 
+			"Map"
+			"Form";
+		}
+
+		.map-form form input {
+			padding: 5px 5px;
+		}
+
+		.map-form form label {
+			font-size: 12px;
+			height: 15px;
+		}
+
+		.change-add-scores {
+			height: 30px;
+		}
 	}
 
 </style>
