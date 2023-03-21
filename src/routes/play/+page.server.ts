@@ -60,7 +60,9 @@ export const load = (async (event) => {
 		
 }) satisfies PageServerLoad;
 
-
+function _hi(){
+	console.log("hi");
+}
 	
 
 export const actions: Actions = {

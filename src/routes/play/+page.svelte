@@ -22,23 +22,27 @@
 	let monster={}
 	var gameData = [];
 	var scene;
-	
 	const gltfLoader = new GLTFLoader();
-	
+
+	//runs on page load
 	onMount(async () => {
 		if (form?.image) {
 			image = form.image
 		}
+		//checks if location is valid, then draws map onto the webpage
 		getPosition().then((position: Position) =>{
 			location.lat=position.coords.latitude;
 			location.lng=position.coords.longitude;
   			createMap(position.coords.latitude,position.coords.longitude);
 		}).then(()=>{
+			//updates position of player every few seconds
 			setInterval(()=>{
 				if(locationTracking){
 					navigator.geolocation.getCurrentPosition(success)}},3000);
+			//sets interval to update the monsters on the screen, including scores and any new monsters
 			setInterval(getMonsters,8000);
 		}).catch(() => {
+				//triggered when location isnt enabled
 				errorMessage = "Location access blocked, please enable."
 		})
 	})
@@ -59,6 +63,7 @@
   		});
 	}
 
+	//fetches current monster db, then updates the monsters
 	async function getMonsters(){
 		const packet: RequestInit = {
 		headers: {
@@ -83,7 +88,7 @@
 		version: "weekly",
 		libraries: ["places"],
 	});
-	//sets settings for the player map. removes most control so they can't go exploring
+	//sets settings for the player map. removes some control from the player
 	const mapOptions = {
 		center: {
 			lat: latitude,
@@ -118,6 +123,7 @@
 
 	//WebGL initialisation. Loads all the models onto the map
 	function initWebglOverlayView(map) {
+		//variables used for webgl
   		let camera:PerspectiveCamera;
 
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
@@ -133,7 +139,7 @@
     	directionalLight.position.set(0.5, -1, 0.5);
     	scene.add(directionalLight);
 
-    	// Sets a reference point for drawing onto the map (dont change its kinda important for setting relative points)
+    	// Sets a reference point for drawing onto the map
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		
 		gltfLoader.load("models/sans.gltf", (gltf) => {
@@ -203,6 +209,7 @@
 }
 
 let spans = []
+//draws the info panel for the currently selected monster
 function addHTML() {
 	spans = []
 	let scores = []
@@ -212,6 +219,7 @@ function addHTML() {
 	scores.push("" + monster.Team3_Score + 3)
 	scores.sort((a,b)=>b-a)
 	var order = []
+	//sets the order of scores from highest to lowest
 	for (var i = 0; i < scores.length; i++) {
 		if (scores[i] % 10 == 1) {
 			sortedScores.push("Red Score: " + Math.floor(scores[i]/10))
@@ -228,6 +236,7 @@ function addHTML() {
 	}
 	
 	for (var i = 0; i < sortedScores.length; i++) {
+		//sets the colour for each team on the display
 		var team = order[i]
 		var span = document.createElement('span')
 		if (order[i] == "red") {
@@ -263,31 +272,28 @@ function drawMonsters(scene, monsters){
 			}
 		})
 		if(!monExists){
-		gltfLoader.load("models/poly.glb", (gltf) => {
-			//gltfLoader.load("models/poly.glb", (gltf) => {
+			//checks if the file currently exists
+			var fileString = "models/"+element.TM_Name+'.gltf';
+			fetch(fileString,{method:"HEAD"}).catch(()=>{fileString="models/poly.glb"}).then((response)=>{
+			if(response.status!=200){
+				//default model
+				fileString="models/poly.glb"
+			}
+			//change to fileString if animations are included
+			gltfLoader.load("models/poly.glb", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 			gltf.scene.position.set(vector.x,vector.y,40);
     		gltf.scene.scale.set(50, 50, 50);
 			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
 			gameData.push({"monster":element,"model":gltf.scene})
-		})
+			})})
+		
 	}
 	});
 	return scene;
 }
 
-function showCampus(){
-	locationTracking=!locationTracking;
-	if(locationTracking==false){
-		map.setCenter({lat:50.736830961444106, lng:-3.532572733972099})
-		map.setZoom(15);
-	}
-	else{
-		navigator.getCurrentPosition
-		map.setZoom(18)
-	}
-}
 function goToLocation(){
 	map.panTo({lat:location.lat,lng:location.lng});
 }
@@ -397,10 +403,6 @@ function unfreezeForm(e) {
 					{/each}
 				</div>
 				{/if}
-			</div>
-			<div class="below_map">
-				<button class="mapButton" on:click="{showCampus}">View Campus</button>
-				<button class="mapButton">Change Zoom</button>
 			</div>
 		</div>
 	</div>
