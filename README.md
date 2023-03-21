@@ -1,5 +1,13 @@
 # Trash Munchers Frontend
 
+## Contents
+
+- [Backend](https://github.com/whoisEllie/trash-muncher-frontend#backend)
+
+- [Deployment](https://github.com/whoisEllie/trash-muncher-frontend#deployement)
+
+---
+
 Hi! Welcome to the frontend for Trash Munchers, an interactive game about saving the planet by feeding trash-munching monsters.
 
 You're currently looking at the frontend of the project, which is built with [SvelteKit](https://kit.svelte.dev/).
@@ -49,3 +57,23 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+--- 
+
+## Contributors :computer: 
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/KermityOwen"><img src="https://avatars.githubusercontent.com/u/47197696?v=4" width="100px;" alt="Owen Lee"/><br /><sub><b>Owen Lee</b></sub></a></td>
+      <td align="center"><a href="https://github.com/whoisEllie"><img src="https://avatars.githubusercontent.com/u/37041249?v=4" width="100px;" alt="Ellie Kelemen"/><br /><sub><b>Ellie Kelemen</b></sub></a></td>
+      <td align="center"><a href="https://github.com/TerraTree"><img src="https://avatars.githubusercontent.com/u/22399437?v=4" width="100px;" alt="William Liversidge"/><br /><sub><b>William Liversidge</b></sub></a></td>
+      <td align="center"><a href="https://github.com/vigneshmohan2002"><img src="https://avatars.githubusercontent.com/u/85409344?v=4" width="100px;" alt="Vignesh Mohanarajan"/><br /><sub><b>Vignesh Mohanarajan</b></sub></a></td>
+      <td align="center"><a href="https://github.com/scarlettp1619"><img src="https://avatars.githubusercontent.com/u/95775118?v=4" width="100px;" alt="Scarlett Parker"/><br /><sub><b>Scarlett Parker</b></sub></a></td>
+      <td align="center"><a href="https://github.com/FBWWTeto"><img src="https://avatars.githubusercontent.com/u/93519490?v=4" width="100px;" alt="Malik Besta"/><br /><sub><b>Malik Besta</b></sub></a></td>
+      </tr>
+  </tbody>
+</table>
+      
+
+---
