@@ -93,38 +93,35 @@
 			const intersections = overlay.raycast(vector);
 
 			if(intersections.length>0){
+			let clicked = false;
+			formChoice=2;
 			intersections.forEach(element => {
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
+					m.model.children[0].material.color.r=0.8227857351303101;
 					if (m.model==element.object.parent){
 						monster=m.monster;
-						t1score=monster.Team1_Score;
-						t2score=monster.Team2_Score;
-						t3score=monster.Team3_Score;
 						element.object.material.color.r=0.06;
-						
-					}
-					else{
-						if(element.object.material.color.r==0.06){
-							m.model.children[2].material.color.r=0.8227857351303101;
-						}
+						clicked=true;
+						addHTML()
 					}
 				});
-				//sets form to choose whether to add or update the monster's score
-                formChoice=2;
 			});
-			}
-			else{
-				//clicked on map directly, sets up form for creating a new monster
-                latForm=event.latLng.lat();
+			} else {
+			 	latForm=event.latLng.lat();
                 lngForm=event.latLng.lng();
 				formChoice=1;
+				gameData.forEach(m => {
+					//detects that the correct monster has been clicked, then sets it as the current monster
+					m.model.children[0].material.color.r=0.8227857351303101;
+				})
+				monster = {}
 			}
 		})
 
 		const animate = () => { //cool animations :)
 			gameData.forEach(element => {
-				element.model.rotateZ(MathUtils.degToRad(0.2));
+				element.model.rotateY(MathUtils.degToRad(0.2));
 			});
 			overlay.requestRedraw();
   			
@@ -140,23 +137,63 @@
 		return scene;
 }
 
+let spans = []
+function addHTML() {
+	spans = []
+	let scores = []
+	let sortedScores = []
+	scores.push("" + monster.Team1_Score + 1)
+	scores.push("" + monster.Team2_Score + 2)
+	scores.push("" + monster.Team3_Score + 3)
+	scores.sort((a,b)=>b-a)
+	var order = []
+	for (var i = 0; i < scores.length; i++) {
+		if (scores[i] % 10 == 1) {
+			sortedScores.push("Red Score: " + Math.floor(scores[i]/10))
+			order[i] = "red"
+		}
+		if (scores[i] % 10 == 2) {
+			sortedScores.push("Green Score: " + Math.floor(scores[i]/10))
+			order[i] = "green"
+		}
+		if (scores[i] % 10 == 3) {
+			sortedScores.push("Blue Score: " + Math.floor(scores[i]/10))
+			order[i] = "blue"
+		}
+	}
+	
+	for (var i = 0; i < sortedScores.length; i++) {
+		var team = order[i]
+		var span = document.createElement('span')
+		if (order[i] == "red") {
+			span.style.color = "#EA6E6E"
+		}
+		if (order[i] == "blue") {
+			span.style.color = "#6285DC"
+		}
+		if (order[i] == "green") {
+			span.style.color = "#6DC462"
+		}
+		span.innerHTML = sortedScores[i]
+		spans.push(span.outerHTML)
+	}
+}
+
 function drawMonsters(scene){
 	//loads the gltf models
 	data.monsters.forEach(element => {
-		gltfLoader.load("https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf", (gltf) => {
-			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
-			vector.z += 50;
-			gltf.scene.position.set(vector.x,vector.y,vector.z);
-    		gltf.scene.scale.set(15, 15, 15);
-
-			//will initialise the animations for each monster here
-			mixer = new AnimationMixer(gltf.scene);
-
-			gltf.scene.rotation.x = Math.PI; // Rotations are in radians.
-			scene.add(gltf.scene);
-			//sets the monsters to an array to access later
-			gameData.push({"monster":element,"model":gltf.scene})
-		})
+		try {
+			gltfLoader.load("../models/" + element.TM_Name + ".glb", (gltf) => {
+				let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
+				gltf.scene.position.set(vector.x,vector.y,40);
+	    		gltf.scene.scale.set(50, 50, 50);
+				gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
+				scene.add(gltf.scene);
+				gameData.push({"monster":element,"model":gltf.scene})
+			})
+		} catch(error) {
+			// monster model does not exist
+		}
 		
 	});
 	return scene;
@@ -191,8 +228,8 @@ function drawMonsters(scene){
 			{#if formChoice == 1}
 				<form method="POST" action="?/newMonster" use:enhance id="monsterForm">
 					<label for="latitude">Location:</label>
-					<input name="latitude" id="latitude" value={latForm + "\"N"} style="border-radius: 10px 10px 0px 0px;">
-						<input name="longitude" id="longitude" value={lngForm + "\"W"} style="border-radius: 0px 0px 10px 10px;">
+					<input name="latitude" id="latitude" value={latForm} style="border-radius: 10px 10px 0px 0px;">
+						<input name="longitude" id="longitude" value={lngForm} style="border-radius: 0px 0px 10px 10px;">
 					<label for="TM_Name">Pick a name for this location:</label>
 						<input name="TM_Name" id="TM_Name" required>
 					<button>Add a new monster!</button>
@@ -235,6 +272,20 @@ function drawMonsters(scene){
 	</div>
 	-->
 	<div id="map" class="map">
+	{#if Object.keys(monster).length > 0}
+		<div class="monsterScore">
+			Name: {monster.TM_Name}<br>
+			{#each spans as item}
+				{@html item}<br>
+			{/each}
+			<br>
+			Carbon consumed
+			<br>
+			<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
+			<br><span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
+			<br><span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
+		</div>
+		{/if}
 	</div>
 </div>
 
@@ -340,6 +391,18 @@ function drawMonsters(scene){
 		border-radius: 15px;
 		background-color: #B5D3D2;
 		transition: all 0.5s ease 0.0s;
+	}
+	
+	.monsterScore {
+		float: right;
+		background-color: #E0E0E0;
+		position: relative;
+		width: fit-content;
+		padding: 10px 20px 10px 10px;
+		font-size: 1.1em;
+		box-shadow: 0px 0px 16px #00000044;
+		border-radius: 15px;
+		font-family: "Montserrat", sans-serif;
 	}
 
 	@media screen and (max-width: 750px) {
