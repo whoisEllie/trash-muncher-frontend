@@ -161,8 +161,7 @@ export const actions: Actions = {
 				}
 				
 				try {
-					await fetch(url, packet).then((response) => {
-						console.log(response)
+					await fetch(url, packet).then(async (response) => {
 						if (response["status"] == 429) {
 							success = false
 							message = "Please wait at least 8 hours between image submissions!"

@@ -22,6 +22,7 @@
 	let monster={}
 	var gameData = [];
 	var scene;
+	var monsters = data.monsters
 	let google2;
 	const gltfLoader = new GLTFLoader();
 
@@ -68,7 +69,7 @@
 
 	//fetches current monster db, then updates the monsters
 	async function getMonsters(){
-		console.log(gameData)
+		let tempMonsters
 		const packet: RequestInit = {
 		headers: {
 			"content-type": "application/json; charset=UTF-8",
@@ -117,8 +118,8 @@
 			//only draws onto map when the map has loaded in the promise
 			google2=google;
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
-			scene = initWebglOverlayView(map);
-			scene = drawMonsters(scene,data.monsters);
+			let scene = initWebglOverlayView(map);
+			scene = drawMonsters(scene,monsters);
 			let button=document.getElementById("location");
 			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
 		})
@@ -148,8 +149,7 @@
     	// Sets a reference point for drawing onto the map
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		
-		gltfLoader.load("models/sans.gltf", (gltf) => {
-			//gltfLoader.load("models/poly.glb", (gltf) => {
+		gltfLoader.load("models/Player.gltf", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:location.lat,lng:location.lng})
 			playerModel = gltf.scene;
 			playerModel.position.set(vector.x,vector.y,0);
@@ -172,6 +172,7 @@
 			const intersections = overlay.raycast(vector);
 
 			if(intersections.length>0){
+			getMonsters()	
 			let clicked = false;
 			intersections.forEach(element => {
 				gameData.forEach(m => {
@@ -266,17 +267,22 @@ function drawMonsters(scene, monsters){
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
+				var totalCarbon = element.Team1_Score + element.Team2_Score + element.Team3_Score
+				previousMonster.monster.Team1Score = element.Team1Score;
+				previousMonster.monster.Team2Score = element.Team2Score;
+				previousMonster.monster.Team3Score = element.Team3Score;
+				previousMonster.monster.Team1Carbon = element.Team1Carbon;
+				previousMonster.monster.Team2Carbon = element.Team2Carbon;
+				previousMonster.monster.Team3Carbon = element.Team3Carbon;
+				var multiplier;
+				if (totalCarbon != 0) {
+					multiplier = 3 * Math.log2(totalScore)
+				} else {
+					multiplier = 0
+				}
+				previousMonster.model.scale.set(35 + multiplier,35 + multiplier,35 + multiplier);
 				previousMonster.monster=element;
 				monExists=true;
-				previousMonster.model.scale.set(40,40,40);
-				console.log(previousMonster.circle)
-				previousMonster.circle.setRadius(getRadius(previousMonster.monster).radius*20);
-				// previousMonster.monster.Team1Score = element.Team1Score;
-				// previousMonster.monster.Team2Score = element.Team2Score;
-				// previousMonster.monster.Team3Score = element.Team3Score;
-				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
-				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
-				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
 				if(monster.TM_ID==element.TM_ID){
 					monster=element;
 				}
@@ -284,34 +290,38 @@ function drawMonsters(scene, monsters){
 			}
 		})
 		if(!monExists){
-			//checks if the file currently exists
-			var fileString = "models/"+element.TM_Name+'.gltf';
-			//fetch(fileString,{method:"HEAD"}).catch(()=>{fileString="models/poly.glb"}).then((response)=>{
-			//if(response.status!=200){
-				//default model
-			//	fileString="models/poly.glb"
-			//}
-			//change to fileString if animations are included
-			gltfLoader.load("models/poly.glb", (gltf) => {
-			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
-			gltf.scene.position.set(vector.x,vector.y,40);
-    		gltf.scene.scale.set(50, 50, 50);
-			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
-			scene.add(gltf.scene);
-			let circleStats = getRadius(element)
-			console.log(circleStats);
-			var shape = new google2.maps.Circle({
-				map:map,
-				fillColor:circleStats.colour,
-				center:{lat:element.Latitude,lng:element.Longitude},
-				radius:circleStats.radius*20,
-				clickable: false
-			})
-			gameData.push({"monster":element,"model":gltf.scene, circle:shape})
-			})
-		//})
-		
-	}
+			var totalCarbon = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
+			var totalScore = element.Team1_Score + element.Team2_Score + element.Team3_Score
+			var multiplier;
+			if (totalCarbon != 0) {
+				multiplier = 3 * Math.log2(totalCarbon)
+			} else {
+				multiplier = 0
+			}
+			try {
+				gltfLoader.load("../models/" + element.TM_Name + ".glb", (gltf) => {
+					//gltfLoader.load("models/poly.glb", (gltf) => {
+					let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
+					gltf.scene.position.set(vector.x,vector.y,40);
+			    	gltf.scene.scale.set(35 + multiplier, 35 + multiplier, 35 + multiplier);
+					gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
+					scene.add(gltf.scene);
+					let circleStats = getRadius(element)
+					if (totalScore != 0) {
+						var shape = new google2.maps.Circle({
+							map:map,
+							fillColor:circleStats.colour,
+							center:{lat:element.Latitude,lng:element.Longitude},
+							radius:circleStats.radius*8 + multiplier,
+							clickable: false
+						})
+					}
+					gameData.push({"monster":element,"model":gltf.scene})
+				})
+			} catch(error) {
+				// do nothing
+			}
+		}
 	});
 	return scene;
 }
