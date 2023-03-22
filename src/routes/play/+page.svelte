@@ -49,7 +49,7 @@
 				if(locationTracking){
 					navigator.geolocation.getCurrentPosition(success)}},3000);
 			//sets interval to update the monsters on the screen, including scores and any new monsters
-			setInterval(getMonsters,5000);
+			//setInterval(getMonsters,5000);
 		}).catch(() => {
 				//triggered when location isnt enabled
 				errorMessage = "Location access blocked, please enable."
@@ -196,7 +196,6 @@
 							elemObject=element.object.parent
 							colour=m.model.children[0].material.color
 						}
-						console.log(colour)
 						//detects that the correct monster has been clicked, then sets it as the current monster
 						colour.r=1;
 						colour.g=1;
@@ -211,6 +210,7 @@
 							colour.b=0.5;
 							clicked=true;
 							addHTML()
+							return true;
 						}
 					});
 				});
@@ -220,7 +220,6 @@
 					//detects that the correct monster has been clicked, then sets it as the current monster
 					let colour;
 					if(m.mixer){
-						//console.log("mixing")
 							m.animation.stop()
 							colour=m.model.children[0].children[0].material.color
 						}
@@ -230,7 +229,6 @@
 					colour.r=1;
 					colour.g=1;
 					colour.b=1;
-					console.log(colour)
 				})
 				//monster = {}
 			}
@@ -239,12 +237,14 @@
 
 
 		const animate = () => { //cool animations
+			let delta = clock.getDelta();
 			gameData.forEach(element => {
 				if(element.monster!=monster || !monsterSelected){
 				element.model.rotateY(MathUtils.degToRad(0.2));
 				}
 				
-				if(element.mixer) element.mixer.update(clock.getDelta())
+				if(element.mixer) {
+					element.mixer.update(delta)}
 			});
 			overlay.requestRedraw();
 			TWEEN.update()
