@@ -3,6 +3,7 @@
 	let wait, submitForm
 	let submit
 	
+	// prevents user for submitting multiple times in a row
 	function freezeForm(e) {
 		submit = true
 		if (submitForm.classList.contains('is-submitting')) {
@@ -10,6 +11,7 @@
 		}
 		
 		submitForm.classList.add('is-submitting');
+		// display waiting message
 		wait.style.opacity = "1"
 	}
 </script>
@@ -21,11 +23,11 @@
 	</div>
   <form id="form" method="POST" bind:this={submitForm}>
   		<br>
-		
 		<div class="inputbox">
 			<input name="email" type="text" required>
 			<label for="">Enter your email</label>
 		</div>
+		<!-- sveltekit if statement, check when submission happens -->
 		{#if form?.success} 
 			<div class="success-wrapper">
 				<span class="success-text">{form.message}</span>
@@ -62,7 +64,7 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
     	height: 80%;
-		width: fit-content;
+		width: fit-content; /* doesn't grow any wider than necessary */
 	    display: flex;
    		flex-direction: column;
 		justify-content: center;

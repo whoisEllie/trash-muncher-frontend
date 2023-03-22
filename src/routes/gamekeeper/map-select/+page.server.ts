@@ -38,6 +38,7 @@ export const load = (async (event) => {
 
 				url="http://38.242.137.81:8000/api/monsters/get-tms"
 				await event.fetch(url,packet).then((response) => response.json().then((out) => {
+					// get monsters to return to map
 					monsters=out;
 				}))
 			})
@@ -46,6 +47,7 @@ export const load = (async (event) => {
 				logged_in: login_status,
 				username: username,
 				monsters:monsters, 
+				cookie: cookies
 			};
 		} catch (error) {
 			throw redirect(302, '/login')
@@ -62,6 +64,8 @@ export const actions: Actions = {
 		const formData = await request.formData();
 
 		let url = "http://38.242.137.81:8000/api/monsters/add-tm"
+		
+		// data to add monster to map
 		const data = {
 			"TM_Name":formData.get("TM_Name"),
 			"Longitude":formData.get("longitude"),
@@ -80,6 +84,7 @@ export const actions: Actions = {
 		
 		try {
 			await fetch(url, packet).then((response) => {
+				// check response status, just in case of unknown/uncaught errors
 				if(response["status"] == 200) {
 					success = true
 					message = "Monster successfully created!"
@@ -123,6 +128,7 @@ export const actions: Actions = {
 		}
 		try {
 			await fetch(url, packet).then((response) => {
+				// get success
 				if(response["status"] == 200) {
 					success = true
 					message = "Score successfully updated!"
@@ -173,6 +179,7 @@ export const actions: Actions = {
 					message = "An error has occurred. Please try again."
 				}
 			})
+		// if api call failed entirely (no internet/server down)
 		} catch(error) {
 			return {
 				success: false,

@@ -10,6 +10,7 @@
 		<p class="title-munchers">MUNCHERS</p>
 	</div>
 	<div class="form-wrapper">
+	<!-- get error message -->
 	{#if form?.success === false}
 		<br>
 		<div class="success-wrapper">
@@ -91,7 +92,7 @@
 		grid-template-columns: repeat(2, 1fr);
 		grid-template-rows: repeat(4, 2fr), 1fr;
 		gap: 1rem;
-		grid-template-areas: 
+		grid-template-areas: /* template to demonstrate how sections fit */
 		". ."
 		". ."
 		". ."
@@ -139,7 +140,7 @@
 
 	input:focus ~label,
 	input:valid ~label {
-		top: -15%;
+		top: -15%; /* allows animation of form */
 		color: #000;
 	}
 
@@ -194,7 +195,7 @@
 		transition: all 0.5s ease 0.0s;
 	}
 
-	@media screen and (max-width: 600px) {
+	@media screen and (max-width: 600px) { /* change based on device */
 		.title {
 			font-size: 4rem;
 		}	

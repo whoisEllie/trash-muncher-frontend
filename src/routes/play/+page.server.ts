@@ -32,6 +32,7 @@ export const load = (async (event) => {
 					throw redirect(302, '/login')
 					return;
 				}
+				// throw them out of the page if they are not gamekeeper
 				if (out['code'] === "token_not_valid")
 				{
 					throw redirect(302, '/login')
@@ -42,11 +43,12 @@ export const load = (async (event) => {
 					throw redirect(302, '/login')
 					return;
 				}
+				
 				if (out['user'].is_gamekeeper == true)
 				{
 					throw redirect(302, '/')
 					return;
-				}	
+				}
 				
 
 				username = out['user']['username']
@@ -64,7 +66,6 @@ export const load = (async (event) => {
 				username: username,
 				monsters: monsters,
 				team_id: team,
-				cookie: authkey
 			};
 		
 		
@@ -76,6 +77,7 @@ export const load = (async (event) => {
 export const actions: Actions = {
 	addScore: async ({cookies, request}) => {
 		const formData = await request.formData();
+		// get score to add
 		const data = {
 			"TM_ID":Number(formData.get("id")),
 			"T1Score":Number(formData.get("t1score")),
@@ -103,6 +105,7 @@ export const actions: Actions = {
 		let success, message
 		if (data.get('image') != "" && data.get("tm") != "undefined"){
 			let team, teamID
+			// get team of the player
 			if (data.get("team") == "Red") {
 				team = "T1Score"
 				teamID = 1
@@ -117,6 +120,7 @@ export const actions: Actions = {
 				"TM_ID": Number(data.get("tm")),
 				[team]: 1
 			}
+			// get their current location
 			let location = {
 				"TM_ID": Number(data.get("tm")),
 				"o-lat": data.get("lat"),
@@ -137,8 +141,8 @@ export const actions: Actions = {
 				}
 			})
 		
+			// location tracking for api call
 			if (inRange) {
-							
 				let pack2 = {
 					"b64_img": data.get("image"),
 					"monster_id": data.get("tm"),
@@ -162,9 +166,10 @@ export const actions: Actions = {
 				
 				try {
 					await fetch(url, packet).then(async (response) => {
+						// response that'll be thrown if upload limit is reached
 						if (response["status"] == 429) {
 							success = false
-							message = "Please wait at least 8 hours between image submissions!"
+							message = "Please wait 8 hours between image submissions!"
 						} else if (response["status"] == 201) {
 							success = true
 							message = "Image successfully uploaded!"

@@ -4,6 +4,7 @@
 	export let form
 	
 	onMount(async () => {
+		//throw user back to index if they enter this page
 		window.location.replace('/')
 	});
 </script>

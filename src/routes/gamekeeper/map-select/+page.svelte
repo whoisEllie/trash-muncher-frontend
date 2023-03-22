@@ -18,16 +18,16 @@
 	var map;
 	let formChoice=0;
 	var gameData = [];
-	let monster = {}, t1score=0,t2score=0,t3score=0, forms;
+	let monster = {}, t1score=0,t2score=0,t3score=0, forms, monsters = data.monsters;
 	var overlay: ThreejsOverlayView;
 	var vector = new Vector2();
 	var mixer: AnimationMixer;
 	const gltfLoader = new GLTFLoader();
 
-	onMount(() => {
+	onMount(async () => {
 		createMap(50.72506135303006,-3.5306954520836453);
-		
 	})
+	
 	async function createMap(latitude: number, longitude: number) {
 		//creates loader to get the map from the api
 		const loader = new Loader({
@@ -35,7 +35,7 @@
 		version: "weekly",
 		libraries: ["places"],
 	});
-
+	
 	//sets settings for the gamekeeper map page. Gives them full control over the map so they can place monsters anywhere
 	const mapOptions = {
 		center: {
@@ -139,16 +139,19 @@
 }
 
 let spans = []
+// display leaderboard information
 function addHTML() {
 	spans = []
 	let scores = []
 	let sortedScores = []
+	// add monsters to array along with team id
 	scores.push("" + monster.Team1_Score + 1)
 	scores.push("" + monster.Team2_Score + 2)
 	scores.push("" + monster.Team3_Score + 3)
 	scores.sort((a,b)=>b-a)
 	var order = []
 	for (var i = 0; i < scores.length; i++) {
+		// sorting array so winning team is on top
 		if (scores[i] % 10 == 1) {
 			sortedScores.push("Red Score: " + Math.floor(scores[i]/10))
 			order[i] = "red"
@@ -182,7 +185,7 @@ function addHTML() {
 
 function drawMonsters(scene){
 	//loads the gltf models
-	data.monsters.forEach(element => {
+	monsters.forEach(element => {
 		try {
 			gltfLoader.load("../models/" + element.TM_Name + ".glb", (gltf) => {
 				let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
@@ -222,35 +225,37 @@ function drawMonsters(scene){
 		formChoice 4 - Adds score to the monster. Defaults to 0.
 		-->
 			{#if formChoice == 0}
+				{#if form?.success == true}
+					<br><br><br>
+					<div class="success-wrapper">
+						<center><span class="success-text">{form.message}</span></center>
+					</div>
+				{:else if form?.success == false}
+					<br><br><br>
+					<div class="success-wrapper">
+						<center><span class="fail-text">{form.message}</span></center>
+					</div>
+				{/if}
 				<div class="no-selection">
 					Click anywhere on the map to add a new monster. Click on an existing monster to adjust It's scores.
 				</div>
 			{/if}
 			{#if formChoice == 1}
-				<form method="POST" action="?/newMonster" use:enhance id="monsterForm">
+				<form method="POST" action="?/newMonster" id="monsterForm">
 					<label for="latitude">Location:</label>
 					<input name="latitude" id="latitude" value={latForm} style="border-radius: 10px 10px 0px 0px;">
 						<input name="longitude" id="longitude" value={lngForm} style="border-radius: 0px 0px 10px 10px;">
-					<label for="TM_Name">Pick a name for this location:</label>
-						<input name="TM_Name" id="TM_Name" required>
+					<label for="TM_Name" class="TM_Label">Pick a name for this location:</label>
+						<input name="TM_Name" id="TM_Name" class="TM_Name" required>
 					<button>Add a new monster!</button>
 				</form>
-				{#if form?.success == true}
-					<div class="success-wrapper">
-						<center><span class="success-text">{form.message}</span></center>
-					</div>
-				{:else if form?.success == false}
-					<div class="success-wrapper">
-						<center><span class="fail-text">{form.message}</span></center>
-					</div>
-				{/if}
 			{:else if formChoice > 1}
 				<div class="change-add-scores">
 					<button on:click={setOverwrite} style="border-radius: 10px 0px 0px 10px;">Overwrite</button>
 					<button on:click={setAddTo} style="border-radius: 0px 10px 10px 0px;">Add to</button>
 				</div>
 			{#if formChoice == 3}
-				<form method="POST" id="updateScore" action="?/updateScore" use:enhance>
+				<form method="POST" id="updateScore" action="?/updateScore">
 					<label for="t1score">Team 1</label>
 						<input type="number" name="t1score" value={t1score}>
 					<label for="t2score">Team 2</label>
@@ -260,17 +265,8 @@ function drawMonsters(scene){
 						<input type="hidden" name="id" value={monster.TM_ID}>
 					<button>Overwrite Scores!</button>
 				</form>
-				{#if form?.success == true}
-					<div class="success-wrapper">
-						<center><span class="success-text">{form.message}</span></center>
-					</div>
-				{:else if form?.success == false}
-					<div class="success-wrapper">
-						<center><span class="fail-text">{form.message}</span></center>
-					</div>
-				{/if}
 			{:else if formChoice == 4}
-				<form method="POST" id="addScore" action="?/addScore" use:enhance>
+				<form method="POST" id="addScore" action="?/addScore">
 					<label for="t1score">Team 1</label>
 					<input type="number" name="t1score" value=0>
 					<label for="t2score">Team 2</label>
@@ -280,15 +276,6 @@ function drawMonsters(scene){
 					<input type="hidden" name="id" value={monster.TM_ID}>
 					<button>Add to Scores!</button>
 				</form>
-				{#if form?.success == true}
-					<div class="success-wrapper">
-						<center><span class="success-text">{form.message}</span></center>
-					</div>
-				{:else if form?.success == false}
-					<div class="success-wrapper">
-						<center><span class="fail-text">{form.message}</span></center>
-					</div>
-				{/if}
 			{/if}
 			{/if}
 		</div>
@@ -301,7 +288,9 @@ function drawMonsters(scene){
 	<div id="map" class="map">
 	{#if Object.keys(monster).length > 0}
 		<div class="monsterScore">
+			<!-- display leaderboard with information -->
 			Name: {monster.TM_Name}<br>
+			<!-- sveltekit loop (for items) -->
 			{#each spans as item}
 				{@html item}<br>
 			{/each}
@@ -347,7 +336,7 @@ function drawMonsters(scene){
 	.map {
 		height: 100%; 
 		width: 100%;
-		grid-area: Map;
+		grid-area: Map; /* displays in Map template area (map-modal) */
 	}
 
 	.no-selection {
@@ -358,7 +347,7 @@ function drawMonsters(scene){
 	.map-form form {
 		display: grid;
 		margin: 25px 0px;
-		grid-area: Form;
+		grid-area: Form; /* displays in Form template area */
 	}
 
 	.map-form form input {
@@ -424,7 +413,7 @@ function drawMonsters(scene){
 		float: right;
 		background-color: #E0E0E0;
 		position: relative;
-		width: fit-content;
+		width: fit-content; /* ensures div isn't too big */
 		padding: 10px 20px 10px 10px;
 		font-size: 1.1em;
 		box-shadow: 0px 0px 16px #00000044;
@@ -433,6 +422,7 @@ function drawMonsters(scene){
 	}
 	
 	.success-wrapper {
+		margin: auto;
 		width: fit-content;
 		padding-left: 20px;
 		padding-right: 20px;
@@ -447,6 +437,12 @@ function drawMonsters(scene){
 	.fail-text {
 		position: relative;
 		color: red;
+	}
+	
+	.TM_Label {
+		position: relative;
+		z-index: 3; /* ensures text appears over input box (different device settings) */
+		text-align: center;
 	}
 
 	@media screen and (max-width: 750px) {

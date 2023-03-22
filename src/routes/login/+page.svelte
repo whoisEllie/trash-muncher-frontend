@@ -143,7 +143,7 @@
 		font-family: 'Montserrat', sans-serif;
 		font-size: 1.2rem;
 		background-color: #B5D3D2;
-		transition: all 0.5s;
+		transition: all 0.5s; /* animation to fade in button colour */
 		padding: 0 30px;
 		width: 180px;
 		text-decoration: none;
