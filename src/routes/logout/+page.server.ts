@@ -14,10 +14,9 @@ export const load = (async (event) => {
 		mode: "cors"
 	}
 
-	await event.fetch(url, packet).then((response) => response.json()).then((out) => {
-		console.log(out)
-	})
-
+	await event.fetch(url, packet)
+	
+	//delete cookies from browser
 	event.cookies.delete('AccessToken');	
 	event.cookies.delete('RefreshToken');
 

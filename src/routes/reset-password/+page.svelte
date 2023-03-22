@@ -6,6 +6,7 @@
     onMount(async () => {
 		url = window.location.href
 		if(form?.success) {
+			// move user to login page after 5 seconds
 			setTimeout(function () {goto('/login')}, 5000)
 		}
 	});
@@ -27,6 +28,7 @@
 			<label for="">Confirm new password</label>
 		</div>
 		<input name="path" value={url} hidden>
+		<!-- display success text -->
 		{#if form?.success} 
 			<div class="success-wrapper">
 				<span class="success-text">{form.message}</span>

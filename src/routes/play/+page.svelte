@@ -20,14 +20,18 @@
 	var overlay;
 	var vector = new Vector2();
 	let monster={}
+	let message = "no message"
 	var gameData = [];
 	var scene;
 	var monsters = data.monsters
 	let google2;
 	let monsterSelected = false
 	const gltfLoader = new GLTFLoader();
-	
 	const clock = new Clock()
+  
+	if (form?.success == true || form?.success == false) {
+		message = form.message	
+	}
 
 	//runs on page load
 	onMount(async () => {
@@ -45,7 +49,7 @@
 				if(locationTracking){
 					navigator.geolocation.getCurrentPosition(success)}},3000);
 			//sets interval to update the monsters on the screen, including scores and any new monsters
-			setInterval(getMonsters,8000);
+			setInterval(getMonsters,5000);
 		}).catch(() => {
 				//triggered when location isnt enabled
 				errorMessage = "Location access blocked, please enable."
@@ -320,9 +324,8 @@ function drawMonsters(scene, monsters){
 					multiplier = 0
 				}
 				previousMonster.model.scale.set(35 + multiplier,35 + multiplier,35 + multiplier);
-				if (totalScore != 0) {
-					previousMonster.circle.setRadius(getRadius(element).radius*8 + multiplier)
-				}
+				previousMonster.circle.setRadius(20 + getRadius(element).radius*4)
+
 				previousMonster.monster=element;
 				monExists=true;
 				if(monster.TM_ID==element.TM_ID){
@@ -362,10 +365,10 @@ function drawMonsters(scene, monsters){
 							center:{lat:element.Latitude,lng:element.Longitude},
 							clickable: false
 						})
-					if (totalScore != 0) {
-						shape.setRadius(circleStats.radius*8 + multiplier)
-					}
+
+					shape.setRadius(20 + circleStats.radius*4)
 					gameData.push({"monster":element,"model":gltf.scene,"circle":shape,"mixer":mixer,"animation":animationAction})	
+
 				})
 			} catch(error) {
 
@@ -435,6 +438,9 @@ const onFileSelected =(e)=> {
 		image = "no file"
 		name = "Please submit a file below 4mb!"
 	} else {
+		if (form?.success == true || form?.success == false) {
+			message = name
+		}
 		error = false
 		reader.readAsDataURL(tempImage);
 		reader.onload = e => {
@@ -491,6 +497,8 @@ function unfreezeForm(e) {
 				{#if form?.success === false || form?.success === true}
 					{#if error == true}
 						{name}
+					{:else if message != "no message"}
+						{message}
 					{:else}
 						{form.message}
 					{/if}
@@ -501,15 +509,19 @@ function unfreezeForm(e) {
 				{/if}
 			</button>
 		</div>
-		<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
-			<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
-			<input type="hidden" name="image" value={image}>
-			<input type="hidden" name="tm" value={monster.TM_ID}>
-			<input type="hidden" name="team" value={data.team_id}>
-			<input type="hidden" name="lat" value={location.lat}>
-			<input type="hidden" name="lng" value={location.lng}>
-			<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
-		</form>
+		{#if error == false}
+			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
+				<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
+				<input type="hidden" name="image" value={image}>
+				<input type="hidden" name="tm" value={monster.TM_ID}>
+				<input type="hidden" name="team" value={data.team_id}>
+				<input type="hidden" name="lat" value={location.lat}>
+				<input type="hidden" name="lng" value={location.lng}>
+				<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
+			</form>
+		{:else}
+			<button class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
+		{/if}
 		{#if monsterSelected}
 			<div class="monsterScore">
 				Name: {monster.TM_Name}<br>
@@ -621,9 +633,8 @@ function unfreezeForm(e) {
 	.file-chosen-wrapper {
 		display: flex;
 		justify-content: center;
-		height: 90%;
-		width: 90%;
-		margin: 10px 10px 0px 15px;
+		height: 100%;
+		margin: 15px 20px 0px 15px;
 	}
 
 	.file-chosen{
@@ -642,13 +653,9 @@ function unfreezeForm(e) {
 		margin: 15px;
 		background-color: #ECECEC;
 		padding: 10px 20px 10px 10px;
-		font-size: 1.1em;
+		font-size: 1.2em;
 		border-radius: 15px;
 		font-family: "Montserrat", sans-serif;
-	}
-	
-	.mobileScore {
-		display: none;
 	}
 
 	.location {
@@ -667,7 +674,7 @@ function unfreezeForm(e) {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin: 0px 15px 8px 15px;
+		margin: 30px 15px 15px 15px;
 	}
 
 	.upload-button {
@@ -684,7 +691,7 @@ function unfreezeForm(e) {
 		background-color: #B5D3D2;
 		transition: all 0.5s;
 		padding: 0px 15px;
-		max-width: 250px;
+		max-width: 300px;
 		text-decoration: none;
 		color: black;
 		margin: 0px auto;
@@ -733,6 +740,11 @@ function unfreezeForm(e) {
 	}
 
 	/* device sensitive */
+	@media screen and (max-width: 1515px) {
+		.upload-button {
+			font-size: 0.85rem;
+		}
+	}
 	@media screen and (max-width: 1200px) {
 		.map-modal {
 			height: 92.5vh;

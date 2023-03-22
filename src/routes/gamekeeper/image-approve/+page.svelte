@@ -34,12 +34,15 @@
 	<!-- svelte for loop -->
 	{#each data.images as i, index}
 		<div class = "item" bind:this="{item[index]}">
+			<!-- get current item index as to not display on every image -->
 			{#if popup == true && currentItem == item[index]}
+				<!-- remove div when no longe rhovering -->
 				<div class="trash-size" on:mouseleave="{removeDiv}">
 					<form method="POST" action="?/accept" bind:this={form}>
 						<input type="hidden" name="id" value={i.id}>
 						<input type="hidden" name="team" value={i.team}>
 						<input type="hidden" name="score" value=0>
+						<!-- random int makes leaderboard look nicer, more randomised -->
 						<input type="hidden" name="carbon" value={70 + getRandomInt(10)}>
 						<input type="hidden" name="tm" value={i.monster_id}>
 						<button type="submit" class="trash" on:click={freezeForm}>Small trash</button>
