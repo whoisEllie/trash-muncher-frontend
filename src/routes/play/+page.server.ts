@@ -173,13 +173,11 @@ export const actions: Actions = {
 							message = "An error has occurred. Please try again"
 						}
 					})
-					if(success==false){
 					return {
 						image: data.get("image"),
 						success: success,
 						message: message
 					}
-				}
 				} catch(error) {
 					success = false
 					return {
@@ -207,10 +205,18 @@ export const actions: Actions = {
 				}
 			}
 		}else{
-			return {
-				image: data.get("image"),
-				success: false,
-				message: "Please select both an image and monster!"
+			if(data.get("tm") == "undefined") {
+				return {
+					image: data.get("image"),
+					success: false,
+					message: "Please select a monster!"
+				}
+			} else if(data.get("image") == ""){
+				return {
+					image: data.get("image"),
+					success: false,
+					message: "Please select an image!"
+				}
 			}
 		}
 	}

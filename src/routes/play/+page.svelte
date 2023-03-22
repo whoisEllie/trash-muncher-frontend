@@ -382,10 +382,9 @@ const onFileSelected =(e)=> {
 	}
 	let reader = new FileReader();
 	if (e.target.files[0].size > 4194304) {
-		root.style.setProperty('--corner-radius', "15px")
 		error = true
 		image = null
-		name = "File size too big! Please submit a file below 4mb!"
+		name = "Please submit a file below 4mb!"
 	} else {
 		error = false
 		reader.readAsDataURL(tempImage);
@@ -404,7 +403,7 @@ function freezeForm(e) {
 	}
 	if(!submitForm.classList.contains('is-submitting')){
 	submitForm.classList.add('is-submitting');
-	setTimeout(()=> {submitForm.classList.remove('is-submitting')},3000)
+	setTimeout(()=> {submitForm.classList.remove('is-submitting')},2000)
 	}
 }
 
@@ -438,8 +437,14 @@ function unfreezeForm(e) {
 			<button class="upload-button" on:click={()=>{fileinput.click();}}>
 				<img src="/images/upload_black.png" alt="A small upload icon" width="40px" height="40px"/>
 				{#if form?.success === false || form?.success === true}
-					{form.message}
-				{:else if error !== true}
+					{#if error == true}
+						{name}
+					{:else}
+						{form.message}
+					{/if}
+				{:else if error == true}
+					{name}
+				{:else}
 					{name}
 				{/if}
 			</button>
@@ -470,7 +475,6 @@ function unfreezeForm(e) {
 			</div>
 		{/if}
 	</div>
-
 	<div id="map" class="map">
 		<div class="map-await">
 			{errorMessage}
@@ -542,7 +546,7 @@ function unfreezeForm(e) {
 		box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
 		background-color: #E1E1E1;
 	}
-
+	
 	.form-wrapper {
 		grid-area: Form;
 		display: grid;
@@ -580,7 +584,7 @@ function unfreezeForm(e) {
 		height: 100%;
 		width: 100%;
 	}
-
+	
 	.monsterScore {
 		margin: 15px;
 		background-color: #ECECEC;
@@ -588,6 +592,10 @@ function unfreezeForm(e) {
 		font-size: 1.1em;
 		border-radius: 15px;
 		font-family: "Montserrat", sans-serif;
+	}
+	
+	.mobileScore {
+		display: none;
 	}
 
 	.location {
@@ -672,7 +680,7 @@ function unfreezeForm(e) {
 	}
 
 	/* device sensitive */
-	@media screen and (max-width: 450px) {
+	@media screen and (max-width: 1000px) {
 		.map-modal {
 			height: 92.5vh;
 			height: 92.5svh;
@@ -696,7 +704,7 @@ function unfreezeForm(e) {
 			bottom: 15%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-			width: 70vw;
+			width: 50vw;
 			max-height: 80px;
 			visibility: visible;
 			background-color: paleturquoise;
@@ -708,6 +716,8 @@ function unfreezeForm(e) {
 
 		.mobile-upload-button {
 			font-family: Montserrat;
+			padding-top: 10px;
+			padding-bottom: 10px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
