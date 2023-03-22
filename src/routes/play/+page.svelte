@@ -20,12 +20,17 @@
 	var overlay;
 	var vector = new Vector2();
 	let monster={}
+	let message = "no message"
 	var gameData = [];
 	var scene;
 	var monsters = data.monsters
 	let google2;
 	let monsterSelected = false
 	const gltfLoader = new GLTFLoader();
+	
+	if (form?.success == true || form?.success == false) {
+		message = form.message	
+	}
 
 	//runs on page load
 	onMount(async () => {
@@ -388,6 +393,9 @@ const onFileSelected =(e)=> {
 		image = "no file"
 		name = "Please submit a file below 4mb!"
 	} else {
+		if (form?.success == true || form?.success == false) {
+			message = name
+		}
 		error = false
 		reader.readAsDataURL(tempImage);
 		reader.onload = e => {
@@ -444,6 +452,8 @@ function unfreezeForm(e) {
 				{#if form?.success === false || form?.success === true}
 					{#if error == true}
 						{name}
+					{:else if message != "no message"}
+						{message}
 					{:else}
 						{form.message}
 					{/if}
@@ -454,15 +464,19 @@ function unfreezeForm(e) {
 				{/if}
 			</button>
 		</div>
-		<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
-			<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
-			<input type="hidden" name="image" value={image}>
-			<input type="hidden" name="tm" value={monster.TM_ID}>
-			<input type="hidden" name="team" value={data.team_id}>
-			<input type="hidden" name="lat" value={location.lat}>
-			<input type="hidden" name="lng" value={location.lng}>
-			<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
-		</form>
+		{#if error == false}
+			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
+				<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
+				<input type="hidden" name="image" value={image}>
+				<input type="hidden" name="tm" value={monster.TM_ID}>
+				<input type="hidden" name="team" value={data.team_id}>
+				<input type="hidden" name="lat" value={location.lat}>
+				<input type="hidden" name="lng" value={location.lng}>
+				<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
+			</form>
+		{:else}
+			<button class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
+		{/if}
 		{#if monsterSelected}
 			<div class="monsterScore">
 				Name: {monster.TM_Name}<br>
