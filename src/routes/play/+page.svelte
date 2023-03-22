@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Loader } from '@googlemaps/js-api-loader';
 	import { onMount } from 'svelte';
-	import {AmbientLight,DirectionalLight,PerspectiveCamera,Scene,WebGLRenderer,Raycaster,Vector2,Matrix4,MathUtils} from 'three';
+	import {AmbientLight,DirectionalLight,PerspectiveCamera,Scene,WebGLRenderer,Raycaster,Vector2,Matrix4,MathUtils,AnimationMixer,Clock} from 'three';
 	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
     import { enhance } from '$app/forms';
@@ -26,6 +26,8 @@
 	let google2;
 	let monsterSelected = false
 	const gltfLoader = new GLTFLoader();
+	
+	const clock = new Clock()
 
 	//runs on page load
 	onMount(async () => {
@@ -133,7 +135,7 @@
 	function initWebglOverlayView(map) {
 		//variables used for webgl
   		let camera:PerspectiveCamera;
-
+		var animationAction;
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
 		overlay.setMap(map);
 
@@ -160,6 +162,7 @@
 			
 		})
 
+
 		//creates a listener to detect mouse clicks onto the map. Raycasts for 3d objects, and shows coordinates when clicking everywhere else
 		map.addListener('click', (event) => {
 			const {domEvent} = event;
@@ -178,11 +181,30 @@
 				let clicked = false;
 				intersections.forEach(element => {
 					gameData.forEach(m => {
+						var elemObject
+						var colour;
+						if(m.mixer){
+							m.animation.stop()
+							elemObject=element.object.parent.parent
+							colour=m.model.children[0].children[0].material.color
+						}
+						else{
+							elemObject=element.object.parent
+							colour=m.model.children[0].material.color
+						}
+						console.log(colour)
 						//detects that the correct monster has been clicked, then sets it as the current monster
-						m.model.children[0].material.color.r=0.8227857351303101;
-						if (m.model==element.object.parent){
+						colour.r=1;
+						colour.g=1;
+						colour.b=1;
+						if (m.model==elemObject){
+							if(m.mixer) {
+								m.animation.play()
+							}
 							monster=m.monster;
-							element.object.material.color.r=0.06;
+							colour.r=0.5;
+							colour.g=0.5;
+							colour.b=0.5;
 							clicked=true;
 							addHTML()
 						}
@@ -192,7 +214,19 @@
 				monsterSelected = false
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
-					m.model.children[0].material.color.r=0.8227857351303101;
+					let colour;
+					if(m.mixer){
+						//console.log("mixing")
+							m.animation.stop()
+							colour=m.model.children[0].children[0].material.color
+						}
+						else{
+							colour=m.model.children[0].material.color
+						}
+					colour.r=1;
+					colour.g=1;
+					colour.b=1;
+					console.log(colour)
 				})
 				//monster = {}
 			}
@@ -202,10 +236,14 @@
 
 		const animate = () => { //cool animations
 			gameData.forEach(element => {
+				if(element.monster!=monster){
 				element.model.rotateY(MathUtils.degToRad(0.2));
+				}
+				if(element.mixer) element.mixer.update(clock.getDelta())
 			});
 			overlay.requestRedraw();
 			TWEEN.update()
+			
 
   			requestAnimationFrame(animate);
 		};
@@ -310,6 +348,12 @@ function drawMonsters(scene, monsters){
 			    	gltf.scene.scale.set(35 + multiplier, 35 + multiplier, 35 + multiplier);
 					gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 					scene.add(gltf.scene);
+					let mixer;
+					let animationAction;
+					if(gltf.animations.length>0){
+						mixer = new AnimationMixer(gltf.scene);
+						animationAction = mixer.clipAction((gltf as any).animations[0])
+					}
 					let circleStats = getRadius(element)
 					var shape = new google2.maps.Circle({
 							map:map,
@@ -320,8 +364,7 @@ function drawMonsters(scene, monsters){
 					if (totalScore != 0) {
 						shape.setRadius(circleStats.radius*8 + multiplier)
 					}
-
-					gameData.push({"monster":element,"model":gltf.scene,"circle":shape})	
+					gameData.push({"monster":element,"model":gltf.scene,"circle":shape,"mixer":mixer,"animation":animationAction})	
 				})
 			} catch(error) {
 
