@@ -345,6 +345,7 @@ function unfreezeForm(e) {
 <link rel="preload" as="image" href="/images/upload_hover_mobile.png">
 <button id="location" on:click={goToLocation}><img class="location" alt="a location centering icon" src="images/location.png"></button>
 
+
 <div class="map-modal">	
 	<div class="form-wrapper">
 		<div class="file-chosen-wrapper">
@@ -401,8 +402,30 @@ function unfreezeForm(e) {
 			<p id="awaitText">{errorMessage}</p>
 		</div>
 		-->
-
 	</div>
+</div>
+
+<div class="mobile-button">
+	<button class="mobile-upload-button" on:click={()=>{fileinput.click();}}>
+				<img src="/images/upload_black.png" alt="A small upload icon" width="40px" height="40px"/>
+				{#if form?.success === false || form?.success === true}
+					{form.message}
+				{:else if error !== true}
+					{name}
+				{/if}
+			</button>
+			{#if image}
+				<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
+					<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
+					<input type="hidden" name="image" value={image}>
+					<input type="hidden" name="tm" value={monster.TM_ID}>
+					<input type="hidden" name="team" value={data.team_id}>
+					<input type="hidden" name="lat" value={location.lat}>
+					<input type="hidden" name="lng" value={location.lng}>
+					<button type="submit" class="mobile-submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
+				</form>
+			{/if}
+
 </div>
 
 <style>
@@ -425,7 +448,7 @@ function unfreezeForm(e) {
 		height: 80vh;
 		display: grid;
 		grid-template-columns: 2fr 7fr;
-		grid-template-rows: auto;
+		grid-template-areas: "Form Map";
 		border-radius: 25px;
 		overflow: hidden;
 		box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
@@ -433,6 +456,7 @@ function unfreezeForm(e) {
 	}
 
 	.form-wrapper {
+		grid-area: Form;
 		display: grid;
 		grid-template-rows: 250px auto auto 5fr;
 		overflow-y: scroll;
@@ -464,6 +488,7 @@ function unfreezeForm(e) {
 	}
 
 	.map {
+		grid-area: Map;
 		height: 100%;
 		width: 100%;
 	}
@@ -552,36 +577,57 @@ function unfreezeForm(e) {
 		transition: all 0.5s ease 0.0s;
 	}
 
+	.mobile-button {
+		visibility: hidden;
+		width: 0px;
+		height: 0px;
+	}
+
 	/* device sensitive */
 	@media screen and (max-width: 450px) {
 		.map-modal {
-			position: relative;
-			left: -66.5%;
-			margin-top: 30px;
-			transform: translate(0%, -10%); /* resets transformation from previous css */
+			height: 92.5vh;
 			width: 100vw;
-			background-color: transparent;
-			box-shadow: none;
-			margin-bottom: 200px;
+			border-radius: 15px 15px 0px 0px;
+			bottom: 0;
+			transform: translate(-50%, -46.125%);
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr;
+			grid-template-areas: "Map";
 		}
-		#map {
-			width: 100vw;
-		}
-	}
-	
-	@media screen and (min-width: 451px) and (max-width: 1000px) {
-		.map-modal {
-			position: relative;
-			left: 50%;
-			transform: translate(-55%, -10%);
-			width: fit-content;
-			background-color: transparent;
-			box-shadow: none;
-			margin-bottom: 200px;
-		}
-		#map {
-			width: 84vw;
-		}
-	}
 
+		.form-wrapper {
+			visibility: hidden;
+			width: 0px;
+			height: 0px;
+		}
+
+		.mobile-button {
+			position: absolute;
+			bottom: 15%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 70vw;
+			max-height: 80px;
+			visibility: visible;
+			background-color: paleturquoise;
+			border-radius: 55px;
+			box-shadow: 0px 0px 21px #00000044;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.mobile-upload-button {
+			display: flex;
+			width: 100%;
+			height: 40px;
+
+		}
+
+		.mobile-submit-button {
+			display: flex;
+			width: 100%;
+			height: 40px;
+		}
+	}
 </style>
