@@ -346,7 +346,7 @@ function unfreezeForm(e) {
 <button id="location" on:click={goToLocation}><img class="location" alt="a location centering icon" src="images/location.png"></button>
 
 <div class="map-modal">	
-	<div class="form">
+	<div class="form-wrapper">
 		<div class="file-chosen-wrapper">
 			{#if image}
 			<img class="file-chosen" src="{image}" alt="d"/>
@@ -377,14 +377,7 @@ function unfreezeForm(e) {
 				<input type="hidden" name="lng" value={location.lng}>
 				<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
 			</form>
-	</div>
-	<div id="map" class="map">
-		<!--
-		<div id="mapAwait">
-			<p id="awaitText">{errorMessage}</p>
-		</div>
-		-->
-		{#if Object.keys(monster).length > 0}
+			{#if Object.keys(monster).length > 0}
 		<div class="monsterScore">
 			Name: {monster.TM_Name}<br>
 			{#each spans as item}
@@ -394,10 +387,21 @@ function unfreezeForm(e) {
 			Carbon consumed
 			<br>
 			<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
-			<br><span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
-			<br><span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
+			<br>
+			<span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
+			<br>
+			<span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
 		</div>
-		{/if}
+	{/if}
+</div>
+
+	<div id="map" class="map">
+		<!--
+		<div id="mapAwait">
+			<p id="awaitText">{errorMessage}</p>
+		</div>
+		-->
+
 	</div>
 </div>
 
@@ -428,9 +432,10 @@ function unfreezeForm(e) {
 		background-color: #E1E1E1;
 	}
 
-	.form {
+	.form-wrapper {
 		display: grid;
 		grid-template-rows: 250px auto auto 5fr;
+		overflow-y: scroll;
 	}
 
 	.no-file-chosen {
@@ -464,12 +469,10 @@ function unfreezeForm(e) {
 	}
 
 	.monsterScore {
-		background-color: #E0E0E0;
-		position: relative;
-		width: fit-content;
+		margin: 15px;
+		background-color: #ECECEC;
 		padding: 10px 20px 10px 10px;
 		font-size: 1.1em;
-		box-shadow: 0px 0px 16px #00000044;
 		border-radius: 15px;
 		font-family: "Montserrat", sans-serif;
 	}
