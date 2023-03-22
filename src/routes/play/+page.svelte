@@ -60,7 +60,9 @@
 		//tries to get permission for location access if needed, or initially loads a position to start with
 		//promise ensures no loading can take place until completed
   		return new Promise((resolve,reject) => {
+			if(navigator.geolocation){
     		navigator.geolocation.getCurrentPosition(resolve,reject,{maximumAge: 100,enableHighAccuracy:true})
+			}
   		});
 	}
 
@@ -267,7 +269,7 @@ function drawMonsters(scene, monsters){
 				previousMonster.monster=element;
 				monExists=true;
 				previousMonster.model.scale.set(40,40,40);
-				console.log(getRadius(previousMonster.monster).radius*1000)
+				console.log(previousMonster.circle)
 				previousMonster.circle.setRadius(getRadius(previousMonster.monster).radius*20);
 				// previousMonster.monster.Team1Score = element.Team1Score;
 				// previousMonster.monster.Team2Score = element.Team2Score;
