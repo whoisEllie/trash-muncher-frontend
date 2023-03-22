@@ -35,13 +35,14 @@
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%); /* center div */
 		bottom: 0px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
 
+	/* display in grid to be more friendly for all devices */
     .split-grid {
 		max-width: 1280px;
 	    display: grid;
@@ -49,7 +50,7 @@
     }
 
     .about-card {
-	    min-width: 300px;
+	    min-width: 300px; /* depending on screen size */
 		max-width: 400px;
 	    height: 90%;
 	    border-radius: 15px;
@@ -105,7 +106,7 @@
 		font-size: 1.5rem;
 		background-color: #B5D3D2;
 		box-shadow: 0px 0px 16px #00000044;
-		transition: all 0.5s;
+		transition: all 0.5s; /* allows button to fade in on hover */
 		padding: 0 50px;
 		min-width: 140px;
 		max-width: 540px;
@@ -121,6 +122,7 @@
 		transition: all 0.5s ease 0.0s;
 	}
 
+	/* depending on device width */
 	@media screen and (max-width: 900px) {
 
 		.about-wrapper {
