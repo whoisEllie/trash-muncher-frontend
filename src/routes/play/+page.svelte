@@ -422,14 +422,14 @@ function unfreezeForm(e) {
 	<div class="form-wrapper">
 		<div class="file-chosen-wrapper">
 			{#if image}
-			<img class="file-chosen" src="{image}" alt="d"/>
-		{:else}
-			{#if form?.image}
-				<img class="file-chosen" src="{form.image}" alt=""/>
+				<img class="file-chosen" src="{image}" alt="d"/>
 			{:else}
-				<div class="no-file-chosen">No file chosen</div>
+				{#if form?.image}
+					<img class="file-chosen" src="{form.image}" alt=""/>
+				{:else}
+					<div class="no-file-chosen">No file chosen</div>
+				{/if}
 			{/if}
-		{/if}
 		</div>
 		<div class="upload-container">
 			<button class="upload-button" on:click={()=>{fileinput.click();}}>
@@ -440,57 +440,37 @@ function unfreezeForm(e) {
 					{name}
 				{/if}
 			</button>
-			</div>
-			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
-				<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
-				<input type="hidden" name="image" value={image}>
-				<input type="hidden" name="tm" value={monster.TM_ID}>
-				<input type="hidden" name="team" value={data.team_id}>
-				<input type="hidden" name="lat" value={location.lat}>
-				<input type="hidden" name="lng" value={location.lng}>
-				<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
-			</form>
-			{#if Object.keys(monster).length > 0}
-		<div class="monsterScore">
-			Name: {monster.TM_Name}<br>
-			{#each spans as item}
-				{@html item}<br>
-			{/each}
-			<br>
-			Carbon consumed
-			<br>
-			<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
-			<br>
-			<span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
-			<br>
-			<span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
 		</div>
-	{/if}
-</div>
+		<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
+			<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
+			<input type="hidden" name="image" value={image}>
+			<input type="hidden" name="tm" value={monster.TM_ID}>
+			<input type="hidden" name="team" value={data.team_id}>
+			<input type="hidden" name="lat" value={location.lat}>
+			<input type="hidden" name="lng" value={location.lng}>
+			<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
+		</form>
+		{#if Object.keys(monster).length > 0}
+			<div class="monsterScore">
+				Name: {monster.TM_Name}<br>
+				{#each spans as item}
+					{@html item}<br>
+				{/each}
+				<br>
+				Carbon consumed
+				<br>
+				<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
+				<br>
+				<span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
+				<br>
+				<span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
+			</div>
+		{/if}
+	</div>
 
 	<div id="map" class="map">
-		<!--
-		<div id="mapAwait">
-			<p id="awaitText">{errorMessage}</p>
-		</div>
-		-->
-		<div id="mapContainer">
-			<div id="map">
-				{#if Object.keys(monster).length > 0}
-				<div class="monsterScore">
-					Name: {monster.TM_Name}<br>
-					{#each spans as item}
-						{@html item}<br>
-					{/each}
-					<br>
-					Carbon consumed
-					<br>
-					<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
-					<br><span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
-					<br><span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
-				</div>
-				{/if}
-			</div>
+		<div class="map-await">
+			{errorMessage}
 		</div>
 	</div>
 </div>
@@ -531,6 +511,17 @@ function unfreezeForm(e) {
 	* {
 		margin: 0;
 		padding: 0;
+	}
+
+	.map-await {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		justify-content: center;
+		align-items: center;
+		font-family: Montserrat;
+		font-weight: 500;
+		font-size: 25px;
 	}
 
 	.map-modal {
@@ -681,6 +672,7 @@ function unfreezeForm(e) {
 	@media screen and (max-width: 450px) {
 		.map-modal {
 			height: 92.5vh;
+			height: 92.5svh;
 			width: 100vw;
 			border-radius: 15px 15px 0px 0px;
 			bottom: 0;
