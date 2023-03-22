@@ -228,7 +228,6 @@
 					colour.r=1;
 					colour.g=1;
 					colour.b=1;
-					console.log(colour)
 				})
 				//monster = {}
 			}

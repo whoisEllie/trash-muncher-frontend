@@ -18,8 +18,6 @@ export const load = (async (event) => {
 
 		try {
 			await event.fetch(url, packet).then((response) => response.json()).then((out) => {
-				console.log(out)
-
 				if (out['detail'] === 'Authentication credentials were not provided.')
 				{
 					return;

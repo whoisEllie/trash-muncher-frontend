@@ -36,7 +36,6 @@ export const actions: Actions = {
 		await fetch(url, packet).then((response) => response.json()).then((out) => {
 			var checkMessage = out['detail']
 			var checkPassword = out['password']
-			console.log(out)
 
 			if (typeof checkMessage !== 'undefined') {
 				message = "Token not found."
