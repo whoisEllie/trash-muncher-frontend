@@ -23,7 +23,12 @@
 			<input name="password" type="password" required>
 			<label for="">Password</label>
 		</div>
-		<a href="/forgot-password" class="forgot-password">Forgot password?</a><br>
+		<div class="forgot">
+			<a href="/forgot-password" class="forgot-password">Forgot password?</a>
+			<span class="forgot-password-text"> or
+			<a href="/register" class="forgot-password">Register</a><br>
+			<br>
+		</div>
   <button>Log in</button>
   </form>
   </div>
@@ -163,6 +168,14 @@
 	}
 	
 	.forgot-password {
+		position: relative;
+		color: black;
+		font-size: 1.1rem;
+		font-family: "Montserrat", sans-serif;
+	}
+	
+	.forgot-password-text {
+		position: relative;
 		color: black;
 		font-size: 1.1rem;
 		font-family: "Montserrat", sans-serif;
@@ -200,7 +213,27 @@
 		.title-munchers {
 			transform: translate(0rem, 0rem);
 		}
-
+		
+		.form-wrapper {
+			margin-left: -20px;
+			margin-right: -20px;
+		}
 	}
+	
+	@media screen and (max-width: 315px) {
+		.form-wrapper {
+			margin-left: 0px;
+			margin-right: 0px;
+		}
+		
+		.forgot-password {
+			font-size: 0.9rem;
+		}
+		
+		.forgot-password-text {
+			font-size: 0.9rem;
+		}
+	}
+	
 
 </style>
