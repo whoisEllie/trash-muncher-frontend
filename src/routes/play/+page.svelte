@@ -61,7 +61,9 @@
 		//tries to get permission for location access if needed, or initially loads a position to start with
 		//promise ensures no loading can take place until completed
   		return new Promise((resolve,reject) => {
+			if(navigator.geolocation){
     		navigator.geolocation.getCurrentPosition(resolve,reject,{maximumAge: 100,enableHighAccuracy:true})
+			}
   		});
 	}
 
@@ -106,6 +108,7 @@
 		streetViewControl:false,
 		mapTypeControl:false,
 		fullscreenControl:false,
+		zoomControl:false,
 		mapId: '805b0b106a1a291d'
 	}
 
