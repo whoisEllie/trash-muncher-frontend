@@ -300,6 +300,7 @@ let fileinput, nameText
 var name = "Select Image"
 	
 const onFileSelected =(e)=> {
+	var root = document.documentElement;
 	let tempImage = e.target.files[0];
 	// get file name
 	name = e.target.files[0].name;
@@ -309,6 +310,7 @@ const onFileSelected =(e)=> {
 	}
 	let reader = new FileReader();
 	if (e.target.files[0].size > 4194304) {
+		root.style.setProperty('--corner-radius', "15px")
 		error = true
 		image = null
 		name = "File size too big! Please submit a file below 4mb!"
@@ -317,7 +319,8 @@ const onFileSelected =(e)=> {
 		reader.readAsDataURL(tempImage);
 		reader.onload = e => {
 			// display uploaded image
-			image = e.target.result
+			image = e.target.result;
+			root.style.setProperty('--corner-radius', "0px")
 	    };
 	}
 }
@@ -407,7 +410,7 @@ function unfreezeForm(e) {
 
 <div class="mobile-button">
 	<button class="mobile-upload-button" on:click={()=>{fileinput.click();}}>
-				<img src="/images/upload_black.png" alt="A small upload icon" width="40px" height="40px"/>
+				<img src="/images/upload_black.png" alt="A small upload icon" width="28px" height="28px"/>
 				{#if form?.success === false || form?.success === true}
 					{form.message}
 				{:else if error !== true}
@@ -433,6 +436,10 @@ function unfreezeForm(e) {
 	@import url('https://fonts.googleapis.com/css?family=Montserrat:400');
 	@import url('https://fonts.googleapis.com/css2?family=Bubbler+One&display=swap');
 	@import url('https://fonts.googleapis.com/css2?family=Chilanka&display=swap');
+
+	:root {
+		--corner-radius: 15px;
+	}
 
 	* {
 		margin: 0;
@@ -618,16 +625,33 @@ function unfreezeForm(e) {
 		}
 
 		.mobile-upload-button {
+			font-family: Montserrat;
 			display: flex;
+			justify-content: center;
+			align-items: center;
 			width: 100%;
 			height: 40px;
+			border: none;
+			border-radius: 15px 15px var(--corner-radius) var(--corner-radius);
+			background-color: #B5D3D2;
+			font-size: 18px;
+		}
 
+		.mobile-upload-button img {
+			padding: 0px 5px 5px 5px;
 		}
 
 		.mobile-submit-button {
+			font-family: Montserrat;
 			display: flex;
+			justify-content: center;
+			align-items: center;
 			width: 100%;
 			height: 40px;
+			border: none;
+			border-radius: 0px 0px 15px 15px;
+			background-color: #B5D3D2;
+			font-size: 18px;
 		}
 	}
 </style>
