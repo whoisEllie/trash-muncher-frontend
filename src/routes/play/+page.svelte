@@ -240,9 +240,10 @@
 
 		const animate = () => { //cool animations
 			gameData.forEach(element => {
-				if(element.monster!=monster){
+				if(element.monster!=monster || !monsterSelected){
 				element.model.rotateY(MathUtils.degToRad(0.2));
 				}
+				
 				if(element.mixer) element.mixer.update(clock.getDelta())
 			});
 			overlay.requestRedraw();
