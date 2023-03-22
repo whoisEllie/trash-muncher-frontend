@@ -22,23 +22,28 @@
 	let monster={}
 	var gameData = [];
 	var scene;
-	
+	let google2;
 	const gltfLoader = new GLTFLoader();
-	
+
+	//runs on page load
 	onMount(async () => {
 		if (form?.image) {
 			image = form.image
 		}
+		//checks if location is valid, then draws map onto the webpage
 		getPosition().then((position: Position) =>{
 			location.lat=position.coords.latitude;
 			location.lng=position.coords.longitude;
   			createMap(position.coords.latitude,position.coords.longitude);
 		}).then(()=>{
+			//updates position of player every few seconds
 			setInterval(()=>{
 				if(locationTracking){
 					navigator.geolocation.getCurrentPosition(success)}},3000);
+			//sets interval to update the monsters on the screen, including scores and any new monsters
 			setInterval(getMonsters,8000);
 		}).catch(() => {
+				//triggered when location isnt enabled
 				errorMessage = "Location access blocked, please enable."
 		})
 	})
@@ -59,7 +64,9 @@
   		});
 	}
 
+	//fetches current monster db, then updates the monsters
 	async function getMonsters(){
+		console.log(gameData)
 		const packet: RequestInit = {
 		headers: {
 			"content-type": "application/json; charset=UTF-8",
@@ -83,7 +90,7 @@
 		version: "weekly",
 		libraries: ["places"],
 	});
-	//sets settings for the player map. removes most control so they can't go exploring
+	//sets settings for the player map. removes some control from the player
 	const mapOptions = {
 		center: {
 			lat: latitude,
@@ -105,8 +112,9 @@
 		.load()
 		.then((google) => {
 			//only draws onto map when the map has loaded in the promise
+			google2=google;
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
-			let scene = initWebglOverlayView(map);
+			scene = initWebglOverlayView(map);
 			scene = drawMonsters(scene,data.monsters);
 			let button=document.getElementById("location");
 			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
@@ -118,6 +126,7 @@
 
 	//WebGL initialisation. Loads all the models onto the map
 	function initWebglOverlayView(map) {
+		//variables used for webgl
   		let camera:PerspectiveCamera;
 
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
@@ -133,7 +142,7 @@
     	directionalLight.position.set(0.5, -1, 0.5);
     	scene.add(directionalLight);
 
-    	// Sets a reference point for drawing onto the map (dont change its kinda important for setting relative points)
+    	// Sets a reference point for drawing onto the map
 		overlay.setReferencePoint({lat:50.75646948193597, lng:-3.5397420013942633})
 		
 		gltfLoader.load("models/sans.gltf", (gltf) => {
@@ -203,6 +212,7 @@
 }
 
 let spans = []
+//draws the info panel for the currently selected monster
 function addHTML() {
 	spans = []
 	let scores = []
@@ -212,6 +222,7 @@ function addHTML() {
 	scores.push("" + monster.Team3_Score + 3)
 	scores.sort((a,b)=>b-a)
 	var order = []
+	//sets the order of scores from highest to lowest
 	for (var i = 0; i < scores.length; i++) {
 		if (scores[i] % 10 == 1) {
 			sortedScores.push("Red Score: " + Math.floor(scores[i]/10))
@@ -228,6 +239,7 @@ function addHTML() {
 	}
 	
 	for (var i = 0; i < sortedScores.length; i++) {
+		//sets the colour for each team on the display
 		var team = order[i]
 		var span = document.createElement('span')
 		if (order[i] == "red") {
@@ -251,11 +263,17 @@ function drawMonsters(scene, monsters){
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
-				
+				previousMonster.monster=element;
 				monExists=true;
-				previousMonster.monster.Team1Score = element.Team1Score;
-				previousMonster.monster.Team2Score = element.Team2Score;
-				previousMonster.monster.Team3Score = element.Team3Score;
+				previousMonster.model.scale.set(40,40,40);
+				console.log(getRadius(previousMonster.monster).radius*1000)
+				previousMonster.circle.setRadius(getRadius(previousMonster.monster).radius*20);
+				// previousMonster.monster.Team1Score = element.Team1Score;
+				// previousMonster.monster.Team2Score = element.Team2Score;
+				// previousMonster.monster.Team3Score = element.Team3Score;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
 				if(monster.TM_ID==element.TM_ID){
 					monster=element;
 				}
@@ -263,31 +281,72 @@ function drawMonsters(scene, monsters){
 			}
 		})
 		if(!monExists){
-		gltfLoader.load("models/poly.glb", (gltf) => {
-			//gltfLoader.load("models/poly.glb", (gltf) => {
+			//checks if the file currently exists
+			var fileString = "models/"+element.TM_Name+'.gltf';
+			//fetch(fileString,{method:"HEAD"}).catch(()=>{fileString="models/poly.glb"}).then((response)=>{
+			//if(response.status!=200){
+				//default model
+			//	fileString="models/poly.glb"
+			//}
+			//change to fileString if animations are included
+			gltfLoader.load("models/poly.glb", (gltf) => {
 			let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 			gltf.scene.position.set(vector.x,vector.y,40);
     		gltf.scene.scale.set(50, 50, 50);
 			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
-			gameData.push({"monster":element,"model":gltf.scene})
-		})
+			let circleStats = getRadius(element)
+			console.log(circleStats);
+			var shape = new google2.maps.Circle({
+				map:map,
+				fillColor:circleStats.colour,
+				center:{lat:element.Latitude,lng:element.Longitude},
+				radius:circleStats.radius*20,
+				clickable: false
+			})
+			gameData.push({"monster":element,"model":gltf.scene, circle:shape})
+			})
+		//})
+		
 	}
 	});
 	return scene;
 }
 
-function showCampus(){
-	locationTracking=!locationTracking;
-	if(locationTracking==false){
-		map.setCenter({lat:50.736830961444106, lng:-3.532572733972099})
-		map.setZoom(15);
-	}
-	else{
-		navigator.getCurrentPosition
-		map.setZoom(18)
-	}
+function getRadius(monster){
+  var colour = "#000000";
+  var radius;
+  if(monster.Team1_Score>monster.Team2_Score && monster.Team1_Score>monster.Team3_Score){
+    colour="#FF0000";
+    if(monster.Team2_Score>monster.Team3_Score){
+      radius=monster.Team1_Score-monster.Team2_Score;
+    }
+    else{
+      radius=monster.Team1_Score-monster.Team3_Score;
+    }
+  }
+  else if(monster.Team2_Score>monster.Team1_Score && monster.Team2_Score>monster.Team3_Score){
+    colour="#00ff00";
+    if(monster.Team1_Score>monster.Team3_Score){
+      radius=monster.Team2_Score-monster.Team1_Score;
+    }
+    else{
+      radius=monster.Team2_Score-monster.Team3_Score;
+    }
+  }
+  else if(monster.Team3_Score>monster.Team1_Score && monster.Team3_Score>monster.Team2_Score){
+    colour="#0000ff";
+    if(monster.Team1_Score>monster.Team2_Score){
+      radius=monster.Team3_Score-monster.Team1_Score;
+    }
+    else{
+      radius=monster.Team3_Score-monster.Team2_Score;
+    }
+  }
+  else{radius=0};
+  return {"colour": colour,"radius":radius};
 }
+
 function goToLocation(){
 	map.panTo({lat:location.lat,lng:location.lng});
 }
@@ -332,7 +391,7 @@ function freezeForm(e) {
 	}
 	if(!submitForm.classList.contains('is-submitting')){
 	submitForm.classList.add('is-submitting');
-	setTimeout(()=> {submitForm.classList.remove('is-submitting')},1000)
+	setTimeout(()=> {submitForm.classList.remove('is-submitting')},3000)
 	}
 }
 
@@ -405,6 +464,24 @@ function unfreezeForm(e) {
 			<p id="awaitText">{errorMessage}</p>
 		</div>
 		-->
+		<div id="mapContainer">
+			<div id="map">
+				{#if Object.keys(monster).length > 0}
+				<div class="monsterScore">
+					Name: {monster.TM_Name}<br>
+					{#each spans as item}
+						{@html item}<br>
+					{/each}
+					<br>
+					Carbon consumed
+					<br>
+					<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
+					<br><span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
+					<br><span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
+				</div>
+				{/if}
+			</div>
+		</div>
 	</div>
 </div>
 

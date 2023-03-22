@@ -23,10 +23,12 @@ export const load = (async (event) => {
 		mode: "cors"
 		}
 
-		try {
+	
 			await event.fetch(url, packet).then((response) => response.json()).then(async (out) => {
+				
 				if (out['detail'] === 'Authentication credentials were not provided.')
 				{
+					
 					throw redirect(302, '/login')
 					return;
 				}
@@ -35,7 +37,18 @@ export const load = (async (event) => {
 					throw redirect(302, '/login')
 					return;
 				}
-					
+				if (out['code'] === "user_not_found")
+				{
+					throw redirect(302, '/login')
+					return;
+				}
+				if (out['user'].is_gamekeeper == true)
+				{
+					throw redirect(302, '/')
+					return;
+				}	
+				
+
 				username = out['user']['username']
 				team = out['team']['name']
 				
@@ -53,15 +66,12 @@ export const load = (async (event) => {
 				team_id: team,
 				cookie: authkey
 			};
-		} catch (error) {
-			throw redirect(302, '/login')
-		}
+		
 		
 		
 }) satisfies PageServerLoad;
 
 
-	
 
 export const actions: Actions = {
 	addScore: async ({cookies, request}) => {
@@ -151,7 +161,7 @@ export const actions: Actions = {
 				}
 				
 				try {
-					await fetch(url, packet).then((response) => {
+					await fetch(url, packet).then(async (response) => {
 						console.log(response)
 						if (response["status"] == 429) {
 							success = false
@@ -159,6 +169,17 @@ export const actions: Actions = {
 						} else if (response["status"] == 201) {
 							success = true
 							message = "Image successfully uploaded!"
+							if (success == true) {
+								await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+								method: 'POST',
+								body: JSON.stringify(pack),
+								mode: "cors",
+								headers: {
+									"content-type": "application/json; charset=UTF-8",
+									"Authorization": authkey
+									}
+								})
+							}
 						} else {
 							success = false
 							message = "An error has occurred. Please try again"
@@ -177,17 +198,7 @@ export const actions: Actions = {
 						message: "An error has occurred. Please try again"
 					}
 				}
-				if (success == true) {
-					await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
-					method: 'POST',
-					body: JSON.stringify(pack),
-					mode: "cors",
-					headers: {
-						"content-type": "application/json; charset=UTF-8",
-						"Authorization": authkey
-						}
-					})
-				}
+				
 			} else {
 				return {
 					image: data.get("image"),

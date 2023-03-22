@@ -77,7 +77,7 @@ export const actions: Actions = {
 			mode: "cors"
 		}
 
-		await fetch(url, packet).then((response) => response.json())
+		await fetch(url, packet).then((response) => {console.log(response)})
 	},
 
 	//changes the entire score for the monster
