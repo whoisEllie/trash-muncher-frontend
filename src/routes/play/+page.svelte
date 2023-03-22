@@ -196,7 +196,6 @@
 							elemObject=element.object.parent
 							colour=m.model.children[0].material.color
 						}
-						console.log(colour)
 						//detects that the correct monster has been clicked, then sets it as the current monster
 						colour.r=1;
 						colour.g=1;
@@ -220,7 +219,6 @@
 					//detects that the correct monster has been clicked, then sets it as the current monster
 					let colour;
 					if(m.mixer){
-						//console.log("mixing")
 							m.animation.stop()
 							colour=m.model.children[0].children[0].material.color
 						}
@@ -230,7 +228,6 @@
 					colour.r=1;
 					colour.g=1;
 					colour.b=1;
-					console.log(colour)
 				})
 				//monster = {}
 			}

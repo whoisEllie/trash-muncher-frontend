@@ -65,7 +65,6 @@ export const actions: Actions = {
 					if (out["message"] == "Logged in successfully") {
 						throw redirect(302, '/');
 					} else {
-						console.log(out)
 						success = false;
 						message = "An error has occurred."
 					}
