@@ -266,6 +266,8 @@ function drawMonsters(scene, monsters){
 				previousMonster.monster=element;
 				monExists=true;
 				previousMonster.model.scale.set(40,40,40);
+				console.log(getRadius(previousMonster.monster).radius*1000)
+				previousMonster.circle.setRadius(getRadius(previousMonster.monster).radius*20);
 				// previousMonster.monster.Team1Score = element.Team1Score;
 				// previousMonster.monster.Team2Score = element.Team2Score;
 				// previousMonster.monster.Team3Score = element.Team3Score;
@@ -294,11 +296,13 @@ function drawMonsters(scene, monsters){
 			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
 			let circleStats = getRadius(element)
+			console.log(circleStats);
 			var shape = new google2.maps.Circle({
 				map:map,
-				fillColour:circleStats.colour,
+				fillColor:circleStats.colour,
 				center:{lat:element.Latitude,lng:element.Longitude},
-				radius:circleStats.radius*100
+				radius:circleStats.radius*20,
+				clickable: false
 			})
 			gameData.push({"monster":element,"model":gltf.scene, circle:shape})
 			})
