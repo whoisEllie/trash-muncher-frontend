@@ -24,6 +24,7 @@
 	var scene;
 	var monsters = data.monsters
 	let google2;
+	let monsterSelected = false
 	const gltfLoader = new GLTFLoader();
 
 	//runs on page load
@@ -172,21 +173,23 @@
 			const intersections = overlay.raycast(vector);
 
 			if(intersections.length>0){
-			getMonsters()	
-			let clicked = false;
-			intersections.forEach(element => {
-				gameData.forEach(m => {
-					//detects that the correct monster has been clicked, then sets it as the current monster
-					m.model.children[0].material.color.r=0.8227857351303101;
-					if (m.model==element.object.parent){
-						monster=m.monster;
-						element.object.material.color.r=0.06;
-						clicked=true;
-						addHTML()
-					}
+				getMonsters()	
+				monsterSelected = true
+				let clicked = false;
+				intersections.forEach(element => {
+					gameData.forEach(m => {
+						//detects that the correct monster has been clicked, then sets it as the current monster
+						m.model.children[0].material.color.r=0.8227857351303101;
+						if (m.model==element.object.parent){
+							monster=m.monster;
+							element.object.material.color.r=0.06;
+							clicked=true;
+							addHTML()
+						}
+					});
 				});
-			});
 			} else {
+				monsterSelected = false
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
 					m.model.children[0].material.color.r=0.8227857351303101;
@@ -269,6 +272,7 @@ function drawMonsters(scene, monsters){
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
 				var totalCarbon = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
+				var totalScore = element.Team1_Score + element.Team2_Score + element.Team3_Score
 				previousMonster.monster=element;
 				var multiplier;
 				if (totalCarbon != 0) {
@@ -277,7 +281,9 @@ function drawMonsters(scene, monsters){
 					multiplier = 0
 				}
 				previousMonster.model.scale.set(35 + multiplier,35 + multiplier,35 + multiplier);
-				previousMonster.circle.setRadius(getRadius(element).radius*8 + multiplier)
+				if (totalScore != 0) {
+					previousMonster.circle.setRadius(getRadius(element).radius*8 + multiplier)
+				}
 				previousMonster.monster=element;
 				monExists=true;
 				if(monster.TM_ID==element.TM_ID){
@@ -382,7 +388,7 @@ const onFileSelected =(e)=> {
 	let reader = new FileReader();
 	if (e.target.files[0].size > 4194304) {
 		error = true
-		image = null
+		image = "no file"
 		name = "Please submit a file below 4mb!"
 	} else {
 		error = false
@@ -390,7 +396,6 @@ const onFileSelected =(e)=> {
 		reader.onload = e => {
 			// display uploaded image
 			image = e.target.result;
-			root.style.setProperty('--corner-radius', "0px")
 	    };
 	}
 }
@@ -423,7 +428,11 @@ function unfreezeForm(e) {
 	<div class="form-wrapper">
 		<div class="file-chosen-wrapper">
 			{#if image}
-				<img class="file-chosen" src="{image}" alt="d"/>
+				{#if image == "no file"}
+					<div class="no-file-chosen">No file chosen</div>
+				{:else}
+					<img class="file-chosen" src="{image}" alt="d"/>
+				{/if}
 			{:else}
 				{#if form?.image}
 					<img class="file-chosen" src="{form.image}" alt=""/>
@@ -457,7 +466,7 @@ function unfreezeForm(e) {
 			<input type="hidden" name="lng" value={location.lng}>
 			<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
 		</form>
-		{#if Object.keys(monster).length > 0}
+		{#if monsterSelected}
 			<div class="monsterScore">
 				Name: {monster.TM_Name}<br>
 				{#each spans as item}
@@ -568,8 +577,9 @@ function unfreezeForm(e) {
 	.file-chosen-wrapper {
 		display: flex;
 		justify-content: center;
-		height: 100%;
-		margin: 15px 15px 0px 15px;
+		height: 90%;
+		width: 90%;
+		margin: 10px 10px 0px 15px;
 	}
 
 	.file-chosen{
@@ -613,7 +623,7 @@ function unfreezeForm(e) {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin: 30px 15px 15px 15px;
+		margin: 0px 15px 8px 15px;
 	}
 
 	.upload-button {
@@ -679,7 +689,7 @@ function unfreezeForm(e) {
 	}
 
 	/* device sensitive */
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 1200px) {
 		.map-modal {
 			height: 92.5vh;
 			height: 92.5svh;
@@ -703,7 +713,7 @@ function unfreezeForm(e) {
 			bottom: 15%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-			width: 50vw;
+			width: 90vw;
 			max-height: 80px;
 			visibility: visible;
 			background-color: paleturquoise;
