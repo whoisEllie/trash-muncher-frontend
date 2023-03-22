@@ -264,7 +264,7 @@ function drawMonsters(scene, monsters){
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
-				var totalCarbon = element.Team1_Score + element.Team2_Score + element.Team3_Score
+				var totalCarbon = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
 				previousMonster.monster.Team1Score = element.Team1Score;
 				previousMonster.monster.Team2Score = element.Team2Score;
 				previousMonster.monster.Team3Score = element.Team3Score;
@@ -273,7 +273,7 @@ function drawMonsters(scene, monsters){
 				previousMonster.monster.Team3Carbon = element.Team3Carbon;
 				var multiplier;
 				if (totalCarbon != 0) {
-					multiplier = 3 * Math.log2(totalScore)
+					multiplier = 3 * Math.log2(totalCarbon)
 				} else {
 					multiplier = 0
 				}
