@@ -32,7 +32,7 @@ export const actions: Actions = {
 					cookies.set('AccessToken', `${out['access']}`, {
 					httpOnly: true,
 					path: '/',
-					secure: true,
+					secure: false,
 					sameSite: 'strict',
 					maxAge: 86400 /* 1 day */
 					})
@@ -40,7 +40,7 @@ export const actions: Actions = {
 					cookies.set('RefreshToken', `${out['refresh']}`, {
 					httpOnly: true,
 					path: '/',
-					secure: true,
+					secure: false,
 					sameSite: 'strict',
 					maxAge: 86400 /* 1 day */
 					})
