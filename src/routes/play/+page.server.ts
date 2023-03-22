@@ -161,7 +161,7 @@ export const actions: Actions = {
 				}
 				
 				try {
-					await fetch(url, packet).then((response) => {
+					await fetch(url, packet).then(async (response) => {
 						if (response["status"] == 429) {
 							success = false
 							message = "Please wait at least 8 hours between image submissions!"
@@ -176,8 +176,7 @@ export const actions: Actions = {
 									"content-type": "application/json; charset=UTF-8",
 									"Authorization": authkey
 									}
-								})
-							}
+							})
 						} else {
 							success = false
 							message = "An error has occurred. Please try again"

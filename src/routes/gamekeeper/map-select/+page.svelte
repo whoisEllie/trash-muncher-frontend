@@ -9,6 +9,7 @@
 
 	/** @type {import('./$types').PageData} */
 	export let data;
+	export let form;
 
 
 	var errorMessage: string = "Awaiting map.";
@@ -234,12 +235,20 @@ function drawMonsters(scene){
 						<input name="TM_Name" id="TM_Name" required>
 					<button>Add a new monster!</button>
 				</form>
+				{#if form?.success == true}
+					<div class="success-wrapper">
+						<center><span class="success-text">{form.message}</span></center>
+					</div>
+				{:else if form?.success == false}
+					<div class="success-wrapper">
+						<center><span class="fail-text">{form.message}</span></center>
+					</div>
+				{/if}
 			{:else if formChoice > 1}
 				<div class="change-add-scores">
 					<button on:click={setOverwrite} style="border-radius: 10px 0px 0px 10px;">Overwrite</button>
 					<button on:click={setAddTo} style="border-radius: 0px 10px 10px 0px;">Add to</button>
 				</div>
-			
 			{#if formChoice == 3}
 				<form method="POST" id="updateScore" action="?/updateScore" use:enhance>
 					<label for="t1score">Team 1</label>
@@ -251,6 +260,15 @@ function drawMonsters(scene){
 						<input type="hidden" name="id" value={monster.TM_ID}>
 					<button>Overwrite Scores!</button>
 				</form>
+				{#if form?.success == true}
+					<div class="success-wrapper">
+						<center><span class="success-text">{form.message}</span></center>
+					</div>
+				{:else if form?.success == false}
+					<div class="success-wrapper">
+						<center><span class="fail-text">{form.message}</span></center>
+					</div>
+				{/if}
 			{:else if formChoice == 4}
 				<form method="POST" id="addScore" action="?/addScore" use:enhance>
 					<label for="t1score">Team 1</label>
@@ -262,6 +280,15 @@ function drawMonsters(scene){
 					<input type="hidden" name="id" value={monster.TM_ID}>
 					<button>Add to Scores!</button>
 				</form>
+				{#if form?.success == true}
+					<div class="success-wrapper">
+						<center><span class="success-text">{form.message}</span></center>
+					</div>
+				{:else if form?.success == false}
+					<div class="success-wrapper">
+						<center><span class="fail-text">{form.message}</span></center>
+					</div>
+				{/if}
 			{/if}
 			{/if}
 		</div>
@@ -404,6 +431,23 @@ function drawMonsters(scene){
 		border-radius: 15px;
 		font-family: "Montserrat", sans-serif;
 	}
+	
+	.success-wrapper {
+		width: fit-content;
+		padding-left: 20px;
+		padding-right: 20px;
+		margin-top: -15px;
+	}
+	
+	.success-text {
+		position: relative;
+		color: green;
+	}
+	
+	.fail-text {
+		position: relative;
+		color: red;
+	}
 
 	@media screen and (max-width: 750px) {
 		.map-modal {
@@ -412,6 +456,7 @@ function drawMonsters(scene){
 			grid-template-areas: 
 			"Map"
 			"Form";
+			padding-bottom: 25px;
 		}
 
 		.map-form form input {
@@ -425,6 +470,10 @@ function drawMonsters(scene){
 
 		.change-add-scores {
 			height: 30px;
+		}
+		
+		.success-wrapper {
+			margin-top: -20px;
 		}
 	}
 

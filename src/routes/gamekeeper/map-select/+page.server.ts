@@ -57,6 +57,7 @@ export const load = (async (event) => {
 export const actions: Actions = {
 	//creates a new monster
 	newMonster: async ({request}) => {
+		let success, message
 		// Returns data from the submitted form
 		const formData = await request.formData();
 
@@ -76,12 +77,32 @@ export const actions: Actions = {
 			method: "POST",
 			mode: "cors"
 		}
-
-		await fetch(url, packet).then((response) => {console.log(response)})
+		
+		try {
+			await fetch(url, packet).then((response) => {
+				if(response["status"] == 200) {
+					success = true
+					message = "Monster successfully created!"
+				} else {
+					success = false
+					message = "An error has occurred. Please try again."
+				}
+			})
+		} catch(error) {
+			return {
+				success: false,
+				message: "An error has occurred. Please try again"
+			}
+		}
+		return {
+			success: success,
+			message: message
+		}
 	},
 
 	//changes the entire score for the monster
 	updateScore: async ({cookies, request}) => {
+		let success, message
 		const formData = await request.formData();
 		const data = {
 			"TM_ID":formData.get("id"),
@@ -100,10 +121,30 @@ export const actions: Actions = {
 			method: "POST",
 			mode: "cors"
 		}
-		await fetch(url, packet).then((response) => response.json())
+		try {
+			await fetch(url, packet).then((response) => {
+				if(response["status"] == 200) {
+					success = true
+					message = "Score successfully updated!"
+				} else {
+					success = false
+					message = "An error has occurred. Please try again."
+				}
+			})
+		} catch(error) {
+			return {
+				success: false,
+				message: "An error has occurred. Please try again"
+			}
+		}
+		return {
+			success: success,
+			message: message
+		}
 	},
 	//adds the score passed in to the monster
 	addScore: async ({cookies, request}) => {
+		let success, message
 		const formData = await request.formData();
 		const data = {
 			"TM_ID":Number(formData.get("id")),
@@ -122,7 +163,26 @@ export const actions: Actions = {
 			method: "POST",
 			mode: "cors"
 		}
-		await fetch(url, packet).then((response) => {})
+		try {
+			await fetch(url, packet).then((response) => {
+				if(response["status"] == 200) {
+					success = true
+					message = "Score successfully added!"
+				} else {
+					success = false
+					message = "An error has occurred. Please try again."
+				}
+			})
+		} catch(error) {
+			return {
+				success: false,
+				message: "An error has occurred. Please try again"
+			}
+		}
+		return {
+			success: success,
+			message: message
+		}
 	}
 	
 }
