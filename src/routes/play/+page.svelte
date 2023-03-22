@@ -48,7 +48,7 @@
 				if(locationTracking){
 					navigator.geolocation.getCurrentPosition(success)}},3000);
 			//sets interval to update the monsters on the screen, including scores and any new monsters
-			setInterval(getMonsters,8000);
+			setInterval(getMonsters,5000);
 		}).catch(() => {
 				//triggered when location isnt enabled
 				errorMessage = "Location access blocked, please enable."

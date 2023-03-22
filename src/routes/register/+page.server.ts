@@ -18,12 +18,14 @@ export const actions: Actions = {
 		} else {
 			let url = "http://38.242.137.81:8000/api/users/player-register/"
 			let data = {
+				// get form data for user
 				"user": {
 					"username": formData.get('username'),
 					"email": formData.get('email'),
 					"password": formData.get('password'),
 					"is_gamekeeper": false
 				},
+				// ensures team is correct
 				"team": {
 					"name": formData.get('team')
 				}
@@ -37,6 +39,7 @@ export const actions: Actions = {
 			};
 			try {
 				await fetch (url, packet).then((response) => response.json()).then((out) => {
+					//error messages to display
 					if (typeof out["user"] !== "undefined") {
 						if (out["user"]["username"] == "A user with that username already exists.") {
 							message = "User already exists!"
