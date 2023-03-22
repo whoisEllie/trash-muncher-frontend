@@ -28,7 +28,7 @@ export const actions: Actions = {
 					success = false;
 					message = "Invalid username or password!"
 				} else {
-		
+					try{
 					cookies.set('AccessToken', `${out['access']}`, {
 					httpOnly: true,
 					path: '/',
@@ -36,7 +36,7 @@ export const actions: Actions = {
 					sameSite: 'strict',
 					maxAge: 86400 /* 1 day */
 					})
-				
+					
 					cookies.set('RefreshToken', `${out['refresh']}`, {
 					httpOnly: true,
 					path: '/',
@@ -44,6 +44,24 @@ export const actions: Actions = {
 					sameSite: 'strict',
 					maxAge: 86400 /* 1 day */
 					})
+					}
+					catch{
+						cookies.set('AccessToken', `${out['access']}`, {
+							httpOnly: true,
+							path: '/',
+							secure: true,
+							sameSite: 'strict',
+							maxAge: 86400 /* 1 day */
+							})
+
+						cookies.set('RefreshToken', `${out['refresh']}`, {
+							httpOnly: true,
+							path: '/',
+							secure: true,
+							sameSite: 'strict',
+							maxAge: 86400 /* 1 day */
+							})	
+					}	
 					if (out["message"] == "Logged in successfully") {
 						throw redirect(302, '/');
 					} else {

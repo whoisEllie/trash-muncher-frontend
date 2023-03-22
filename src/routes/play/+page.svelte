@@ -22,6 +22,7 @@
 	let monster={}
 	var gameData = [];
 	var scene;
+	let google2;
 	const gltfLoader = new GLTFLoader();
 
 	//runs on page load
@@ -111,8 +112,9 @@
 		.load()
 		.then((google) => {
 			//only draws onto map when the map has loaded in the promise
+			google2=google;
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
-			let scene = initWebglOverlayView(map);
+			scene = initWebglOverlayView(map);
 			scene = drawMonsters(scene,data.monsters);
 			let button=document.getElementById("location");
 			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
@@ -261,11 +263,17 @@ function drawMonsters(scene, monsters){
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
-				
+				previousMonster.monster=element;
 				monExists=true;
-				previousMonster.monster.Team1Score = element.Team1Score;
-				previousMonster.monster.Team2Score = element.Team2Score;
-				previousMonster.monster.Team3Score = element.Team3Score;
+				previousMonster.model.scale.set(40,40,40);
+				console.log(getRadius(previousMonster.monster).radius*1000)
+				previousMonster.circle.setRadius(getRadius(previousMonster.monster).radius*20);
+				// previousMonster.monster.Team1Score = element.Team1Score;
+				// previousMonster.monster.Team2Score = element.Team2Score;
+				// previousMonster.monster.Team3Score = element.Team3Score;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
 				if(monster.TM_ID==element.TM_ID){
 					monster=element;
 				}
@@ -287,13 +295,56 @@ function drawMonsters(scene, monsters){
     		gltf.scene.scale.set(50, 50, 50);
 			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
-			gameData.push({"monster":element,"model":gltf.scene})
+			let circleStats = getRadius(element)
+			console.log(circleStats);
+			var shape = new google2.maps.Circle({
+				map:map,
+				fillColor:circleStats.colour,
+				center:{lat:element.Latitude,lng:element.Longitude},
+				radius:circleStats.radius*20,
+				clickable: false
+			})
+			gameData.push({"monster":element,"model":gltf.scene, circle:shape})
 			})
 		//})
 		
 	}
 	});
 	return scene;
+}
+
+function getRadius(monster){
+  var colour = "#000000";
+  var radius;
+  if(monster.Team1_Score>monster.Team2_Score && monster.Team1_Score>monster.Team3_Score){
+    colour="#FF0000";
+    if(monster.Team2_Score>monster.Team3_Score){
+      radius=monster.Team1_Score-monster.Team2_Score;
+    }
+    else{
+      radius=monster.Team1_Score-monster.Team3_Score;
+    }
+  }
+  else if(monster.Team2_Score>monster.Team1_Score && monster.Team2_Score>monster.Team3_Score){
+    colour="#00ff00";
+    if(monster.Team1_Score>monster.Team3_Score){
+      radius=monster.Team2_Score-monster.Team1_Score;
+    }
+    else{
+      radius=monster.Team2_Score-monster.Team3_Score;
+    }
+  }
+  else if(monster.Team3_Score>monster.Team1_Score && monster.Team3_Score>monster.Team2_Score){
+    colour="#0000ff";
+    if(monster.Team1_Score>monster.Team2_Score){
+      radius=monster.Team3_Score-monster.Team1_Score;
+    }
+    else{
+      radius=monster.Team3_Score-monster.Team2_Score;
+    }
+  }
+  else{radius=0};
+  return {"colour": colour,"radius":radius};
 }
 
 function goToLocation(){
