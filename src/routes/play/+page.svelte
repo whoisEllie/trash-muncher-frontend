@@ -191,21 +191,21 @@
 		
 
 
-// 		const animate = () => { //cool animations
-// 			gameData.forEach(element => {
-// 				element.model.rotateY(MathUtils.degToRad(0.2));
-// 			});
-// 			overlay.requestRedraw();
-// 			TWEEN.update()
+		const animate = () => { //cool animations
+			gameData.forEach(element => {
+				element.model.rotateY(MathUtils.degToRad(0.2));
+			});
+			overlay.requestRedraw();
+			TWEEN.update()
 
-//   			requestAnimationFrame(animate);
-// 		};
+  			requestAnimationFrame(animate);
+		};
 
-// 		overlay.update = () => {
-// };
+		overlay.update = () => {
+};
 
-// 		// start animation loop
-// 		requestAnimationFrame(animate);
+		// start animation loop
+		requestAnimationFrame(animate);
 		return scene;
 }
 
@@ -261,11 +261,15 @@ function drawMonsters(scene, monsters){
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
-				
+				previousMonster.monster=element;
 				monExists=true;
-				previousMonster.monster.Team1Score = element.Team1Score;
-				previousMonster.monster.Team2Score = element.Team2Score;
-				previousMonster.monster.Team3Score = element.Team3Score;
+				previousMonster.model.scale.set(40,40,40);
+				// previousMonster.monster.Team1Score = element.Team1Score;
+				// previousMonster.monster.Team2Score = element.Team2Score;
+				// previousMonster.monster.Team3Score = element.Team3Score;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
+				// previousMonster.monster.Team1Carbon = element.Team1Carbon;
 				if(monster.TM_ID==element.TM_ID){
 					monster=element;
 				}
