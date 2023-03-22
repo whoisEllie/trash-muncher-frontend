@@ -345,7 +345,7 @@ function drawMonsters(scene, monsters){
 				multiplier = 0
 			}
 			try {
-				gltfLoader.load("./models/" + element.TM_Name + ".glb", (gltf) => {
+				gltfLoader.load("models/" + element.TM_Name + ".glb", (gltf) => {
 					//gltfLoader.load("models/poly.glb", (gltf) => {
 					let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
 					gltf.scene.position.set(vector.x,vector.y,40);
