@@ -265,14 +265,12 @@ function drawMonsters(scene, monsters){
 
 	//loads the gltf models
 	monsters.forEach(element => {
-		//console.log(element)
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
 				var totalCarbon = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
 				previousMonster.monster=element;
 				var multiplier;
-				console.log(totalCarbon)
 				if (totalCarbon != 0) {
 					multiplier = 3 * Math.log2(totalCarbon)
 				} else {
