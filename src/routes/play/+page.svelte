@@ -22,6 +22,7 @@
 	let monster={}
 	var gameData = [];
 	var scene;
+	let google2;
 	const gltfLoader = new GLTFLoader();
 
 	//runs on page load
@@ -111,6 +112,7 @@
 		.load()
 		.then((google) => {
 			//only draws onto map when the map has loaded in the promise
+			google2=google;
 			map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
 			scene = initWebglOverlayView(map);
 			scene = drawMonsters(scene,data.monsters);
@@ -291,13 +293,54 @@ function drawMonsters(scene, monsters){
     		gltf.scene.scale.set(50, 50, 50);
 			gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 			scene.add(gltf.scene);
-			gameData.push({"monster":element,"model":gltf.scene})
+			let circleStats = getRadius(element)
+			var shape = new google2.maps.Circle({
+				map:map,
+				fillColour:circleStats.colour,
+				center:{lat:element.Latitude,lng:element.Longitude},
+				radius:circleStats.radius*100
+			})
+			gameData.push({"monster":element,"model":gltf.scene, circle:shape})
 			})
 		//})
 		
 	}
 	});
 	return scene;
+}
+
+function getRadius(monster){
+  var colour = "#000000";
+  var radius;
+  if(monster.Team1_Score>monster.Team2_Score && monster.Team1_Score>monster.Team3_Score){
+    colour="#FF0000";
+    if(monster.Team2_Score>monster.Team3_Score){
+      radius=monster.Team1_Score-monster.Team2_Score;
+    }
+    else{
+      radius=monster.Team1_Score-monster.Team3_Score;
+    }
+  }
+  else if(monster.Team2_Score>monster.Team1_Score && monster.Team2_Score>monster.Team3_Score){
+    colour="#00ff00";
+    if(monster.Team1_Score>monster.Team3_Score){
+      radius=monster.Team2_Score-monster.Team1_Score;
+    }
+    else{
+      radius=monster.Team2_Score-monster.Team3_Score;
+    }
+  }
+  else if(monster.Team3_Score>monster.Team1_Score && monster.Team3_Score>monster.Team2_Score){
+    colour="#0000ff";
+    if(monster.Team1_Score>monster.Team2_Score){
+      radius=monster.Team3_Score-monster.Team1_Score;
+    }
+    else{
+      radius=monster.Team3_Score-monster.Team2_Score;
+    }
+  }
+  else{radius=0};
+  return {"colour": colour,"radius":radius};
 }
 
 function goToLocation(){
