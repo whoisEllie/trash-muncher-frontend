@@ -264,15 +264,15 @@ function drawMonsters(scene, monsters){
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
+				var totalCarbon = element.Team1_Score + element.Team2_Score + element.Team3_Score
 				previousMonster.monster.Team1Score = element.Team1Score;
 				previousMonster.monster.Team2Score = element.Team2Score;
 				previousMonster.monster.Team3Score = element.Team3Score;
 				previousMonster.monster.Team1Carbon = element.Team1Carbon;
 				previousMonster.monster.Team2Carbon = element.Team2Carbon;
 				previousMonster.monster.Team3Carbon = element.Team3Carbon;
-				var totalScore = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
 				var multiplier;
-				if (totalScore != 0) {
+				if (totalCarbon != 0) {
 					multiplier = 3 * Math.log2(totalScore)
 				} else {
 					multiplier = 0
@@ -280,7 +280,6 @@ function drawMonsters(scene, monsters){
 				previousMonster.model.scale.set(35 + multiplier,35 + multiplier,35 + multiplier);
 				previousMonster.monster=element;
 				monExists=true;
-				previousMonster.circle.setRadius(getRadius(previousMonster.monster).radius*20);
 				if(monster.TM_ID==element.TM_ID){
 					monster=element;
 				}
@@ -288,10 +287,11 @@ function drawMonsters(scene, monsters){
 			}
 		})
 		if(!monExists){
-			var totalScore = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
+			var totalCarbon = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
+			var totalScore = element.Team1_Score + element.Team2_Score + element.Team3_Score
 			var multiplier;
-			if (totalScore != 0) {
-				multiplier = 3 * Math.log2(totalScore)
+			if (totalCarbon != 0) {
+				multiplier = 3 * Math.log2(totalCarbon)
 			} else {
 				multiplier = 0
 			}
@@ -304,28 +304,21 @@ function drawMonsters(scene, monsters){
 					gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 					scene.add(gltf.scene);
 					let circleStats = getRadius(element)
-					var shape = new google2.maps.Circle({
-						map:map,
-						fillColor:circleStats.colour,
-						center:{lat:element.Latitude,lng:element.Longitude},
-						radius:circleStats.radius*20,
-						clickable: false
-					})
+					if (totalScore != 0) {
+						var shape = new google2.maps.Circle({
+							map:map,
+							fillColor:circleStats.colour,
+							center:{lat:element.Latitude,lng:element.Longitude},
+							radius:circleStats.radius*8 + multiplier,
+							clickable: false
+						})
+					}
 					gameData.push({"monster":element,"model":gltf.scene})
 				})
 			} catch(error) {
-				gltfLoader.load("../models/poly.glb", (gltf) => {
-					let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
-					gltf.scene.position.set(vector.x,vector.y,40);
-			    	gltf.scene.scale.set(35 + multiplier, 35 + multiplier, 35 + multiplier);
-					gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
-					scene.add(gltf.scene);
-					gameData.push({"monster":element,"model":gltf.scene})
-				})
+				// do nothing
 			}
 		}
-		
-	}
 	});
 	return scene;
 }
