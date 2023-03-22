@@ -281,6 +281,7 @@ function drawMonsters(scene, monsters){
 					multiplier = 0
 				}
 				previousMonster.model.scale.set(35 + multiplier,35 + multiplier,35 + multiplier);
+				previousMonster.circle.setRadius(getRadius(element).radius * 20)
 				previousMonster.monster=element;
 				monExists=true;
 				if(monster.TM_ID==element.TM_ID){
@@ -316,7 +317,7 @@ function drawMonsters(scene, monsters){
 							clickable: false
 						})
 					}
-					gameData.push({"monster":element,"model":gltf.scene})
+					gameData.push({"monster":element,"model":gltf.scene,"circle":shape})	
 				})
 			} catch(error) {
 				// do nothing
