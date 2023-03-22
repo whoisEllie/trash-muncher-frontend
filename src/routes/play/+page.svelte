@@ -191,7 +191,7 @@
 					//detects that the correct monster has been clicked, then sets it as the current monster
 					m.model.children[0].material.color.r=0.8227857351303101;
 				})
-				monster = {}
+				//monster = {}
 			}
 		})
 		
@@ -262,25 +262,27 @@ function addHTML() {
 
 
 function drawMonsters(scene, monsters){
+
 	//loads the gltf models
 	monsters.forEach(element => {
+		//console.log(element)
 		let monExists = false;
 		gameData.forEach(previousMonster =>{
 			if(previousMonster.monster.TM_ID==element.TM_ID){
+				console.log(element)
 				var totalCarbon = element.Team1_Score + element.Team2_Score + element.Team3_Score
-				previousMonster.monster.Team1Score = element.Team1Score;
-				previousMonster.monster.Team2Score = element.Team2Score;
-				previousMonster.monster.Team3Score = element.Team3Score;
-				previousMonster.monster.Team1Carbon = element.Team1Carbon;
-				previousMonster.monster.Team2Carbon = element.Team2Carbon;
-				previousMonster.monster.Team3Carbon = element.Team3Carbon;
+				previousMonster.monster=element;
 				var multiplier;
+				console.log(totalCarbon)
 				if (totalCarbon != 0) {
 					multiplier = 3 * Math.log2(totalScore)
 				} else {
 					multiplier = 0
 				}
+				console.log(multiplier)
 				previousMonster.model.scale.set(35 + multiplier,35 + multiplier,35 + multiplier);
+				console.log(previousMonster.model.scale)
+
 				previousMonster.circle.setRadius(getRadius(element).radius * 20)
 				previousMonster.monster=element;
 				monExists=true;
@@ -291,6 +293,7 @@ function drawMonsters(scene, monsters){
 			}
 		})
 		if(!monExists){
+
 			var totalCarbon = element.Team1_Carbon + element.Team2_Carbon + element.Team3_Carbon
 			var totalScore = element.Team1_Score + element.Team2_Score + element.Team3_Score
 			var multiplier;
@@ -308,19 +311,20 @@ function drawMonsters(scene, monsters){
 					gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
 					scene.add(gltf.scene);
 					let circleStats = getRadius(element)
-					if (totalScore != 0) {
-						var shape = new google2.maps.Circle({
+					var shape = new google2.maps.Circle({
 							map:map,
 							fillColor:circleStats.colour,
 							center:{lat:element.Latitude,lng:element.Longitude},
-							radius:circleStats.radius*8 + multiplier,
 							clickable: false
 						})
+					if (totalScore != 0) {
+						shape.setRadius(circleStats.radius*8 + multiplier)
 					}
+
 					gameData.push({"monster":element,"model":gltf.scene,"circle":shape})	
 				})
 			} catch(error) {
-				// do nothing
+
 			}
 		}
 	});
