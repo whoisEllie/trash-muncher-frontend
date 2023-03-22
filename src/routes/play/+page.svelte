@@ -281,9 +281,8 @@ function drawMonsters(scene, monsters){
 					multiplier = 0
 				}
 				previousMonster.model.scale.set(35 + multiplier,35 + multiplier,35 + multiplier);
-				if (totalScore != 0) {
-					previousMonster.circle.setRadius(getRadius(element).radius*8 + multiplier)
-				}
+				previousMonster.circle.setRadius(20 + getRadius(element).radius*4)
+
 				previousMonster.monster=element;
 				monExists=true;
 				if(monster.TM_ID==element.TM_ID){
@@ -317,9 +316,7 @@ function drawMonsters(scene, monsters){
 							center:{lat:element.Latitude,lng:element.Longitude},
 							clickable: false
 						})
-					if (totalScore != 0) {
-						shape.setRadius(circleStats.radius*8 + multiplier)
-					}
+					shape.setRadius(20 + circleStats.radius*4)
 
 					gameData.push({"monster":element,"model":gltf.scene,"circle":shape})	
 				})
@@ -577,9 +574,8 @@ function unfreezeForm(e) {
 	.file-chosen-wrapper {
 		display: flex;
 		justify-content: center;
-		height: 90%;
-		width: 90%;
-		margin: 10px 10px 0px 15px;
+		height: 100%;
+		margin: 15px 20px 0px 15px;
 	}
 
 	.file-chosen{
@@ -598,13 +594,9 @@ function unfreezeForm(e) {
 		margin: 15px;
 		background-color: #ECECEC;
 		padding: 10px 20px 10px 10px;
-		font-size: 1.1em;
+		font-size: 1.2em;
 		border-radius: 15px;
 		font-family: "Montserrat", sans-serif;
-	}
-	
-	.mobileScore {
-		display: none;
 	}
 
 	.location {
@@ -623,7 +615,7 @@ function unfreezeForm(e) {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin: 0px 15px 8px 15px;
+		margin: 30px 15px 15px 15px;
 	}
 
 	.upload-button {
