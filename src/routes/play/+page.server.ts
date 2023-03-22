@@ -161,7 +161,7 @@ export const actions: Actions = {
 				}
 				
 				try {
-					await fetch(url, packet).then(async (response) => {
+					await fetch(url, packet).then((response) => {
 						console.log(response)
 						if (response["status"] == 429) {
 							success = false
@@ -169,27 +169,18 @@ export const actions: Actions = {
 						} else if (response["status"] == 201) {
 							success = true
 							message = "Image successfully uploaded!"
-							if (success == true) {
-								await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
-								method: 'POST',
-								body: JSON.stringify(pack),
-								mode: "cors",
-								headers: {
-									"content-type": "application/json; charset=UTF-8",
-									"Authorization": authkey
-									}
-								})
-							}
 						} else {
 							success = false
 							message = "An error has occurred. Please try again"
 						}
 					})
+					if(success==false){
 					return {
 						image: data.get("image"),
 						success: success,
 						message: message
 					}
+				}
 				} catch(error) {
 					success = false
 					return {
@@ -198,7 +189,17 @@ export const actions: Actions = {
 						message: "An error has occurred. Please try again"
 					}
 				}
-				
+				if (success == true) {
+					await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+					method: 'POST',
+					body: JSON.stringify(pack),
+					mode: "cors",
+					headers: {
+						"content-type": "application/json; charset=UTF-8",
+						"Authorization": authkey
+						}
+					})
+				}
 			} else {
 				return {
 					image: data.get("image"),

@@ -105,6 +105,7 @@
 		streetViewControl:false,
 		mapTypeControl:false,
 		fullscreenControl:false,
+		zoomControl:false,
 		mapId: '805b0b106a1a291d'
 	}
 
