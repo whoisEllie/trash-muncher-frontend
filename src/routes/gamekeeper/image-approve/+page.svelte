@@ -170,14 +170,6 @@
 		transition: all 0.5s ease 0.0s;
 	}
 	
-	.accept:hover .trash-size{
-		opacity: 1;
-	}
-	
-	button span {
-		display: none;
-	}
-	
 	@media screen and (max-width: 635px) {
 		.item{
 			margin-bottom: 20px;
