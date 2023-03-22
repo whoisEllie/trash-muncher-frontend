@@ -343,72 +343,61 @@ function unfreezeForm(e) {
 <!-- pre loads hover image -->
 <link rel="preload" as="image" href="/images/upload_hover.png">
 <link rel="preload" as="image" href="/images/upload_hover_mobile.png">
-<button id="location" on:click={goToLocation}><img class="location" src="images/location.png"></button>
-<div class="map-wrapper">
-	<div class="submit-image">
-		<div class="image-display">
-	        {#if image}
-				<center><img class="image" src="{image}" alt="d" /></center>
-	        {:else}
-				{#if form?.image}
-					<center><img class="image" src="{form.image}" alt="" /></center>
-				{:else}
-		        	<center><img class="no-image" src="/images/no_file.png" alt="" /></center>
+<button id="location" on:click={goToLocation}><img class="location" alt="a location centering icon" src="images/location.png"></button>
+
+<div class="map-modal">	
+	<div class="form">
+		<div class="file-chosen-wrapper">
+			{#if image}
+			<img class="file-chosen" src="{image}" alt="d"/>
+		{:else}
+			{#if form?.image}
+				<img class="file-chosen" src="{form.image}" alt=""/>
+			{:else}
+				<div class="no-file-chosen">No file chosen</div>
+			{/if}
+		{/if}
+		</div>
+		<div class="upload-container">
+			<button class="upload-button" on:click={()=>{fileinput.click();}}>
+				<img src="/images/upload_black.png" alt="A small upload icon" width="40px" height="40px"/>
+				{#if form?.success === false || form?.success === true}
+					{form.message}
+				{:else if error !== true}
+					{name}
 				{/if}
-	        {/if}
-			<br>
-			<div class="upload-container">
-				<center><img class="upload" src="/images/upload.png" alt="" on:click={()=>{fileinput.click();}} /></center>
-				{#if form?.success === false}
-					<span class="upload-click-error" on:click={()=>{fileinput.click();}} bind:this={nameText}>{form.message}</span>
-				{:else if form?.success === true}
-					<span class="upload-click-success" on:click={()=>{fileinput.click();}} bind:this={nameText}>{form.message}</span>
-				{:else}
-					{#if error !== true}
-				        <span class="upload-click" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
-					{:else}
-						<span class="upload-click-error" on:click={()=>{fileinput.click();}} bind:this={nameText}>{name}</span>
-					{/if}
-				{/if}
+			</button>
 			</div>
 			<form method="POST" action="?/uploadImage" enctype="multipart/form-data" bind:this={submitForm} use:enhance>
-		        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput}
-				name="file">
+				<input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} name="file">
 				<input type="hidden" name="image" value={image}>
 				<input type="hidden" name="tm" value={monster.TM_ID}>
 				<input type="hidden" name="team" value={data.team_id}>
 				<input type="hidden" name="lat" value={location.lat}>
 				<input type="hidden" name="lng" value={location.lng}>
-				<center><button type="submit" class="button" bind:this="{submitButton}" on:click={freezeForm} >Submit Image</button></center>
+				<button type="submit" class="submit-button" bind:this="{submitButton}" on:click={freezeForm}>Submit Image</button>
 			</form>
-		</div>
 	</div>
-	<div class="map-modal">	
+	<div id="map" class="map">
+		<!--
 		<div id="mapAwait">
 			<p id="awaitText">{errorMessage}</p>
 		</div>
-		<div id="mapContainer">
-			<div id="map">
-				{#if Object.keys(monster).length > 0}
-				<div class="monsterScore">
-					Name: {monster.TM_Name}<br>
-					{#each spans as item}
-						{@html item}<br>
-					{/each}
-					<br>
-					Carbon consumed
-					<br>
-					<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
-					<br><span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
-					<br><span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
-				</div>
-				{/if}
-			</div>
-			<div class="below_map">
-				<button class="mapButton" on:click="{showCampus}">View Campus</button>
-				<button class="mapButton">Change Zoom</button>
-			</div>
+		-->
+		{#if Object.keys(monster).length > 0}
+		<div class="monsterScore">
+			Name: {monster.TM_Name}<br>
+			{#each spans as item}
+				{@html item}<br>
+			{/each}
+			<br>
+			Carbon consumed
+			<br>
+			<span style="color: #EA6E6E">R: {monster.Team1_Carbon}g</span>
+			<br><span style="color: #6285DC">B: {monster.Team2_Carbon}g</span>
+			<br><span style="color: #6DC462">G: {monster.Team3_Carbon}g</span>
 		</div>
+		{/if}
 	</div>
 </div>
 
@@ -434,69 +423,46 @@ function unfreezeForm(e) {
 		grid-template-columns: 2fr 7fr;
 		grid-template-rows: auto;
 		border-radius: 25px;
+		overflow: hidden;
 		box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
-		background-color: #61846F;
+		background-color: #E1E1E1;
 	}
 
-	#map {
-		height: 60vh;
-		width: 50vw;
-		position: relative; /* relative to parent (allows for better scaling / scroll bar) */
+	.form {
+		display: grid;
+		grid-template-rows: 250px auto auto 5fr;
 	}
 
-	#mapAwait {
-		height: 60vh;
-		width: 50vw;
-		position: relative;
-		top:50%;
-		left:65%;
-		transform: translate(-50%,-50%);
+	.no-file-chosen {
+		font-family: Montserrat;
+		text-transform: uppercase;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #ECECEC;
+		max-height: 100%;
+		width: 100%;
+		border-radius: 15px;
 	}
 
-	#mapContainer {
-		height: 60vh;
-		width: 50vw; /* The width is half the width of the web page */
-		box-shadow: 0px 4px 30px #272727;
-		position: relative;
-		top:50%;
-		left:10%;
-		transform: translate(-50%,-50%);
+	.file-chosen-wrapper {
+		display: flex;
+		justify-content: center;
+		height: 100%;
+		margin: 15px 15px 0px 15px;
 	}
 
-	#awaitText{
-		text-align: center;
-		font-size: 32px;
-		font-family: "Montserrat", sans-serif;
-		position: relative;
-		top:50%;
-		left:95%;
-		transform: translate(-50%,-50%);
+	.file-chosen{
+		border-radius: 15px;
+		max-width: 100%;
+		object-fit: cover; /* crop images to correct size */
 	}
 
-	.below_map { /* buttons that appear on top of the map */
-		list-style-type: none;
-		text-align: center;
-		float: left;
-		position: relative;
+	.map {
+		height: 100%;
+		width: 100%;
 	}
 
-	.mapButton {
-		float: left;
-		padding: 12px;
-		text-decoration: none;
-		font-size: 17px;
-		width: 140px;
-		text-align: center;
-		height: 65px;
-		border: none;
-		cursor: pointer;
-		background-color: white;
-	}
-
-	.mapButton:hover {
-		background-color: #F0F0F0;
-	}
-	
 	.monsterScore {
 		background-color: #E0E0E0;
 		position: relative;
@@ -508,16 +474,6 @@ function unfreezeForm(e) {
 		font-family: "Montserrat", sans-serif;
 	}
 
-	#errorText{
-		font-size: 1.2em;
-		width: max-content;
-		background-color: red;
-		position: absolute;
-		width: 50vw;
-		font-family: "Montserrat", sans-serif;
-
-	}
-	
 	.location {
 		width: 25px;
 		height: 25px;
@@ -530,101 +486,14 @@ function unfreezeForm(e) {
 		height: 50px;
 	}
 	
-	.submit-image {
-		z-index: 2;
-		display: block;
-		position: relative;
-		left: 21%;
-		top: 0%;
-		height: 30vh;
-		width: fit-content;
-		max-width: 260px;
-		transform: translate(-50%, 85%);
-	}
-	
-	.image-display {
-		text-align: center;
-	}
-	
-	.upload{
-		height:50px;
-		width:50px;
-		padding-bottom: 10px;
-		cursor:pointer;
-	}
-	
-	.image{
-		display:flex;
-		height:250px;
-		width:200px;
-		object-fit: cover; /* crop images to correct size */
-	}
-	
-	.no-image{
-		display:flex;
-		height:250px;
-		width:250px;
-	}
-	
-	.upload-text {
-		font-family: "Montserrat", sans-serif;
-		color: white;
-	}
-	
-	.upload-click {
-		font-family: "Montserrat", sans-serif;
-		color: white;
-		cursor: pointer;
-		top: 50%;
-		margin: auto;
-		padding-left: 5px;
-		width: fit-content;
-	}
-	
-	.upload-click-error {
-		font-family: "Montserrat", sans-serif;
-		color: #FF8B8B;
-		cursor: pointer;
-		top: 50%;
-		margin: auto;
-		padding-left: 5px;
-		width: 180px;
-	}
-	
-	.upload-click-success {
-		font-family: "Montserrat", sans-serif;
-		color: #A2FF8B;
-		cursor: pointer;
-		top: 50%;
-		margin: auto;
-		padding-left: 5px;
-		width: 160px;
-	}
-	
 	.upload-container {
-		justify-content: center;
-		margin: auto;
-		width: fit-content;
 		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 30px 15px 15px 15px;
 	}
-	
-	.upload-container:hover .upload-click {
-		color: #FCDFC4;
-	}
-	
-	.upload-container:hover .upload {
-		content: url("/images/upload_hover.png");
-	}
-	
-	.upload-container:hover .upload-click-error {
-		color: #FCDFC4;
-	}
-	
-	.upload-container:hover .upload-click-success {
-		color: #FCDFC4;
-	}
-	
-	button {
+
+	.upload-button {
 		height: 50px;
 		cursor: pointer;
 		display: flex;
@@ -637,23 +506,49 @@ function unfreezeForm(e) {
 		font-size: 1.0rem;
 		background-color: #B5D3D2;
 		transition: all 0.5s;
-		width: 155px;
+		padding: 0px 15px;
+		max-width: 250px;
 		text-decoration: none;
 		color: black;
+		margin: 0px auto;
+	}
+
+	.upload-button img {
+		padding: 0px 5px 5px 5px;
+	}
+
+	.upload-button:hover {
+		background-color: #DFC9B5;
+		border-radius: 25px;
+		transition: all 0.5s ease 0.0s;
 	}
 	
-	button:hover {
+	.submit-button {
+		height: 50px;
+		cursor: pointer;
+		display: flex;
+		border: none;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		border-radius: 20px;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 1.0rem;
+		background-color: #B5D3D2;
+		transition: all 0.5s;
+		padding: 0px 15px;
+		max-width: 200px;
+		text-decoration: none;
+		color: black;
+		margin: 0px auto;
+	}
+	
+	.submit-button:hover {
 		background-color: #DFC9B5;
-		border-radius: 22px;
+		border-radius: 25px;
 		transition: all 0.5s ease 0.0s;
 	}
 
-	#status{
-		font-family: "Montserrat", sans-serif;
-		text-align: center;
-		font-size: larger;
-	}
-	
 	/* device sensitive */
 	@media screen and (max-width: 450px) {
 		.map-modal {
@@ -669,43 +564,6 @@ function unfreezeForm(e) {
 		#map {
 			width: 100vw;
 		}
-		#mapAwait {
-			width: 100vw;
-		}
-		#mapContainer {
-			width: 100vw;
-		}
-		.below_map {
-			display: none;
-		}
-		.submit-image {
-			position: relative;
-			left: 0%;
-			transform: translateY(25%);
-			width: 100vw;
-			margin-bottom: 250px;
-			max-width: 100vw;
-		}
-		.map-wrapper {
-			margin-top: 60px;
-			transform: scale(1.03);
-			position: relative;
-			overflow-x: hidden;
-			overflow-y: auto;
-			max-height: 91.5vh;
-		}
-		
-		.upload-container:hover .upload-click {
-			color: #977453;
-		}
-		
-		.upload-container:hover .upload {
-			content: url("/images/upload_hover_mobile.png");
-		}
-		
-		.image {
-			box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
-		}
 	}
 	
 	@media screen and (min-width: 451px) and (max-width: 1000px) {
@@ -720,42 +578,6 @@ function unfreezeForm(e) {
 		}
 		#map {
 			width: 84vw;
-		}
-		#mapAwait {
-			width: 84vw;
-		}
-		#mapContainer {
-			width: 84vw;
-		}
-		.submit-image {
-			position: relative;
-			left: 0%;
-			transform: translateY(25%);
-			width: 100vw;
-			margin-bottom: 250px;
-			max-width: 100vw;
-		}
-		.map-wrapper {
-			margin-top: 80px;
-			transform: scale(1.03);
-			position: relative;
-			overflow-x: hidden;
-			overflow-y: auto;
-			max-height: 88.5vh;
-		}
-		.below_map {
-			display: none;
-		}
-		.upload-container:hover .upload-click {
-			color: #977453;
-		}
-		
-		.upload-container:hover .upload {
-			content: url("/images/upload_hover_mobile.png");
-		}
-		
-		.image {
-			box-shadow: 0px 0px 21px rgba(0, 0, 0, 0.5); /* drop shadow */
 		}
 	}
 
