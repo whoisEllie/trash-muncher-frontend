@@ -162,15 +162,13 @@ export const actions: Actions = {
 				
 				try {
 					await fetch(url, packet).then(async (response) => {
-						console.log(response)
 						if (response["status"] == 429) {
 							success = false
 							message = "Please wait at least 8 hours between image submissions!"
 						} else if (response["status"] == 201) {
 							success = true
 							message = "Image successfully uploaded!"
-							if (success == true) {
-								await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+							await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
 								method: 'POST',
 								body: JSON.stringify(pack),
 								mode: "cors",
@@ -178,8 +176,7 @@ export const actions: Actions = {
 									"content-type": "application/json; charset=UTF-8",
 									"Authorization": authkey
 									}
-								})
-							}
+							})
 						} else {
 							success = false
 							message = "An error has occurred. Please try again"
