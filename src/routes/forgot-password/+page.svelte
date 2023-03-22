@@ -64,7 +64,7 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
     	height: 80%;
-		width: fit-content; // doesn't grow any wider than necessary
+		width: fit-content; /* doesn't grow any wider than necessary */
 	    display: flex;
    		flex-direction: column;
 		justify-content: center;
