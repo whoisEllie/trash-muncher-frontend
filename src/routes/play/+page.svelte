@@ -646,7 +646,7 @@ function unfreezeForm(e) {
 		background-color: #B5D3D2;
 		transition: all 0.5s;
 		padding: 0px 15px;
-		max-width: 250px;
+		max-width: 300px;
 		text-decoration: none;
 		color: black;
 		margin: 0px auto;
@@ -695,6 +695,11 @@ function unfreezeForm(e) {
 	}
 
 	/* device sensitive */
+	@media screen and (max-width: 1515px) {
+		.upload-button {
+			font-size: 0.85rem;
+		}
+	}
 	@media screen and (max-width: 1200px) {
 		.map-modal {
 			height: 92.5vh;

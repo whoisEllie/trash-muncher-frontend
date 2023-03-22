@@ -169,7 +169,7 @@ export const actions: Actions = {
 						// response that'll be thrown if upload limit is reached
 						if (response["status"] == 429) {
 							success = false
-							message = "Please wait 8 hours between image submissions!"
+							message = "Please wait 24 hours between submissions."
 						} else if (response["status"] == 201) {
 							success = true
 							message = "Image successfully uploaded!"
