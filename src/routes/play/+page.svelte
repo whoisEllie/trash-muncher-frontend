@@ -80,9 +80,6 @@
 		const packet = {
 			headers: {
 				'Content-Type':'application/json',
-	            'Access-Control-Allow-Origin':'*',
-	            'Access-Control-Allow-Methods':'GET',
-				"Authorization": data.cookie
 			},
 			method: "GET",
 			mode: "cors"
