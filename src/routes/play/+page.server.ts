@@ -66,6 +66,7 @@ export const load = (async (event) => {
 				username: username,
 				monsters: monsters,
 				team_id: team,
+				cookie:authkey
 			};
 		
 		
@@ -187,7 +188,6 @@ export const actions: Actions = {
 						} else {
 							success = false
 							message = "An error has occurred. Please try again"
-							console.log(response)
 						}
 					})
 					return {
@@ -197,7 +197,6 @@ export const actions: Actions = {
 					}
 				} catch(error) {
 					success = false
-					console.log(error)
 					return {
 						image: data.get("image"),
 						success: false,
