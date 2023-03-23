@@ -16,7 +16,9 @@ export const load = (async (event) => {
 
 	const packet: RequestInit = {
 		headers: {
-			"content-type": "application/json; charset=UTF-8",
+			'Content-Type':'application/json',
+            'Access-Control-Allow-Origin':'*',
+            'Access-Control-Allow-Methods':'GET',
 			"Authorization": `Bearer ${event.cookies.get('AccessToken')}`
 		},
 		method: "GET",
