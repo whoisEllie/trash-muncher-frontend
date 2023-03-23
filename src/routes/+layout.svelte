@@ -221,7 +221,7 @@
 		}
 	}
 
-	@media screen and (max-width:  450px) {
+	@media screen and (max-width:  1055px) {
 		.container {
 			width: 100vw;
 			height: 100vh;		
