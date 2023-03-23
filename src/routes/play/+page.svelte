@@ -139,7 +139,6 @@
 	function initWebglOverlayView(map) {
 		//variables used for webgl
   		let camera:PerspectiveCamera;
-		var animationAction;
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
 		overlay.setMap(map);
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Loader } from '@googlemaps/js-api-loader';
 	import { onMount } from 'svelte';
-	import {AmbientLight,DirectionalLight,PerspectiveCamera,Scene,WebGLRenderer,Raycaster,Vector2,Matrix4,MathUtils,AnimationMixer} from 'three';
+	import {AmbientLight,DirectionalLight,PerspectiveCamera,Scene,WebGLRenderer,Raycaster,Vector2,Matrix4,MathUtils,AnimationMixer,Clock} from 'three';
 	import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 	import ThreejsOverlayView from '@ubilabs/threejs-overlay-view';
     import { enhance } from '$app/forms';
@@ -23,6 +23,8 @@
 	var vector = new Vector2();
 	var mixer: AnimationMixer;
 	const gltfLoader = new GLTFLoader();
+	const clock = new Clock()
+	let monsterSelected = false
 
 	onMount(async () => {
 		createMap(50.72506135303006,-3.5306954520836453);
@@ -99,12 +101,31 @@
 			intersections.forEach(element => {
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
-					m.model.children[0].material.color.r=0.8227857351303101;
-					if (m.model==element.object.parent){
-						monster=m.monster;
-						element.object.material.color.r=0.06;
-						clicked=true;
-						addHTML()
+					var elemObject
+					var colour;
+					if(m.mixer){
+						m.animation.stop()
+						elemObject=element.object.parent.parent
+						colour=m.model.children[0].children[0].material.color
+					}
+					else{
+						elemObject=element.object.parent
+						colour=m.model.children[0].material.color
+					}
+					colour.r=1;
+					colour.g=1;
+					colour.b=1;
+					if (m.model==elemObject){
+						if(m.mixer) {
+								m.animation.play()
+							}
+							monster=m.monster;
+							colour.r=0.5;
+							colour.g=0.5;
+							colour.b=0.5;
+							clicked=true;
+							addHTML()
+							return true;
 					}
 				});
 			});
@@ -114,15 +135,31 @@
 				formChoice=1;
 				gameData.forEach(m => {
 					//detects that the correct monster has been clicked, then sets it as the current monster
-					m.model.children[0].material.color.r=0.8227857351303101;
+					let colour;
+					if(m.mixer){
+							m.animation.stop()
+							colour=m.model.children[0].children[0].material.color
+						}
+						else{
+							colour=m.model.children[0].material.color
+						}
+					colour.r=1;
+					colour.g=1;
+					colour.b=1;
 				})
 				monster = {}
 			}
 		})
 
 		const animate = () => { //cool animations :)
+			let delta = clock.getDelta();
 			gameData.forEach(element => {
+				if(element.monster!=monster || !monsterSelected){
 				element.model.rotateY(MathUtils.degToRad(0.2));
+				}
+				
+				if(element.mixer) {
+					element.mixer.update(delta)}
 			});
 			overlay.requestRedraw();
   			
@@ -189,11 +226,17 @@ function drawMonsters(scene){
 		try {
 			gltfLoader.load("../models/" + element.TM_Name + ".glb", (gltf) => {
 				let vector = overlay.latLngAltToVector3({lat:element.Latitude,lng:element.Longitude})
-				gltf.scene.position.set(vector.x,vector.y,40);
-	    		gltf.scene.scale.set(50, 50, 50);
-				gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
-				scene.add(gltf.scene);
-				gameData.push({"monster":element,"model":gltf.scene})
+					gltf.scene.position.set(vector.x,vector.y,40);
+			    	gltf.scene.scale.set(35, 35, 35);
+					gltf.scene.rotation.x = Math.PI/2; // Rotations are in radians.
+					scene.add(gltf.scene);
+					let mixer;
+					let animationAction;
+					if(gltf.animations.length>0){
+						mixer = new AnimationMixer(gltf.scene);
+						animationAction = mixer.clipAction((gltf as any).animations[0])
+					}
+					gameData.push({"monster":element,"model":gltf.scene,"mixer":mixer,"animation":animationAction})
 			})
 		} catch(error) {
 			// monster model does not exist
