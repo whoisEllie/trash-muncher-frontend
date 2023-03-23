@@ -138,6 +138,7 @@ export const actions: Actions = {
 				}
 			})
 		} catch(error) {
+			console.log(error)
 			return {
 				success: false,
 				message: "An error has occurred. Please try again"
@@ -181,6 +182,7 @@ export const actions: Actions = {
 			})
 		// if api call failed entirely (no internet/server down)
 		} catch(error) {
+			console.log(error)
 			return {
 				success: false,
 				message: "An error has occurred. Please try again"
