@@ -93,12 +93,12 @@
 <style>
 	.grid {
 		position: absolute;
-		width: 85%;
-		height: 70%;
-		display: flex; /* images are loaded from top left to bottom right in flex */
-		flex-flow: wrap;
-		overflow-x: hidden;
-		overflow-y: auto; /* allows vertical scrolling in the div */
+		width: 85vw;
+		height: 80vh;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		grid-gap: 1rem;
+		overflow-y: scroll; /* allows vertical scrolling in the div */
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
@@ -106,17 +106,16 @@
 	
 	.item{
 		position: relative;
+		max-width: 100%;
 		height: 350px;
-		width: 270px;
-	    box-shadow: 0px 0px 16px #00000044;
+	  box-shadow: 0px 0px 16px #00000044;
+		display: flex;
+		align-items: center;
 	}
 	
 	.item > img {
-		top: 0%;
-		z-index: 0;
 		height: 100%; /* ensures image fits in grid */
 		width: 100%;
-		position: absolute;
 		object-fit: cover;
 	}
 	
@@ -174,10 +173,23 @@
 	}
 	
 	@media screen and (max-width: 635px) {
+
 		.item{
 			margin-bottom: 20px;
 			left: 50%;
 			transform: translateX(-50%);
 		}
 	}
+
+	@media screen and (max-width: 450px) {
+		.grid {
+			height: 92.5vh;
+			height: 92.5svh;
+			width: 90vw;
+			border-radius: 15px 15px 0px 0px;
+			bottom: 0;
+			transform: translate(-50%, -46.125%);
+		}
+	}
+
 </style>

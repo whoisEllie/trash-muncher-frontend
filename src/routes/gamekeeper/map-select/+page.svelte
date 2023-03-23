@@ -473,4 +473,15 @@ function drawMonsters(scene){
 		}
 	}
 
+	@media screen and (max-width: 450px) {
+		.map-modal {
+			height: 92.5vh;
+			height: 92.5svh;
+			width: 100vw;
+			border-radius: 15px 15px 0px 0px;
+			bottom: 0;
+			transform: translate(-50%, -46.125%);
+		}
+	}
+
 </style>

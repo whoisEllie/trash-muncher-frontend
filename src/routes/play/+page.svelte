@@ -745,7 +745,7 @@ function unfreezeForm(e) {
 			font-size: 0.85rem;
 		}
 	}
-	@media screen and (max-width: 1200px) {
+	@media screen and (max-width: 450px) {
 		.map-modal {
 			height: 92.5vh;
 			height: 92.5svh;
