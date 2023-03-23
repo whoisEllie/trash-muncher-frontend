@@ -478,7 +478,7 @@ function unfreezeForm(e) {
 		<div class="file-chosen-wrapper">
 			{#if image}
 				{#if image == "no file"}
-					<div class="no-file-chosen">No file chosen</div>
+					<div class="no-file-chosen"><center>No file chosen</center></div>
 				{:else}
 					<img class="file-chosen" src="{image}" alt="d"/>
 				{/if}
@@ -486,7 +486,7 @@ function unfreezeForm(e) {
 				{#if form?.image}
 					<img class="file-chosen" src="{form.image}" alt=""/>
 				{:else}
-					<div class="no-file-chosen">No file chosen</div>
+					<div class="no-file-chosen"><center>No file chosen</center></div>
 				{/if}
 			{/if}
 		</div>
