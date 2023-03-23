@@ -140,6 +140,8 @@ export const actions: Actions = {
 					inRange = true
 				}
 			})
+
+			//inRange = true //comment out later
 		
 			// location tracking for api call
 			if (inRange) {
@@ -185,6 +187,7 @@ export const actions: Actions = {
 						} else {
 							success = false
 							message = "An error has occurred. Please try again"
+							console.log(response)
 						}
 					})
 					return {
@@ -194,10 +197,12 @@ export const actions: Actions = {
 					}
 				} catch(error) {
 					success = false
+					console.log(error)
 					return {
 						image: data.get("image"),
 						success: false,
 						message: "An error has occurred. Please try again"
+						
 					}
 				}
 			} else {
