@@ -96,7 +96,7 @@
 		width: 85vw;
 		height: 80vh;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
 		grid-gap: 1rem;
 		overflow-y: scroll; /* allows vertical scrolling in the div */
 		top: 50%;
