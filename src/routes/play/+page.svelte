@@ -77,15 +77,16 @@
 	//fetches current monster db, then updates the monsters
 	async function getMonsters(){
 		let tempMonsters
-		const packet = {
-			headers: {
-				'Content-Type':'application/json',
-			},
-			method: "GET",
-			mode: "cors"
+		const packet: RequestInit = {
+		headers: {
+			"content-type": "application/json; charset=UTF-8",
+			"Authorization": data.cookie
+		},
+		method: "GET",
+		mode: "cors"
 		}
 		let url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
-		fetch(url,packet).then((response) => response.json().then((out) => {
+		await fetch(url,packet).then((response) => response.json().then((out) => {
 			let monsters=out;
 			drawMonsters(scene,monsters)
 			addHTML()
@@ -477,7 +478,7 @@ function unfreezeForm(e) {
 		<div class="file-chosen-wrapper">
 			{#if image}
 				{#if image == "no file"}
-					<div class="no-file-chosen">No file chosen</div>
+					<div class="no-file-chosen"><center>No file chosen</center></div>
 				{:else}
 					<img class="file-chosen" src="{image}" alt="d"/>
 				{/if}
@@ -485,7 +486,7 @@ function unfreezeForm(e) {
 				{#if form?.image}
 					<img class="file-chosen" src="{form.image}" alt=""/>
 				{:else}
-					<div class="no-file-chosen">No file chosen</div>
+					<div class="no-file-chosen"><center>No file chosen</center></div>
 				{/if}
 			{/if}
 		</div>
