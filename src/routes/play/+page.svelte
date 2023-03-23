@@ -85,7 +85,7 @@
 		method: "GET",
 		mode: "cors"
 		}
-		let url="http://api.trashmunchers.co.uk/api/monsters/get-tms"
+		let url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
 		await fetch(url,packet).then((response) => response.json().then((out) => {
 			let monsters=out;
 			drawMonsters(scene,monsters)
@@ -139,7 +139,7 @@
 	function initWebglOverlayView(map) {
 		//variables used for webgl
   		let camera:PerspectiveCamera;
-		var animationActiohttps://api.trashmunchers.co.uk/n;
+		var animationAction;
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
 		overlay.setMap(map);
 
@@ -269,7 +269,7 @@ function addHTML() {
 	let sortedScores = []
 	scores.push("" + monster.Team1_Score + 1)
 	scores.push("" + monster.Team2_Score + 2)
-	scores.push("" + monhttps://api.trashmunchers.co.uk/ster.Team3_Score + 3)
+	scores.push("" + monster.Team3_Score + 3)
 	scores.sort((a,b)=>b-a)
 	var order = []
 	//sets the order of scores from highest to lowest
