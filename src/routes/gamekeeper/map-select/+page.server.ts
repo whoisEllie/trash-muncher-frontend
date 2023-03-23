@@ -10,7 +10,7 @@ export const load = (async (event) => {
 	let username: String = ""
 	let monsters= [];
 
-	let url = "http://38.242.137.81:8000/api/users/me/"
+	let url = "https://api.trashmunchers.co.uk/api/users/me/"
 
 	const packet: RequestInit = {
 		headers: {
@@ -36,7 +36,7 @@ export const load = (async (event) => {
 				username = out['user']['username']
 				login_status = true;
 
-				url="http://38.242.137.81:8000/api/monsters/get-tms"
+				url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
 				await event.fetch(url,packet).then((response) => response.json().then((out) => {
 					// get monsters to return to map
 					monsters=out;
@@ -63,7 +63,7 @@ export const actions: Actions = {
 		// Returns data from the submitted form
 		const formData = await request.formData();
 
-		let url = "http://38.242.137.81:8000/api/monsters/add-tm"
+		let url = "https://api.trashmunchers.co.uk/api/monsters/add-tm"
 		
 		// data to add monster to map
 		const data = {
@@ -115,7 +115,7 @@ export const actions: Actions = {
 			"T2Score":formData.get("t2score"),
 			"T3Score":formData.get("t3score")
 		};
-		let url = "http://38.242.137.81:8000/api/monsters/change-score"
+		let url = "https://api.trashmunchers.co.uk/api/monsters/change-score"
 
 		const packet: RequestInit = {
 			headers: {
@@ -158,7 +158,7 @@ export const actions: Actions = {
 			"T2Score":Number(formData.get("t2score")),
 			"T3Score":Number(formData.get("t3score"))
 		};
-		let url = "http://38.242.137.81:8000/api/monsters/add-score"
+		let url = "https://api.trashmunchers.co.uk/api/monsters/add-score"
 
 		const packet: RequestInit = {
 			headers: {

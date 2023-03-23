@@ -8,7 +8,7 @@ export const actions: Actions = {
 		var sendMessage, success;
 		
 		// get api endpoint
-		let url = "http://38.242.137.81:8000/api/users/password-reset/"
+		let url = "https://api.trashmunchers.co.uk/api/users/password-reset/"
 		let data = {
 			"email": formData.get('email')
 		}

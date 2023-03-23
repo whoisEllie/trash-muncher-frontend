@@ -20,7 +20,7 @@ export const actions: Actions = {
 			}
 		}		
 
-		let url = "http://38.242.137.81:8000/api/users/password-reset/confirm/"
+		let url = "https://api.trashmunchers.co.uk/api/users/password-reset/confirm/"
 		let data = {
 			"password": formData.get('password'),
 			"token": token

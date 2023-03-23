@@ -4,7 +4,7 @@ import type { Actions } from './$types'
 let authkey;
 
 export const load = (async (event) => {
-	let url = "http://38.242.137.81:8000/api/images/list-images/"
+	let url = "https://api.trashmunchers.co.uk/api/images/list-images/"
 	
 	// get authkey to pass after load
 	authkey = `Bearer ${event.cookies.get('AccessToken')}`
@@ -36,7 +36,7 @@ export const actions : Actions = {
 		let pack = {
 			"id": Number(data.get("id"))
 		}
-		await fetch("http://38.242.137.81:8000/api/images/delete-image/", {
+		await fetch("https://api.trashmunchers.co.uk/api/images/delete-image/", {
 			method: 'POST',
 			body: JSON.stringify(pack),
 			mode: "cors",
@@ -80,7 +80,7 @@ export const actions : Actions = {
 			}
 			
 			
-			await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+			await fetch("https://api.trashmunchers.co.uk/api/monsters/add-score", {
 				method: 'POST',
 				body: JSON.stringify(pack2),
 				mode: "cors",
@@ -90,7 +90,7 @@ export const actions : Actions = {
 				}
 			})
 			
-			await fetch("http://38.242.137.81:8000/api/monsters/add-carbon", {
+			await fetch("https://api.trashmunchers.co.uk/api/monsters/add-carbon", {
 				method: 'POST',
 				body: JSON.stringify(pack3),
 				mode: "cors",
@@ -108,7 +108,7 @@ export const actions : Actions = {
 		let pack = {
 			"id": Number(data.get("id"))
 		}
-		await fetch("http://38.242.137.81:8000/api/images/delete-image/", {
+		await fetch("https://api.trashmunchers.co.uk/api/images/delete-image/", {
 			method: 'POST',
 			body: JSON.stringify(pack),
 			mode: "cors",
@@ -142,7 +142,7 @@ export const actions : Actions = {
 		
 		if(success) {
 			// sends request
-			await fetch("http://38.242.137.81:8000/api/monsters/remove-score", {
+			await fetch("https://api.trashmunchers.co.uk/api/monsters/remove-score", {
 				method: 'POST',
 				body: JSON.stringify(pack2),
 				mode: "cors",

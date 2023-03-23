@@ -3,7 +3,7 @@ import { redirect } from "@sveltejs/kit";
 
 export const load = (async (event) => {
 	
-	let url = "http://38.242.137.81:8000/api/users/logout/"
+	let url = "https://api.trashmunchers.co.uk/api/users/logout/"
 
 	const packet: RequestInit = {
 		headers: {

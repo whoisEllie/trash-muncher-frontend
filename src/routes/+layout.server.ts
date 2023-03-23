@@ -5,7 +5,7 @@ export const load = (async (event) => {
 	let login_status: Boolean = false;
 	let username: String = ""
 
-	let url = "http://38.242.137.81:8000/api/users/me/"
+	let url = "https://api.trashmunchers.co.uk/api/users/me/"
 
 	const packet: RequestInit = {
 		headers: {

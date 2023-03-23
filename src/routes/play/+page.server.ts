@@ -12,7 +12,7 @@ export const load = (async (event) => {
 	let monsters= [];
 	authkey = `Bearer ${event.cookies.get('AccessToken')}`
 
-	let url = "http://38.242.137.81:8000/api/users/me"
+	let url = "https://api.trashmunchers.co.uk/api/users/me"
 
 	const packet: RequestInit = {
 		headers: {
@@ -56,7 +56,7 @@ export const load = (async (event) => {
 				
 				login_status = true;
 
-				url="http://38.242.137.81:8000/api/monsters/get-tms"
+				url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
 				await event.fetch(url,packet).then((response) => response.json().then((out) => {
 					monsters=out;
 				}))

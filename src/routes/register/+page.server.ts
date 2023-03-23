@@ -16,7 +16,7 @@ export const actions: Actions = {
 				message: message
 			}
 		} else {
-			let url = "http://38.242.137.81:8000/api/users/player-register/"
+			let url = "https://api.trashmunchers.co.uk/api/users/player-register/"
 			let data = {
 				// get form data for user
 				"user": {
@@ -72,7 +72,7 @@ export const actions: Actions = {
 					success: false
 				}
 			} else {
-				let url = "http://38.242.137.81:8000/api/users/login/"
+				let url = "https://api.trashmunchers.co.uk/api/users/login/"
 				let data = {
 					"username" : formData.get('username'),
 					"password" : formData.get('password') 

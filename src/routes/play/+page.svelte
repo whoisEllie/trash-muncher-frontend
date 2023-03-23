@@ -85,7 +85,7 @@
 		method: "GET",
 		mode: "cors"
 		}
-		let url="http://38.242.137.81:8000/api/monsters/get-tms"
+		let url="http://api.trashmunchers.co.uk/api/monsters/get-tms"
 		await fetch(url,packet).then((response) => response.json().then((out) => {
 			let monsters=out;
 			drawMonsters(scene,monsters)
@@ -139,7 +139,7 @@
 	function initWebglOverlayView(map) {
 		//variables used for webgl
   		let camera:PerspectiveCamera;
-		var animationAction;
+		var animationActiohttps://api.trashmunchers.co.uk/n;
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
 		overlay.setMap(map);
 
@@ -179,7 +179,7 @@
 			//detects if you click onto an object
 			const intersections = overlay.raycast(vector);
 
-			if(intersections.length>0){
+			if(intersectionshttps://api.trashmunchers.co.uk/.length>0){
 				getMonsters()	
 				monsterSelected = true
 				let clicked = false;
@@ -200,7 +200,7 @@
 						colour.r=1;
 						colour.g=1;
 						colour.b=1;
-						if (m.model==elemObject){
+						if (m.modehttps://api.trashmunchers.co.uk/l==elemObject){
 							if(m.mixer) {
 								m.animation.play()
 							}
@@ -269,7 +269,7 @@ function addHTML() {
 	let sortedScores = []
 	scores.push("" + monster.Team1_Score + 1)
 	scores.push("" + monster.Team2_Score + 2)
-	scores.push("" + monster.Team3_Score + 3)
+	scores.push("" + monhttps://api.trashmunchers.co.uk/ster.Team3_Score + 3)
 	scores.sort((a,b)=>b-a)
 	var order = []
 	//sets the order of scores from highest to lowest
