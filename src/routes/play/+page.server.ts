@@ -136,13 +136,13 @@ export const actions: Actions = {
 				"content-type": "application/json; charset=UTF-8",
 				"Authorization": authkey
 				}
-			}).then((response) => {response.json()}).then(out => {
-				if (out == true) {
+			}).then((response) => response.json().then((out) => {
+				if (out["result"] == "True") {
 					inRange = true
 				}
-			})
+			}))
 
-			//inRange = true //comment out later
+			// inRange = true //comment out later
 		
 			// location tracking for api call
 			if (inRange) {
