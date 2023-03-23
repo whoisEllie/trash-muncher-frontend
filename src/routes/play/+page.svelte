@@ -77,15 +77,16 @@
 	//fetches current monster db, then updates the monsters
 	async function getMonsters(){
 		let tempMonsters
-		const packet = {
-			headers: {
-				'Content-Type':'application/json',
-			},
-			method: "GET",
-			mode: "cors"
+		const packet: RequestInit = {
+		headers: {
+			"content-type": "application/json; charset=UTF-8",
+			"Authorization": data.cookie
+		},
+		method: "GET",
+		mode: "cors"
 		}
 		let url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
-		fetch(url,packet).then((response) => response.json().then((out) => {
+		await fetch(url,packet).then((response) => response.json().then((out) => {
 			let monsters=out;
 			drawMonsters(scene,monsters)
 			addHTML()
