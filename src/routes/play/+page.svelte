@@ -83,7 +83,7 @@
 			"Authorization": data.cookie
 		},
 		method: "GET",
-		mode: "cors"
+		mode: "no-cors"
 		}
 		let url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
 		await fetch(url,packet).then((response) => response.json().then((out) => {

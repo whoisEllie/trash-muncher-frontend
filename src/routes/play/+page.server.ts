@@ -84,7 +84,7 @@ export const actions: Actions = {
 			"T2Score":Number(formData.get("t2score")),
 			"T3Score":Number(formData.get("t3score"))
 		};
-		let url = "http://38.242.137.81:8000/api/monsters/add-score"
+		let url = "https://api.trashmunchers.co.uk/api/monsters/add-score"
 
 		const packet: RequestInit = {
 			headers: {
@@ -127,7 +127,7 @@ export const actions: Actions = {
 				"o-long": data.get("lng")
 			}
 
-			await fetch("http://38.242.137.81:8000/api/monsters/verify-distance", {
+			await fetch("https://api.trashmunchers.co.uk/api/monsters/verify-distance", {
 			method: 'POST',
 			body: JSON.stringify(location),
 			mode: "cors",
@@ -135,7 +135,7 @@ export const actions: Actions = {
 				"content-type": "application/json; charset=UTF-8",
 				"Authorization": authkey
 				}
-			}).then((response) => response.json()).then(out => {
+			}).then((response) => {response.json()}).then(out => {
 				if (out == true) {
 					inRange = true
 				}
@@ -154,7 +154,7 @@ export const actions: Actions = {
 					formData.append(name, pack2[name]);
 				}
 				
-				let url = "http://38.242.137.81:8000/api/images/submit-image/"
+				let url = "https://api.trashmunchers.co.uk/api/images/submit-image/"
 				const packet: RequestInit = {
 					headers: {
 						"Authorization": authkey
@@ -173,7 +173,7 @@ export const actions: Actions = {
 						} else if (response["status"] == 201) {
 							success = true
 							message = "Image successfully uploaded!"
-							await fetch("http://38.242.137.81:8000/api/monsters/add-score", {
+							await fetch("https://api.trashmunchers.co.uk/api/monsters/add-score", {
 								method: 'POST',
 								body: JSON.stringify(pack),
 								mode: "cors",
