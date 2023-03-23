@@ -57,11 +57,15 @@ export const load = (async (event) => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
+	
 	//creates a new monster
 	newMonster: async ({request}) => {
+		console.log(cookies)
+		console.log("running")
 		let success, message
 		// Returns data from the submitted form
 		const formData = await request.formData();
+		console.log(formData)
 
 		let url = "https://api.trashmunchers.co.uk/api/monsters/add-tm"
 		
@@ -84,6 +88,7 @@ export const actions: Actions = {
 		
 		try {
 			await fetch(url, packet).then((response) => {
+				console.log(response)
 				// check response status, just in case of unknown/uncaught errors
 				if(response["status"] == 200) {
 					success = true
@@ -106,7 +111,8 @@ export const actions: Actions = {
 	},
 
 	//changes the entire score for the monster
-	updateScore: async ({cookies, request}) => {
+	updateScore: async ({request}) => {
+		
 		let success, message
 		const formData = await request.formData();
 		const data = {
@@ -128,6 +134,7 @@ export const actions: Actions = {
 		}
 		try {
 			await fetch(url, packet).then((response) => {
+				console.log(response)
 				// get success
 				if(response["status"] == 200) {
 					success = true
@@ -150,7 +157,9 @@ export const actions: Actions = {
 		}
 	},
 	//adds the score passed in to the monster
-	addScore: async ({cookies, request}) => {
+	addScore: async ({request}) => {
+		console.log(cookies)
+		console.log("add")
 		let success, message
 		const formData = await request.formData();
 		const data = {
@@ -172,12 +181,14 @@ export const actions: Actions = {
 		}
 		try {
 			await fetch(url, packet).then((response) => {
+				console.log(response)
 				if(response["status"] == 200) {
 					success = true
 					message = "Score successfully added!"
 				} else {
 					success = false
 					message = "An error has occurred. Please try again."
+				
 				}
 			})
 		// if api call failed entirely (no internet/server down)

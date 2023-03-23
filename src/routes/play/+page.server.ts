@@ -135,7 +135,7 @@ export const actions: Actions = {
 				"content-type": "application/json; charset=UTF-8",
 				"Authorization": authkey
 				}
-			}).then((response) => response.json()).then(out => {
+			}).then((response) => {response.json()}).then(out => {
 				if (out == true) {
 					inRange = true
 				}

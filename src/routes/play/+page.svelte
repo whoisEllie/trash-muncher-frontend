@@ -83,7 +83,7 @@
 			"Authorization": data.cookie
 		},
 		method: "GET",
-		mode: "cors"
+		mode: "no-cors"
 		}
 		let url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
 		await fetch(url,packet).then((response) => response.json().then((out) => {
@@ -139,7 +139,6 @@
 	function initWebglOverlayView(map) {
 		//variables used for webgl
   		let camera:PerspectiveCamera;
-		var animationAction;
 		overlay = new ThreejsOverlayView({lat:0,lng:0});
 		overlay.setMap(map);
 
