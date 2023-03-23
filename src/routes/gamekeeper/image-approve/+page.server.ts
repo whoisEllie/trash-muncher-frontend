@@ -21,6 +21,7 @@ export const load = (async (event) => {
 	const key = event.cookies.get('AccessToken')
 	const imageData = await event.fetch(url, packet).then((response) => response.json());
 	
+	console.log(imageData)
 	return {
 		// return images for client side
 		images: imageData,

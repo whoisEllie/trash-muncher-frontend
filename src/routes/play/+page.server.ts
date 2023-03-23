@@ -187,7 +187,7 @@ export const actions: Actions = {
 							})
 						} else {
 							success = false
-							message = "An error has occurred. Please try again"
+							message = "Waiting..."
 						}
 					})
 					return {
@@ -200,7 +200,7 @@ export const actions: Actions = {
 					return {
 						image: data.get("image"),
 						success: false,
-						message: "An error has occurred. Please try again"
+						message: "Waiting..."
 						
 					}
 				}
