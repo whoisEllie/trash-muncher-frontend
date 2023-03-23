@@ -49,7 +49,7 @@
 				if(locationTracking){
 					navigator.geolocation.getCurrentPosition(success)}},3000);
 			//sets interval to update the monsters on the screen, including scores and any new monsters
-			//setInterval(getMonsters,5000);
+			setInterval(getMonsters,5000);
 		}).catch(() => {
 				//triggered when location isnt enabled
 				errorMessage = "Location access blocked, please enable."
@@ -83,7 +83,7 @@
 			"Authorization": data.cookie
 		},
 		method: "GET",
-		mode: "no-cors"
+		mode: "cors"
 		}
 		let url="https://api.trashmunchers.co.uk/api/monsters/get-tms"
 		await fetch(url,packet).then((response) => response.json().then((out) => {
