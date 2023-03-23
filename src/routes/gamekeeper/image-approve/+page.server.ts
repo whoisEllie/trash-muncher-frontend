@@ -80,15 +80,15 @@ export const actions : Actions = {
 			}
 			
 			
-			// await fetch("https://api.trashmunchers.co.uk/api/monsters/add-score", {
-			// 	method: 'POST',
-			// 	body: JSON.stringify(pack2),
-			// 	mode: "cors",
-			// 	headers: {
-			// 		"content-type": "application/json; charset=UTF-8",
-			// 		"Authorization": authkey
-			// 	}
-			// })
+			await fetch("https://api.trashmunchers.co.uk/api/monsters/add-score", {
+				method: 'POST',
+				body: JSON.stringify(pack2),
+				mode: "cors",
+				headers: {
+					"content-type": "application/json; charset=UTF-8",
+					"Authorization": authkey
+				}
+			})
 			
 			await fetch("https://api.trashmunchers.co.uk/api/monsters/add-carbon", {
 				method: 'POST',
