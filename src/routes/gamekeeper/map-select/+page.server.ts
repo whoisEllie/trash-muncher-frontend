@@ -46,7 +46,7 @@ export const load = (async (event) => {
 			return {
 				logged_in: login_status,
 				username: username,
-				monsters:monsters, 
+				monsters: monsters, 
 				cookie: cookies
 			};
 		} catch (error) {
@@ -120,7 +120,7 @@ export const actions: Actions = {
 		const packet: RequestInit = {
 			headers: {
 				"content-type": "application/json; charset=UTF-8",
-				"Authorization": `Bearer ${cookies.get('AccessToken')}`
+				"Authorization": cookies 
 			},
 			body: JSON.stringify(data),
 			method: "POST",
@@ -163,7 +163,7 @@ export const actions: Actions = {
 		const packet: RequestInit = {
 			headers: {
 				"content-type": "application/json; charset=UTF-8",
-				"Authorization": `Bearer ${cookies.get('AccessToken')}`
+				"Authorization": cookies
 			},
 			body: JSON.stringify(data),
 			method: "POST",
