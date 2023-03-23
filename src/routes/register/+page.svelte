@@ -44,8 +44,13 @@
 				</optgroup>
 			</select></center>
 		</div>
-		<center><button>Register</button></center>
+		<div class="register-button">
+			<center><button>Register</button></center>
+		</div>
 	</form>
+	<div class="privacy-wrapper">
+		<center><span class="privacy-text"><br>By registering an account you agree to be bound by our Privacy Policy</span></center>
+	</div>
 	</div>
 </div>
 
@@ -117,6 +122,19 @@
 
 	.title-munchers {
 		transform: translate(3rem, 0rem);
+	}
+	
+	.privacy-text {
+		position: relative;
+		transform: translateY(-10%);
+		font-size: 1rem;
+		font-family: "Montserrat", sans-serif;
+	}
+	
+	.privacy-wrapper {
+		position: relative;
+		margin: auto;
+		width: 300px;
 	}
 
 	.inputbox {
