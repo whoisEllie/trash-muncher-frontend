@@ -744,7 +744,22 @@ function unfreezeForm(e) {
 			font-size: 0.85rem;
 		}
 	}
-	@media screen and (max-width: 1055px) {
+
+	@media screen and (max-width: 1200px)
+	{
+		.map-modal {
+			grid-template-columns: 3fr 6fr;
+		}
+	}
+
+	@media screen and (max-width: 800px)
+	{
+		.map-modal {
+			grid-template-columns: 3fr 5fr;
+		}
+	}
+
+	@media screen and (max-width: 450px) {
 		.map-modal {
 			height: 92.5vh;
 			height: 92.5svh;

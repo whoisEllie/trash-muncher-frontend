@@ -49,7 +49,7 @@
 		</div>
 	</form>
 	<div class="privacy-wrapper">
-		<center><span class="privacy-text"><br>By registering an account you agree to be bound by our Privacy Policy</span></center>
+		<center><span class="privacy-text"><br>By registering an account you agree to be bound by our <a href="https://github.com/whoisEllie/trash-muncher-frontend/blob/main/tm_privacy_policy.pdf">Privacy Policy</a></span></center>
 	</div>
 	</div>
 </div>
