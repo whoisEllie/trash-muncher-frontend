@@ -93,12 +93,12 @@
 <style>
 	.grid {
 		position: absolute;
-		width: 85vw;
-		height: 80vh;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
-		grid-gap: 1rem;
-		overflow-y: scroll; /* allows vertical scrolling in the div */
+		width: 85%;
+		height: 70%;
+		display: flex; /* images are loaded from top left to bottom right in flex */
+		flex-flow: wrap;
+		overflow-x: hidden;
+		overflow-y: auto; /* allows vertical scrolling in the div */
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
