@@ -179,7 +179,7 @@
 			//detects if you click onto an object
 			const intersections = overlay.raycast(vector);
 
-			if(intersectionshttps://api.trashmunchers.co.uk/.length>0){
+			if(intersections.length>0){
 				getMonsters()	
 				monsterSelected = true
 				let clicked = false;
@@ -200,7 +200,7 @@
 						colour.r=1;
 						colour.g=1;
 						colour.b=1;
-						if (m.modehttps://api.trashmunchers.co.uk/l==elemObject){
+						if (m.model==elemObject){
 							if(m.mixer) {
 								m.animation.play()
 							}
